@@ -1,0 +1,95 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <Filter Include="Headers">
+      <UniqueIdentifier>{a98aa338-fc55-407d-a85f-4604ae664577}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source">
+      <UniqueIdentifier>{dffc85f0-572a-4f04-a220-16276ab019ac}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source\Input">
+      <UniqueIdentifier>{71edf263-030c-410e-8ae4-d6f87d057183}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Headers\Input">
+      <UniqueIdentifier>{452b3b77-1525-4b1a-ad7d-724c21e89511}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Headers\Window">
+      <UniqueIdentifier>{62173923-a031-440b-ae93-d53a4dd83961}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source\Window">
+      <UniqueIdentifier>{dc98883f-69a6-40d0-8dee-920fbf8d9ed6}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Headers\Renderer">
+      <UniqueIdentifier>{96456968-bfa8-43c5-b50f-46a16395e6b6}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source\Renderer">
+      <UniqueIdentifier>{3d6143f8-80f8-4efc-969b-48f0e4922f99}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Headers\Utils">
+      <UniqueIdentifier>{62a9a381-c222-426c-b5fc-f5b7bc8b46c4}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source\Core">
+      <UniqueIdentifier>{578238f2-2759-44be-83a8-fc9e3dc4148f}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Headers\Core">
+      <UniqueIdentifier>{413b8d17-0406-411a-9bfd-94e90caf4c40}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="src\Window\GLContext.cpp">
+      <Filter>Source\Window</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Window\VideoMode.cpp">
+      <Filter>Source\Window</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Window\Window.cpp">
+      <Filter>Source\Window</Filter>
+    </ClCompile>
+    <ClCompile Include="src\main.cpp">
+      <Filter>Source</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Window\Keyboard.cpp">
+      <Filter>Source\Window</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Window\Mouse.cpp">
+      <Filter>Source\Window</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Core\Application.cpp">
+      <Filter>Source\Core</Filter>
+    </ClCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="include\Window\GLContext.h">
+      <Filter>Headers\Window</Filter>
+    </ClInclude>
+    <ClInclude Include="include\Utils\GraphicsUtils.h">
+      <Filter>Headers\Utils</Filter>
+    </ClInclude>
+    <ClInclude Include="include\Window\VideoMode.h">
+      <Filter>Headers\Window</Filter>
+    </ClInclude>
+    <ClInclude Include="include\Window\Window.h">
+      <Filter>Headers\Window</Filter>
+    </ClInclude>
+    <ClInclude Include="include\Utils\Vector2D.h">
+      <Filter>Headers\Utils</Filter>
+    </ClInclude>
+    <ClInclude Include="include\OpenGL.h">
+      <Filter>Headers\Core</Filter>
+    </ClInclude>
+    <ClInclude Include="include\Window\Keyboard.h">
+      <Filter>Headers\Window</Filter>
+    </ClInclude>
+    <ClInclude Include="include\Window\Mouse.h">
+      <Filter>Headers\Window</Filter>
+    </ClInclude>
+    <ClInclude Include="include\Core\Application.h">
+      <Filter>Headers\Core</Filter>
+    </ClInclude>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="include\Utils\Vector2D.inl">
+      <Filter>Headers\Utils</Filter>
+    </None>
+  </ItemGroup>
+</Project>

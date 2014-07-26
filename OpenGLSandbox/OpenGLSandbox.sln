@@ -1,0 +1,20 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio 2012
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "OpenGLSandbox", "OpenGLSandbox\OpenGLSandbox.vcxproj", "{C78F7A58-C68B-4FDB-B61B-215B531D06AC}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Win32 = Debug|Win32
+		Release|Win32 = Release|Win32
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{C78F7A58-C68B-4FDB-B61B-215B531D06AC}.Debug|Win32.ActiveCfg = Debug|Win32
+		{C78F7A58-C68B-4FDB-B61B-215B531D06AC}.Debug|Win32.Build.0 = Debug|Win32
+		{C78F7A58-C68B-4FDB-B61B-215B531D06AC}.Release|Win32.ActiveCfg = Release|Win32
+		{C78F7A58-C68B-4FDB-B61B-215B531D06AC}.Release|Win32.Build.0 = Release|Win32
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+EndGlobal
