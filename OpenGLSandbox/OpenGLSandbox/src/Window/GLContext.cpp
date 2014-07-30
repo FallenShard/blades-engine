@@ -68,8 +68,4 @@ void GLContext::initialize()
     
     // Activate the new core-profile context
     wglMakeCurrent(m_deviceContextHandle, m_resourceContextHandle);
-
-    version = glGetString(GL_VERSION);
-
-    MessageBox(nullptr, reinterpret_cast<LPCSTR>(version), "OpenGL Version", MB_OK | MB_ICONINFORMATION);
 }
