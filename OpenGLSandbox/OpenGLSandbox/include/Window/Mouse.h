@@ -1,7 +1,7 @@
 #ifndef MOUSE_H
 #define MOUSE_H
 
-#include "Utils/GraphicsUtils.h"
+#include "Utils/Vector2D.h"
 
 class Window;
 
@@ -10,11 +10,11 @@ class Mouse
 public:
     enum Button
     {
-        Left,       
-        Right,      
-        Middle,     
-        XButton1,   
-        XButton2,   
+        Left,
+        Right,
+        Middle,
+        XButton1,
+        XButton2,
 
         ButtonCount
     };

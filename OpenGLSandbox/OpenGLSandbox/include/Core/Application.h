@@ -12,9 +12,9 @@ public:
     void run();
 
 private:
-    void initialize();
-
+    void processInput();
     void render();
+    void renderInit();
 
     Window*  m_window;
 };

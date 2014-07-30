@@ -24,6 +24,7 @@
     <ClInclude Include="include\OpenGL.h" />
     <ClInclude Include="include\Utils\GraphicsUtils.h" />
     <ClInclude Include="include\Utils\Vector2D.h" />
+    <ClInclude Include="include\Window\Event.h" />
     <ClInclude Include="include\Window\GLContext.h" />
     <ClInclude Include="include\Window\Keyboard.h" />
     <ClInclude Include="include\Window\Mouse.h" />
