@@ -33,7 +33,7 @@ void GLContext::initialize()
 
     int errorReport = SetPixelFormat(m_deviceContextHandle, format, &pfd);
 
-    // Create an OpenGL resource context
+    // Create an OpenGL resource context to query version and such
     HGLRC dummyContextHandle = wglCreateContext(m_deviceContextHandle);
     
     // Enable this context on the current thread and handle
@@ -59,19 +59,17 @@ void GLContext::initialize()
          0
     };
 
+    // Disable and delete dummy context on the curent thread and window
     wglMakeCurrent(NULL, NULL);
     wglDeleteContext(dummyContextHandle);
 
     // Open a new resource context with specified attributes
     m_resourceContextHandle = wglCreateContextAttribsARB(m_deviceContextHandle, 0, attributes);
     
-    // Disable and delete dummy context on the curent thread and window
-    
-
     // Activate the new core-profile context
     wglMakeCurrent(m_deviceContextHandle, m_resourceContextHandle);
 
     version = glGetString(GL_VERSION);
 
-    MessageBox(nullptr, (const char*)version, "OpenGL Version", MB_OK|MB_ICONINFORMATION);
+    MessageBox(nullptr, reinterpret_cast<LPCSTR>(version), "OpenGL Version", MB_OK | MB_ICONINFORMATION);
 }
