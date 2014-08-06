@@ -54,7 +54,7 @@ void GLContext::initialize()
     {
          WGL_CONTEXT_MAJOR_VERSION_ARB, m_majorVersion,
          WGL_CONTEXT_MINOR_VERSION_ARB, m_minorVersion,
-         WGL_CONTEXT_FLAGS_ARB, WGL_CONTEXT_FORWARD_COMPATIBLE_BIT_ARB,
+         //WGL_CONTEXT_FLAGS_ARB, WGL_CONTEXT_FORWARD_COMPATIBLE_BIT_ARB,
          WGL_CONTEXT_PROFILE_MASK_ARB, WGL_CONTEXT_CORE_PROFILE_BIT_ARB,
          0
     };
@@ -65,7 +65,9 @@ void GLContext::initialize()
 
     // Open a new resource context with specified attributes
     m_resourceContextHandle = wglCreateContextAttribsARB(m_deviceContextHandle, 0, attributes);
-    
+
     // Activate the new core-profile context
     wglMakeCurrent(m_deviceContextHandle, m_resourceContextHandle);
+
+    version = glGetString(GL_SHADING_LANGUAGE_VERSION);
 }

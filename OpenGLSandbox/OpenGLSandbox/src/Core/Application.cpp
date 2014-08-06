@@ -1,15 +1,18 @@
 #include "Core/Application.h"
+#include <fstream>
+#include "Renderer/Shader.h"
 
 namespace
 {
-    GLuint VertexArrayID = 15;
-        
-    static const GLfloat g_vertex_buffer_data[] = { -1.0f, -1.0f, 0.0f,
-                                                     1.0f, -1.0f, 0.0f,
-                                                     0.0f,  1.0f, 0.0f };
+    const float vertexPositions[] = {
+        0.75f, 0.75f, 0.0f, 1.0f,
+        0.75f, -0.75f, 0.0f, 1.0f,
+        -0.75f, -0.75f, 0.0f, 1.0f,
+    };
 
-    GLuint vertexbuffer = 20;
-
+    GLuint positionBufferObject;
+    GLuint vao;
+    
 
     void CheckShader(GLuint id, GLuint type, GLint *ret, const char *onfail)
     {
@@ -24,6 +27,7 @@ namespace
         GLsizei charsWritten = 0;
         glGetShaderInfoLog(id, infologLength, &charsWritten, buffer);
         int x = 5;
+        delete[] buffer;
        }
        break;
      case(GL_LINK_STATUS):
@@ -35,12 +39,15 @@ namespace
         GLsizei charsWritten = 0;
         glGetProgramInfoLog(id, infologLength, &charsWritten, buffer);
         int x = 5;
+        delete[] buffer;
        }
        break;
      default:
        break;
      };
     }
+
+    GLuint progHandle;
 }
 
 Application::Application()
@@ -78,73 +85,70 @@ void Application::processInput()
     {
         if (event.type == Event::KeyPressed && event.key.code == Keyboard::Escape)
             m_window->close();
+        if (event.type == Event::KeyPressed && event.key.code == Keyboard::A)
+            backColor = 1;
+        if (event.type == Event::KeyPressed && event.key.code == Keyboard::D)
+            backColor = 0;
     }
 }
 
 void Application::render()
 {
-    glEnableVertexAttribArray(0);
-    glBindBuffer(GL_ARRAY_BUFFER, vertexbuffer);
-    glVertexAttribPointer(
-                       0,                  // attribute 0. No particular reason for 0, but must match the layout in the shader.
-                       3,                  // size
-                       GL_FLOAT,           // type
-                       GL_FALSE,           // normalized?
-                       0,                  // stride
-                       0                   // array buffer offset
-    );
- 
+    GLenum errorReport = 0;
+    if (backColor == 1)
+        glClearColor(1.f, 0.f, 0.0f, 1.f);
+    else
+        glClearColor(0.f, 0.f, 1.f, 1.f);
+    glClear(GL_COLOR_BUFFER_BIT);
+    
+    glUseProgram(progHandle);
+    errorReport = glGetError();
+
+    glBindBuffer(GL_ARRAY_BUFFER, positionBufferObject);
+    errorReport = glGetError();
+    glEnableVertexAttribArray(vao);
+    errorReport = glGetError();
+    glVertexAttribPointer(vao, 4, GL_FLOAT, GL_FALSE, 0, 0);
+    errorReport = glGetError();
     // Draw the triangle !
     glDrawArrays(GL_TRIANGLES, 0, 3); // Starting from vertex 0; 3 vertices total -> 1 triangle
- 
+    errorReport = glGetError();
     glDisableVertexAttribArray(0);
+    errorReport = glGetError();
+    glBindBuffer(GL_ARRAY_BUFFER, 0);
+    errorReport = glGetError();
+    glUseProgram(0);
+    errorReport = glGetError();
 }
 
 void Application::renderInit()
 {
-    GLuint vertShader = glCreateShader(GL_VERTEX_SHADER);
-    const GLchar* vertSrc[] = { "#version 420 core \n void main() {gl_Position = gl_ModelViewProjectionMatrix * gl_Vertex;}\n" };
-    const GLint vertLen[] = { strlen(vertSrc[0]) };
+    Shader vertShader(Shader::Vert);
+    vertShader.loadFromFile("res/default.vert");
+    vertShader.checkCompileError();
 
-    GLuint fragShader = glCreateShader(GL_FRAGMENT_SHADER);
-    const GLchar* fragSrc[] = {"#version 420 core \n void main() {gl_FragColor = vec4(0.0, 1.0, 0.0, 1.0);}\n"};
-    const GLint fragLen[] = { strlen(fragSrc[0]) };
+    Shader fragShader(Shader::Frag);
+    fragShader.loadFromFile("res/default.frag");
+    fragShader.checkCompileError();
 
-    glShaderSource(vertShader, 1, vertSrc, vertLen);
-    glShaderSource(fragShader, 1, fragSrc, fragLen);
+    progHandle = glCreateProgram();
+    glAttachShader(progHandle, vertShader.getShaderIdentifier());
+    glAttachShader(progHandle, fragShader.getShaderIdentifier());
 
-    GLint statusChecker;
-    // Step through the code here, only the last one reports a GL_INVALID_OPERATION
-    glCompileShader(vertShader);
-    GLenum errorReport = glGetError();
-
-    glCompileShader(fragShader);
-    errorReport = glGetError();
-
-    GLint progHandle = glCreateProgram();
-    glAttachShader(progHandle, vertShader);
-    errorReport = glGetError();
-    glAttachShader(progHandle, fragShader);
-    errorReport = glGetError();
-
+    GLint statusChecker = 0;
     glLinkProgram(progHandle);
-    CheckShader(vertShader, GL_COMPILE_STATUS, &statusChecker, nullptr);
-    CheckShader(fragShader, GL_COMPILE_STATUS, &statusChecker, nullptr);
     CheckShader(progHandle, GL_LINK_STATUS, &statusChecker, nullptr);
-    errorReport = glGetError();
 
-    glUseProgram(progHandle);
-    errorReport = glGetError();
+    glGenVertexArrays(1, &vao);
+    glBindVertexArray(vao);
 
-    glGenVertexArrays(1, &VertexArrayID);
-    glBindVertexArray(VertexArrayID);
-    glGenBuffers(1, &vertexbuffer);
- 
-    // The following commands will talk to our 'vertexbuffer' buffer
-    glBindBuffer(GL_ARRAY_BUFFER, vertexbuffer);
- 
-    // Give our vertices to OpenGL
-    glBufferData(GL_ARRAY_BUFFER, sizeof(g_vertex_buffer_data), g_vertex_buffer_data, GL_STATIC_DRAW);
-    glClearColor(0.f, 0.f, 0.2f, 1.f);
+
+    glGenBuffers(1, &positionBufferObject);
+
+    vao = glGetAttribLocation(progHandle, "vertexPosition");
+
+    glBindBuffer(GL_ARRAY_BUFFER, positionBufferObject);
+    glBufferData(GL_ARRAY_BUFFER, sizeof(vertexPositions), vertexPositions, GL_STATIC_DRAW);
+    glBindBuffer(GL_ARRAY_BUFFER, 0);
 }
 

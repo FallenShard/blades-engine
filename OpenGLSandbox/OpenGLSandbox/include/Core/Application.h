@@ -17,6 +17,8 @@ private:
     void renderInit();
 
     Window*  m_window;
+
+    int backColor;
 };
 
 #endif
