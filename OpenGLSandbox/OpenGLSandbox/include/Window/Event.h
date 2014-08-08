@@ -29,6 +29,13 @@ struct Event
         int           y;
     };
 
+    // Event used for resizing
+    struct SizeEvent
+    {
+        int width;
+        int height;
+    };
+
     // Various event types
     enum EventType
     {
@@ -40,6 +47,7 @@ struct Event
         MouseMoved,
         MouseEntered,
         MouseLeft,
+        Resized,
 
         Count
     };
@@ -51,6 +59,7 @@ struct Event
         KeyEvent             key;
         MouseMoveEvent       mouseMove;
         MouseButtonEvent     mouseButton;
+        SizeEvent            size;
     };
 };
 

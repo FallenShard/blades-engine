@@ -37,10 +37,13 @@ public:
     bool isOpen() const;
 
     bool pollEvent(Event& event);
+    bool waitEvent(Event& event);
 
     void display();
 
     void close();
+
+    Vector2Du getSize() const;
 
 private:
     // Called only the first time to register type of window created
@@ -60,11 +63,13 @@ private:
     std::queue<Event> m_eventQueue;
 
     Vector2Du m_size;
+    Vector2Du m_prevSize; // Used for resizing
     HWND m_windowHandle;
     HDC m_deviceContextHandle;
     GLContext* m_GLContext;
     bool m_isOpen;
     bool m_containsMouse;
+    bool m_isResizing;
 };
 
 #endif // WINDOW_H

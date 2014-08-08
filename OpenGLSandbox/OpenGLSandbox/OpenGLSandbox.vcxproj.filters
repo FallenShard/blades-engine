@@ -37,6 +37,9 @@
     <Filter Include="Resources">
       <UniqueIdentifier>{38c49d7e-7735-4629-8647-8941656162ce}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Source\Utils">
+      <UniqueIdentifier>{aa6029ad-3a91-420a-8d9b-4ca2cde07c11}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\Window\GLContext.cpp">
@@ -63,6 +66,15 @@
     <ClCompile Include="src\Renderer\Shader.cpp">
       <Filter>Source\Renderer</Filter>
     </ClCompile>
+    <ClCompile Include="src\Utils\Logger.cpp">
+      <Filter>Source\Utils</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Renderer\ShaderProgram.cpp">
+      <Filter>Source\Renderer</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Renderer\GLRenderer.cpp">
+      <Filter>Source\Renderer</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="include\Window\GLContext.h">
@@ -80,9 +92,6 @@
     <ClInclude Include="include\Utils\Vector2D.h">
       <Filter>Headers\Utils</Filter>
     </ClInclude>
-    <ClInclude Include="include\OpenGL.h">
-      <Filter>Headers\Core</Filter>
-    </ClInclude>
     <ClInclude Include="include\Window\Keyboard.h">
       <Filter>Headers\Window</Filter>
     </ClInclude>
@@ -97,6 +106,18 @@
     </ClInclude>
     <ClInclude Include="include\Renderer\Shader.h">
       <Filter>Headers\Renderer</Filter>
+    </ClInclude>
+    <ClInclude Include="include\Utils\Logger.h">
+      <Filter>Headers\Utils</Filter>
+    </ClInclude>
+    <ClInclude Include="include\Renderer\ShaderProgram.h">
+      <Filter>Headers\Renderer</Filter>
+    </ClInclude>
+    <ClInclude Include="include\Renderer\GLRenderer.h">
+      <Filter>Headers\Renderer</Filter>
+    </ClInclude>
+    <ClInclude Include="include\OpenGL.h">
+      <Filter>Headers\Core</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

@@ -10,6 +10,8 @@ public:
     Vector2D();
     // Creates a vector with given coordinates
     Vector2D(T x, T y);
+    // Copy constructor
+    Vector2D(const Vector2D<T>& vector);
 
     // Destructor which currently does nothing
     ~Vector2D();
@@ -19,6 +21,9 @@ public:
     const Vector2D<T> operator*(T scalar);
     const Vector2D<T> operator+(const Vector2D<T>& vector);
     const Vector2D<T> operator-(const Vector2D<T>& vector);
+
+    bool operator==(const Vector2D<T>& vector);
+    bool operator!=(const Vector2D<T>& vector);
     
     float dotProduct(const Vector2D<T>& vector);
 

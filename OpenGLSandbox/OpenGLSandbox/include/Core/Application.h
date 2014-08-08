@@ -2,6 +2,7 @@
 #define APP_H
 
 #include "Window/Window.h"
+#include "Renderer/GLRenderer.h"
 
 class Application
 {
@@ -16,9 +17,10 @@ private:
     void render();
     void renderInit();
 
-    Window*  m_window;
+    Window* m_window;
+    GLRenderer* m_renderer;
 
-    int backColor;
+    float backColor;
 };
 
 #endif

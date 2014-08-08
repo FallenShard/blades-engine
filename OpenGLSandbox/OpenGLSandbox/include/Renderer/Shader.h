@@ -20,25 +20,27 @@ public:
 
     Shader();
     Shader(Type type);
+    Shader(std::string fileName, Type type);
 
     ~Shader();
 
     void create(Type type);
 
     void loadFromFile(std::string fileName, Type type = None);
-    void loadFromString(GLchar source[]);
+    void compile();
 
-    GLuint getShaderIdentifier() const;
+    GLuint getShaderId() const;
+    std::string getSourceFileName() const;
 
-    bool checkCompileError();
+    bool checkCompileStatus();
 
 private:
     void setShaderType(Type type);
-    void compile();
 
+    std::string m_sourceFileName;
     std::string m_source;
     GLuint m_identifier;
-    GLenum m_shaderType;
+    GLenum m_type;
 };
 
 

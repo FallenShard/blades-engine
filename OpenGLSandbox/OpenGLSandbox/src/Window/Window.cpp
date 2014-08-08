@@ -111,6 +111,54 @@ void Window::processMessage(UINT message, WPARAM wParam, LPARAM lParam)
             break;
         }
 
+    // Triggered on resizing
+    case WM_SIZE:
+    {
+        // Consider only events triggered by a maximize or a un-maximize
+        if (wParam != SIZE_MINIMIZED && !m_isResizing && m_prevSize != getSize())
+        {
+            // Update previous housekept size
+            m_prevSize = getSize();
+
+            // Push a resize event
+            Event event;
+            event.type = Event::Resized;
+            event.size.width = m_prevSize.getX();
+            event.size.height = m_prevSize.getY();
+            pushEvent(event);
+        }
+        break;
+    }
+
+    // Start resizing
+    case WM_ENTERSIZEMOVE:
+    {
+        m_isResizing = true;
+       
+        break;
+    }
+
+    // Stop resizing
+    case WM_EXITSIZEMOVE:
+    {
+        m_isResizing = false;
+
+        // Ignore cases where the window has only been moved
+        if (m_prevSize != getSize())
+        {
+            // Update previous housekept size
+            m_prevSize = getSize();
+
+            // Push a resize event
+            Event event;
+            event.type = Event::Resized;
+            event.size.width = m_prevSize.getX();
+            event.size.height = m_prevSize.getY();
+            pushEvent(event);
+        }
+        break;
+    }
+
     // Triggered on any key press event
     case WM_KEYDOWN:
     case WM_SYSKEYDOWN:
@@ -167,7 +215,7 @@ void Window::processMessage(UINT message, WPARAM wParam, LPARAM lParam)
         }
 
     // Mouse right button press event
-    case WM_RBUTTONDOWN :
+    case WM_RBUTTONDOWN:
         {
             Event event;
             event.type               = Event::MouseButtonPressed;
@@ -179,7 +227,7 @@ void Window::processMessage(UINT message, WPARAM wParam, LPARAM lParam)
         }
 
     // Mouse right button release event
-    case WM_RBUTTONUP :
+    case WM_RBUTTONUP:
         {
             Event event;
             event.type               = Event::MouseButtonReleased;
@@ -191,7 +239,7 @@ void Window::processMessage(UINT message, WPARAM wParam, LPARAM lParam)
         }
 
     // Mouse wheel button press event
-    case WM_MBUTTONDOWN :
+    case WM_MBUTTONDOWN:
         {
             Event event;
             event.type               = Event::MouseButtonPressed;
@@ -203,7 +251,7 @@ void Window::processMessage(UINT message, WPARAM wParam, LPARAM lParam)
         }
 
     // Mouse wheel button release event
-    case WM_MBUTTONUP :
+    case WM_MBUTTONUP:
         {
             Event event;
             event.type               = Event::MouseButtonReleased;
@@ -215,7 +263,7 @@ void Window::processMessage(UINT message, WPARAM wParam, LPARAM lParam)
         }
 
     // Mouse extra button press event
-    case WM_XBUTTONDOWN :
+    case WM_XBUTTONDOWN:
         {
             Event event;
             event.type               = Event::MouseButtonPressed;
@@ -569,4 +617,18 @@ void Window::close()
 bool Window::pollEvent(Event& event)
 {
     return popEvent(event, false);
+}
+
+bool Window::waitEvent(Event& event)
+{
+    return popEvent(event, true);
+}
+
+
+Vector2Du Window::getSize() const
+{
+    RECT rect;
+    GetClientRect(m_windowHandle, &rect);
+
+    return Vector2Du(rect.right - rect.left, rect.bottom - rect.top);
 }
