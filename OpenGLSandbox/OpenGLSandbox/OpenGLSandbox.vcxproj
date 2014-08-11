@@ -50,8 +50,10 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="include\Utils\Vector2D.inl" />
+    <None Include="res\circularMotion.vert" />
     <None Include="res\default.frag" />
     <None Include="res\default.vert" />
+    <None Include="res\circularMotion.frag" />
   </ItemGroup>
   <PropertyGroup Label="Globals">
     <ProjectGuid>{C78F7A58-C68B-4FDB-B61B-215B531D06AC}</ProjectGuid>

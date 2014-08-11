@@ -139,5 +139,7 @@
     <None Include="res\default.frag">
       <Filter>Resources</Filter>
     </None>
+    <None Include="res\circularMotion.vert" />
+    <None Include="res\circularMotion.frag" />
   </ItemGroup>
 </Project>
