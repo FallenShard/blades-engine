@@ -19,6 +19,17 @@ void ShaderProgram::attachShader(Shader& shader)
     m_shaders.insert(attachedShader);
 }
 
+void ShaderProgram::detachShader(Shader& shader)
+{
+    // Detach the shader from this program
+    glDetachShader(m_identifier, shader.getShaderId());
+
+    // Remove the shader from current map
+    auto foundShader = m_shaders.find(shader.getSourceFileName());
+    if (foundShader != m_shaders.end())
+        m_shaders.erase(foundShader);
+}
+
 void ShaderProgram::link()
 {
     // Link the program
@@ -28,16 +39,16 @@ void ShaderProgram::link()
 bool ShaderProgram::checkLinkStatus()
 {
     // Used to grab actual error status
-    GLint errorStatus = 0;
+    GLint linkStatus = 0;
 
     // Assume that there was no error
     bool hasError = 0;
 
     // Get linking status of a program
-    glGetProgramiv(m_identifier, GL_LINK_STATUS, &errorStatus);
+    glGetProgramiv(m_identifier, GL_LINK_STATUS, &linkStatus);
 
-    // If GL_FALSE was written in errorStatus, there was an error with linking
-    if (errorStatus == GL_FALSE)
+    // If GL_FALSE was written in linkStatus, there was an error with linking
+    if (linkStatus == GL_FALSE)
     {
         hasError = true;
         int infoLogLength = 0;

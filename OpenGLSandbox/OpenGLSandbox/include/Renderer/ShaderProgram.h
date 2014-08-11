@@ -14,6 +14,7 @@ public:
     ~ShaderProgram();
 
     void attachShader(Shader& shader);
+    void detachShader(Shader& shader);
 
     void link();
 

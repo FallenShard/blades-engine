@@ -392,11 +392,11 @@ void Window::registerWindowClass()
     windowClass.lpfnWndProc   = &WndProc;
     windowClass.cbClsExtra    = 0;
     windowClass.cbWndExtra    = 0;
-    windowClass.hInstance     = GetModuleHandle(NULL);
-    windowClass.hIcon         = NULL;
+    windowClass.hInstance     = GetModuleHandle(nullptr);
+    windowClass.hIcon         = nullptr;
     windowClass.hCursor       = 0;
     windowClass.hbrBackground = 0;
-    windowClass.lpszMenuName  = NULL;
+    windowClass.lpszMenuName  = nullptr;
     windowClass.lpszClassName = windowClassName;
     RegisterClass(&windowClass);
 }

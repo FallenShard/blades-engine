@@ -19,6 +19,7 @@ Shader::Shader(std::string fileName, Shader::Type type)
 
 Shader::~Shader()
 {
+    glDeleteShader(m_identifier);
 }
 
 void Shader::loadFromFile(std::string fileName, Shader::Type type)
@@ -56,16 +57,16 @@ void Shader::compile()
 
 bool Shader::checkCompileStatus()
 {
-    GLint errorStatus = 0;
+    GLint compileStatus = 0;
 
     // Assume that there was no error
     bool hasError = 0;
 
     // Get compilation status of a shader
-    glGetShaderiv(m_identifier, GL_COMPILE_STATUS, &errorStatus);
+    glGetShaderiv(m_identifier, GL_COMPILE_STATUS, &compileStatus);
 
-    // If GL_FALSE was written in errorStatus, there was an error with the shader
-    if (errorStatus == GL_FALSE)
+    // If GL_FALSE was written in compileStatus, there was an error with the shader
+    if (compileStatus == GL_FALSE)
     {
         hasError = true;
         int infoLogLength = 0;
@@ -93,10 +94,10 @@ void Shader::setShaderType(Shader::Type type)
     case TessControl: m_type = GL_TESS_CONTROL_SHADER;    break;
     case TessEval:    m_type = GL_TESS_EVALUATION_SHADER; break;
     case Frag:        m_type = GL_FRAGMENT_SHADER;        break;
-    default:          m_type = 0;                         break;
+    default:          m_type = GL_NONE;                   break;
     }
 
-    if (m_type != 0)
+    if (m_type != GL_NONE)
         m_identifier = glCreateShader(m_type);
 }
 

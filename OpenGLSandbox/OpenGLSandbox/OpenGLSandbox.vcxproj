@@ -12,10 +12,14 @@
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\Core\Application.cpp" />
+    <ClCompile Include="src\Core\Timer.cpp" />
     <ClCompile Include="src\main.cpp" />
     <ClCompile Include="src\Renderer\GLRenderer.cpp" />
     <ClCompile Include="src\Renderer\Shader.cpp" />
     <ClCompile Include="src\Renderer\ShaderProgram.cpp" />
+    <ClCompile Include="src\Renderer\Vertex.cpp" />
+    <ClCompile Include="src\Renderer\VertexArray.cpp" />
+    <ClCompile Include="src\Renderer\VertexBuffer.cpp" />
     <ClCompile Include="src\Utils\Logger.cpp" />
     <ClCompile Include="src\Window\GLContext.cpp" />
     <ClCompile Include="src\Window\Keyboard.cpp" />
@@ -25,10 +29,15 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="include\Core\Application.h" />
+    <ClInclude Include="include\Core\Timer.h" />
     <ClInclude Include="include\OpenGL.h" />
     <ClInclude Include="include\Renderer\GLRenderer.h" />
     <ClInclude Include="include\Renderer\Shader.h" />
     <ClInclude Include="include\Renderer\ShaderProgram.h" />
+    <ClInclude Include="include\Renderer\Vertex.h" />
+    <ClInclude Include="include\Renderer\VertexArray.h" />
+    <ClInclude Include="include\Renderer\VertexAttribute.h" />
+    <ClInclude Include="include\Renderer\VertexBuffer.h" />
     <ClInclude Include="include\Utils\GraphicsUtils.h" />
     <ClInclude Include="include\Utils\Logger.h" />
     <ClInclude Include="include\Utils\Vector2D.h" />

@@ -1,8 +1,12 @@
 #version 440 core
 
-layout (location = 0) in vec4 vertexPosition;
+layout(location = 1) in vec4 vPosition;
+layout(location = 2) in vec4 vColor;
+
+flat out vec4 outColor;
 
 void main()
 {
-    gl_Position = vertexPosition;
+    gl_Position = vPosition;
+    outColor = vColor;
 }

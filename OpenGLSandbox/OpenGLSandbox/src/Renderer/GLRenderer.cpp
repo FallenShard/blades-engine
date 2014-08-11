@@ -2,11 +2,21 @@
 
 namespace
 {
-    const float vertexPositions[] = 
+    const float PI = 4.f * atanf(1.0f);
+    const float fullCircle = 2 * PI;
+
+    GLfloat vertexPositions[] =
     {
-         0.75f,  0.75f, 0.0f, 1.0f,
-         0.75f, -0.75f, 0.0f, 1.0f,
-        -0.75f, -0.75f, 0.0f, 1.0f,
+        0.0f, 0.5f,
+        0.5f, -0.366f, 
+        -0.5f, -0.366f
+    };
+
+    GLfloat vertexColors[] =
+    {
+        1.0f, 0.0f, 0.0f, 1.0f,
+        0.0f, 1.0f, 0.0f, 1.0f,
+        0.0f, 0.0f, 1.0f, 1.0f
     };
 
     GLuint positionBufferObject;
@@ -14,11 +24,29 @@ namespace
 }
 
 GLRenderer::GLRenderer()
+    : m_aspectRatio(4.f / 3)
 {
     init();
 }
 
-void GLRenderer::init()
+GLRenderer::GLRenderer(int width, int height)
+    : m_aspectRatio(static_cast<float>(width) / height)
+{
+    init();
+}
+
+GLRenderer::~GLRenderer()
+{
+    for (VertexArray* array : m_vertexArrays)
+        delete array;
+    m_vertexArrays.clear();
+
+    for (VertexBuffer* buffer : m_vertexBuffers)
+        delete buffer;
+    m_vertexBuffers.clear();
+}
+
+void GLRenderer::shaderSetup()
 {
     // Default vertex shader
     Shader vertShader(Shader::Vert);
@@ -30,46 +58,118 @@ void GLRenderer::init()
     fragShader.loadFromFile("res/default.frag");
     fragShader.checkCompileStatus();
 
-    // 
+    // Create an accompanying shader program
     m_shaderProgram.attachShader(vertShader);
     m_shaderProgram.attachShader(fragShader);
     m_shaderProgram.link();
     m_shaderProgram.checkLinkStatus();
+    m_shaderProgram.detachShader(vertShader);
+    m_shaderProgram.detachShader(fragShader);
+}
 
-    glGenVertexArrays(1, &vao);
-    glBindVertexArray(vao);
+void GLRenderer::init()
+{
+    shaderSetup();
 
+    m_vertexArrays.push_back(new VertexArray());
+    m_vertexArrays[0]->bind();
 
-    glGenBuffers(1, &positionBufferObject);
+    VertexBuffer* positionBuffer = new VertexBuffer(GL_ARRAY_BUFFER, GL_STREAM_DRAW);
+    VertexBuffer* colorBuffer = new VertexBuffer(GL_ARRAY_BUFFER, GL_STATIC_DRAW);
+    m_vertexBuffers.push_back(positionBuffer);
+    m_vertexBuffers.push_back(colorBuffer);
+    m_vertexArrays[0]->attachBuffers(m_vertexBuffers);
 
-    vao = glGetAttribLocation(m_shaderProgram.getProgramId(), "vertexPosition");
+    positionBuffer->bind();
+    positionBuffer->setData(vertexPositions, 6, 2);
 
-    glBindBuffer(GL_ARRAY_BUFFER, positionBufferObject);
-    glBufferData(GL_ARRAY_BUFFER, sizeof(vertexPositions), vertexPositions, GL_STATIC_DRAW);
-    glBindBuffer(GL_ARRAY_BUFFER, 0);
+    VertexAttribute* posAttribute = new VertexAttribute();
+    posAttribute->name = "vPosition";
+    posAttribute->location = glGetAttribLocation(m_shaderProgram.getProgramId(), posAttribute->name.c_str());
+    posAttribute->normalized = GL_FALSE;
+    posAttribute->size = 2;
+    posAttribute->offset = (GLvoid*)0;
+    posAttribute->stride = 0;
+    posAttribute->type = GL_FLOAT;
 
+    posAttribute->enable();
 
+    m_vertexAttributes.push_back(posAttribute);
+
+    
+    colorBuffer->bind();
+    colorBuffer->setData(vertexColors, 12, 4);
+
+    VertexAttribute* colorAttribute = new VertexAttribute();
+    colorAttribute->name = "vColor";
+    colorAttribute->location = glGetAttribLocation(m_shaderProgram.getProgramId(), colorAttribute->name.c_str());
+    colorAttribute->normalized = GL_FALSE;
+    colorAttribute->size = 4;
+    colorAttribute->offset = (GLvoid*)0;
+    colorAttribute->stride = 0;
+    colorAttribute->type = GL_FLOAT;
+
+    colorAttribute->enable();
+
+    m_vertexAttributes.push_back(colorAttribute);
+
+    glUseProgram(m_shaderProgram.getProgramId());
+    glClearColor(0.f, 0.f, 0.3f, 1.f);
 }
 
 void GLRenderer::draw()
 {
-    //glClearColor(0.f, 0.f, 1.f, 1.f);
     glClear(GL_COLOR_BUFFER_BIT);
 
-    glUseProgram(m_shaderProgram.getProgramId());
+    glDrawArrays(GL_TRIANGLES, 0, 3);
+}
 
-    glBindBuffer(GL_ARRAY_BUFFER, positionBufferObject);
-    glEnableVertexAttribArray(vao);
+void GLRenderer::update(float timeDelta)
+{
+    static float currentAngle = 0.f;
+    float loopDuration = 4.f;
+    float diameter = 0.5f;
 
-    glVertexAttribPointer(vao, 4, GL_FLOAT, GL_FALSE, 0, 0);
+    float xOffset = cosf(currentAngle) * diameter;
+    float yOffset = sinf(currentAngle) * diameter;
 
-    // Draw the triangle !
-    glDrawArrays(GL_TRIANGLES, 0, 3); // Starting from vertex 0; 3 vertices total -> 1 triangle
+    std::vector<GLfloat> vertices;
+    for (int i = 0; i < 3; i++)
+    {
+        float newX = vertexPositions[i * 2 + 0] + xOffset;
+        float newY = vertexPositions[i * 2 + 1] + yOffset;
+        vertices.push_back(newX);
+        vertices.push_back(newY);
+    }
 
-    glDisableVertexAttribArray(0);
+    m_vertexBuffers[0]->bind();
+    m_vertexBuffers[0]->setData(vertices, 2);
 
-    glBindBuffer(GL_ARRAY_BUFFER, 0);
+    currentAngle += fullCircle * timeDelta / loopDuration;
+}
 
-    glUseProgram(0);
+void GLRenderer::resize(int width, int height)
+{
+    float resWidth = static_cast<float>(width);
+    float resHeight = static_cast<float>(height);
+    float newRatio = resWidth / resHeight;
 
+    float newWidth;
+    float newHeight;
+
+    if (newRatio > m_aspectRatio)
+    {
+        newWidth = resHeight * m_aspectRatio;
+        newHeight = resHeight;
+    }
+    else
+    {
+        newHeight = resWidth / m_aspectRatio;
+        newWidth = resWidth;
+    }
+
+    GLint x = static_cast<GLint>((resWidth - newWidth) / 2);
+    GLint y = static_cast<GLint>((resHeight - newHeight) / 2);
+
+    glViewport(x, y, static_cast<GLsizei>(newWidth), static_cast<GLsizei>(newHeight));
 }

@@ -75,6 +75,10 @@
     <ClCompile Include="src\Renderer\GLRenderer.cpp">
       <Filter>Source\Renderer</Filter>
     </ClCompile>
+    <ClCompile Include="src\Core\Timer.cpp" />
+    <ClCompile Include="src\Renderer\VertexArray.cpp" />
+    <ClCompile Include="src\Renderer\VertexBuffer.cpp" />
+    <ClCompile Include="src\Renderer\Vertex.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="include\Window\GLContext.h">
@@ -119,6 +123,11 @@
     <ClInclude Include="include\OpenGL.h">
       <Filter>Headers\Core</Filter>
     </ClInclude>
+    <ClInclude Include="include\Core\Timer.h" />
+    <ClInclude Include="include\Renderer\VertexArray.h" />
+    <ClInclude Include="include\Renderer\VertexBuffer.h" />
+    <ClInclude Include="include\Renderer\Vertex.h" />
+    <ClInclude Include="include\Renderer\VertexAttribute.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include="include\Utils\Vector2D.inl">
