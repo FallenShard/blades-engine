@@ -55,6 +55,10 @@
     <None Include="res\default.vert" />
     <None Include="res\circularMotion.frag" />
   </ItemGroup>
+  <ItemGroup>
+    <Text Include="res\TriangleColorData.txt" />
+    <Text Include="res\TrianglePositionData.txt" />
+  </ItemGroup>
   <PropertyGroup Label="Globals">
     <ProjectGuid>{C78F7A58-C68B-4FDB-B61B-215B531D06AC}</ProjectGuid>
     <Keyword>Win32Proj</Keyword>

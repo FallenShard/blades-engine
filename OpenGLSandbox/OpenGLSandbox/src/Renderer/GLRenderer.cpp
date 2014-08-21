@@ -48,6 +48,10 @@ GLRenderer::~GLRenderer()
     for (VertexBuffer* buffer : m_vertexBuffers)
         delete buffer;
     m_vertexBuffers.clear();
+
+    for (VertexAttribute* attribute : m_vertexAttributes)
+        delete attribute;
+    m_vertexAttributes.clear();
 }
 
 void GLRenderer::shaderSetup()
@@ -86,7 +90,7 @@ void GLRenderer::init()
     m_vertexArrays[0]->attachBuffers(m_vertexBuffers);
 
     positionBuffer->bind();
-    positionBuffer->setData(vertexPositions, 6, 2);
+    positionBuffer->loadFromFile("res/TrianglePositionData.txt", 2);
 
     VertexAttribute* posAttribute = new VertexAttribute();
     posAttribute->name = "vPosition";
@@ -101,9 +105,8 @@ void GLRenderer::init()
 
     m_vertexAttributes.push_back(posAttribute);
 
-    
     colorBuffer->bind();
-    colorBuffer->setData(vertexColors, 12, 4);
+    colorBuffer->loadFromFile("res/TriangleColorData.txt", 4);
 
     VertexAttribute* colorAttribute = new VertexAttribute();
     colorAttribute->name = "vColor";
@@ -118,12 +121,11 @@ void GLRenderer::init()
 
     m_vertexAttributes.push_back(colorAttribute);
 
-    //offsetLocation = glGetUniformLocation(m_shaderProgram.getProgramId(), "offset");
     timeLocation = glGetUniformLocation(m_shaderProgram.getProgramId(), "time");
-    loopDuration = glGetUniformLocation(m_shaderProgram.getProgramId(), "time");
+    loopDuration = glGetUniformLocation(m_shaderProgram.getProgramId(), "loopDuration");
 
 
-    glUseProgram(m_shaderProgram.getProgramId());
+    m_shaderProgram.use();
 
     glClearColor(0.f, 0.f, 0.3f, 1.f);
 }
@@ -135,40 +137,13 @@ void GLRenderer::draw()
     glDrawArrays(GL_TRIANGLES, 0, 3);
 }
 
-namespace
-{
-    
-}
-
 void GLRenderer::update(float timeDelta)
 {
-    //static float currentAngle = 0.f;
-    //float loopDuration = 4.f;
-    //float diameter = 0.5f;
     static float timePassed = 0.0f;
-    //xOffset = cosf(currentAngle) * diameter;
-    //yOffset = sinf(currentAngle) * diameter;
 
-    
-    //glUniform2f(offsetLocation, xOffset, yOffset);
     glUniform1f(timeLocation, timePassed);
 
     timePassed += timeDelta;
-
-    /*
-    std::vector<GLfloat> vertices;
-    for (int i = 0; i < 3; i++)
-    {
-        float newX = vertexPositions[i * 2 + 0] + xOffset;
-        float newY = vertexPositions[i * 2 + 1] + yOffset;
-        vertices.push_back(newX);
-        vertices.push_back(newY);
-    }
-
-    m_vertexBuffers[0]->bind();
-    m_vertexBuffers[0]->setData(vertices, 2);
-    */
-    //currentAngle += fullCircle * timeDelta / loopDuration;
 }
 
 void GLRenderer::resize(int width, int height)

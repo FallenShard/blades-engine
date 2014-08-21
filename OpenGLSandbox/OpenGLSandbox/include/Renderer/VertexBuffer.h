@@ -14,7 +14,7 @@ public:
 
     void setData(GLfloat* vertices, int size, int packSize);
     void setData(std::vector<GLfloat> vertices, int packSize);
-    void loadFromFile(std::string fileName);
+    void loadFromFile(std::string fileName, int packSize);
 
     void bind() const;
 

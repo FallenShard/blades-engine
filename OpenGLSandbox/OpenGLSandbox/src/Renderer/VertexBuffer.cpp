@@ -1,4 +1,6 @@
+#include <fstream>
 #include "Renderer/VertexBuffer.h"
+
 
 VertexBuffer::VertexBuffer(GLenum targetType, GLenum drawType)
     : m_targetType(targetType)
@@ -28,7 +30,7 @@ void VertexBuffer::setData(GLfloat* vertices, int size, int packSize)
     for (int i = 0; i < size; i++)
         m_vertices.push_back(vertices[i]);
 
-    glBufferData(m_targetType, sizeof(GLfloat) * size, m_vertices.data(), m_drawType);
+    glBufferData(m_targetType, sizeof(GLfloat) * m_vertices.size(), m_vertices.data(), m_drawType);
 }
 
 void VertexBuffer::setData(std::vector<GLfloat> vertices, int packSize)
@@ -43,4 +45,19 @@ void VertexBuffer::setData(std::vector<GLfloat> vertices, int packSize)
 GLsizei VertexBuffer::getSize() const
 {
     return m_vertices.size();
+}
+
+void VertexBuffer::loadFromFile(std::string fileName, int packSize)
+{
+    m_packSize = packSize;
+
+    std::ifstream inputFile(fileName, std::ios::in);
+
+    float vertexData;
+    while (inputFile >> vertexData)
+    {
+        m_vertices.push_back(vertexData);
+    }
+
+    glBufferData(m_targetType, sizeof(GLfloat) * m_vertices.size(), m_vertices.data(), m_drawType);
 }

@@ -17,6 +17,7 @@ public:
     void detachShader(Shader& shader);
 
     void link();
+    void use();
 
     bool checkLinkStatus();
 

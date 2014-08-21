@@ -36,6 +36,11 @@ void ShaderProgram::link()
     glLinkProgram(m_identifier);
 }
 
+void ShaderProgram::use()
+{
+    glUseProgram(m_identifier);
+}
+
 bool ShaderProgram::checkLinkStatus()
 {
     // Used to grab actual error status

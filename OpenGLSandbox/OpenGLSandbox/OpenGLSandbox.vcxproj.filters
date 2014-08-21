@@ -142,4 +142,8 @@
     <None Include="res\circularMotion.vert" />
     <None Include="res\circularMotion.frag" />
   </ItemGroup>
+  <ItemGroup>
+    <Text Include="res\TrianglePositionData.txt" />
+    <Text Include="res\TriangleColorData.txt" />
+  </ItemGroup>
 </Project>
