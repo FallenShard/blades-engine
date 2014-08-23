@@ -2,7 +2,7 @@
 #define GL_RENDERER_H
 
 #include <vector>
-#include <map>
+#include <unordered_map>
 
 #include "OpenGL.h"
 #include "Renderer/ShaderProgram.h"
@@ -31,11 +31,13 @@ private:
 
     float m_aspectRatio;
     ShaderProgram m_shaderProgram;
+    ShaderProgram m_defaultProgram;
 
     std::vector<VertexArray*> m_vertexArrays;
     std::vector<VertexBuffer*> m_vertexBuffers;
     std::vector<VertexAttribute*> m_vertexAttributes;
-
+    
+    float m_timePassed;
 };
 
 

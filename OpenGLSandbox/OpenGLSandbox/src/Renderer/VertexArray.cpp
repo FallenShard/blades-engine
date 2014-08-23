@@ -44,3 +44,18 @@ void VertexArray::bind()
 {
     glBindVertexArray(m_id);
 }
+
+void VertexArray::release()
+{
+    glBindVertexArray(0);
+}
+
+void VertexArray::setPrimitiveType(GLenum primitiveType)
+{
+    m_primitiveType = primitiveType;
+}
+
+GLenum VertexArray::getPrimitiveType() const
+{
+    return m_primitiveType;
+}

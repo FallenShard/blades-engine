@@ -10,9 +10,11 @@ uniform float time;
 
 void main()
 {
-	float scale = 3.141592 * 2 / loopDuration;
+	float scale = 3.141592f * 2 / loopDuration;
 
-	gl_Position = vPosition + vec4(cos(scale * time) * 0.5f, sin(scale * time) * 0.5f, 0.f, 0.f);
+	vec4 totalOffset = vec4(cos(scale * time) * 0.5f, sin(scale * time) * 0.5f, 0.f, 0.f);
+
+	gl_Position = vPosition + totalOffset;
 
 	outColor = vColor;
 }

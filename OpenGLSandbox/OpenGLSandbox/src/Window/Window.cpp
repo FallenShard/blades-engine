@@ -15,7 +15,7 @@ Window::Window(VideoMode videoMode, const std::string& title, Window::Style styl
     ,   m_isOpen(false)
     ,   m_containsMouse(false)
 {
-    // Register the window class when during first window creation
+    // Register the window class during first window creation
     if (windowCount == 0)
         registerWindowClass();
 
@@ -51,7 +51,7 @@ Window::Window(VideoMode videoMode, const std::string& title, Window::Style styl
                                   left, top, width, height, NULL, NULL, GetModuleHandle(NULL), this);
 
     // Set the instance pointer as user data associated with hWnd
-    SetWindowLongPtr(m_windowHandle, GWLP_USERDATA, (LONG_PTR)this);
+    SetWindowLongPtr(m_windowHandle, GWLP_USERDATA, reinterpret_cast<LONG_PTR>(this));
 
     // Create the OpenGL Context
     m_deviceContextHandle = GetDC(m_windowHandle);

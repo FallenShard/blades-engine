@@ -7,6 +7,11 @@ ShaderProgram::ShaderProgram()
     m_identifier = glCreateProgram();
 }
 
+ShaderProgram::~ShaderProgram()
+{
+    m_shaders.clear();
+}
+
 void ShaderProgram::attachShader(Shader& shader)
 {
     // Attach the shader to this program
@@ -30,6 +35,15 @@ void ShaderProgram::detachShader(Shader& shader)
         m_shaders.erase(foundShader);
 }
 
+void ShaderProgram::compile()
+{
+    // Compile all attached shaders
+    for (auto& shader : m_shaders)
+    {
+        shader.second->compile();
+    }
+}
+
 void ShaderProgram::link()
 {
     // Link the program
@@ -39,6 +53,11 @@ void ShaderProgram::link()
 void ShaderProgram::use()
 {
     glUseProgram(m_identifier);
+}
+
+void ShaderProgram::release()
+{
+    glUseProgram(0);
 }
 
 bool ShaderProgram::checkLinkStatus()
@@ -72,10 +91,27 @@ bool ShaderProgram::checkLinkStatus()
     return hasError;
 }
 
-ShaderProgram::~ShaderProgram()
+GLint ShaderProgram::getUniformAttribute(std::string name)
 {
-    m_shaders.clear();
+    // Query the location from OpenGL
+    GLint location = glGetUniformLocation(m_identifier, name.c_str());
+
+    // Insert the name and location into attribute hash table
+    m_uniformAttributes[name] = location;
+
+    return location;
 }
+
+void ShaderProgram::setUniformAttribute(std::string name, GLfloat value)
+{
+    glUniform1f(m_uniformAttributes[name], value);
+}
+
+void ShaderProgram::setUniformAttribute(std::string name, GLfloat x, GLfloat y)
+{
+    glUniform2f(m_uniformAttributes[name], x, y);
+}
+
 
 GLuint ShaderProgram::getProgramId() const
 {

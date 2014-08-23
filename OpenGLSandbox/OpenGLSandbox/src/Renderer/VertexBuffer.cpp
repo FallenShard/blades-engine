@@ -1,4 +1,5 @@
 #include <fstream>
+#include <cassert>
 #include "Renderer/VertexBuffer.h"
 
 
@@ -23,7 +24,13 @@ void VertexBuffer::bind() const
     glBindBuffer(m_targetType, m_id);
 }
 
-void VertexBuffer::setData(GLfloat* vertices, int size, int packSize)
+void VertexBuffer::release(GLenum targetType)
+{
+    glBindBuffer(targetType, 0);
+}
+
+
+void VertexBuffer::create(GLfloat* vertices, int size, int packSize)
 {
     m_packSize = packSize;
 
@@ -33,7 +40,7 @@ void VertexBuffer::setData(GLfloat* vertices, int size, int packSize)
     glBufferData(m_targetType, sizeof(GLfloat) * m_vertices.size(), m_vertices.data(), m_drawType);
 }
 
-void VertexBuffer::setData(std::vector<GLfloat> vertices, int packSize)
+void VertexBuffer::create(std::vector<GLfloat> vertices, int packSize)
 {
     m_packSize = packSize;
 
@@ -60,4 +67,11 @@ void VertexBuffer::loadFromFile(std::string fileName, int packSize)
     }
 
     glBufferData(m_targetType, sizeof(GLfloat) * m_vertices.size(), m_vertices.data(), m_drawType);
+}
+
+GLfloat& VertexBuffer::operator[](unsigned int index)
+{
+    assert(index >= 0 && index < m_vertices.size());
+    
+    return m_vertices[index];
 }

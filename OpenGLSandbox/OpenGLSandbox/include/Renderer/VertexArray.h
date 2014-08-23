@@ -21,8 +21,12 @@ public:
     void attachBuffers(std::vector<VertexBuffer*> buffers);
 
     void bind();
+    static void release();
 
     GLuint getId() const;
+
+    void setPrimitiveType(GLenum primitiveType);
+    GLenum getPrimitiveType() const;
 
     void render();
 

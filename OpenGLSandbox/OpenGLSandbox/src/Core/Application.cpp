@@ -36,6 +36,8 @@ void Application::run()
     Timer frameTimer;
     __int64 timeSinceLastUpdate = 0;
 
+    m_renderer->resize(windowWidth, windowHeight);
+
     while (m_window->isOpen())
     {
         __int64 timeDelta = frameTimer.restart();

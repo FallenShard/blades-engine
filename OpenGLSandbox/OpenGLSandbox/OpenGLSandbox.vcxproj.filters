@@ -141,9 +141,12 @@
     </None>
     <None Include="res\circularMotion.vert" />
     <None Include="res\circularMotion.frag" />
+    <None Include="res\manualPerspective.vert" />
   </ItemGroup>
   <ItemGroup>
     <Text Include="res\TrianglePositionData.txt" />
     <Text Include="res\TriangleColorData.txt" />
+    <Text Include="res\PrismPosData.txt" />
+    <Text Include="res\PrismColorData.txt" />
   </ItemGroup>
 </Project>

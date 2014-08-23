@@ -12,17 +12,19 @@ public:
 
     ~VertexBuffer();
 
-    void setData(GLfloat* vertices, int size, int packSize);
-    void setData(std::vector<GLfloat> vertices, int packSize);
+    void create(GLfloat* vertices, int size, int packSize);
+    void create(std::vector<GLfloat> vertices, int packSize);
     void loadFromFile(std::string fileName, int packSize);
 
     void bind() const;
+    static void release(GLenum targetType);
+ 
 
     GLsizei getSize() const;
 
     GLuint getId() const;
 
-    GLfloat& operator[](int index);
+    GLfloat& operator[](unsigned int index);
 
 private:
     void create();
