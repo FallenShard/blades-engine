@@ -112,6 +112,11 @@ void ShaderProgram::setUniformAttribute(std::string name, GLfloat x, GLfloat y)
     glUniform2f(m_uniformAttributes[name], x, y);
 }
 
+void ShaderProgram::setUniformAttribute(std::string name, GLsizei count, GLboolean transpose, const GLfloat* values)
+{
+    glUniformMatrix4fv(m_uniformAttributes[name], count, transpose, values);
+}
+
 
 GLuint ShaderProgram::getProgramId() const
 {

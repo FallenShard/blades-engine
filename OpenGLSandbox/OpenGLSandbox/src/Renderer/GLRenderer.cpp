@@ -167,15 +167,22 @@ void GLRenderer::init()
     m_vertexAttributes.push_back(prismColorAttribute);
 
     m_defaultProgram.getUniformAttribute("offset");
-    m_defaultProgram.getUniformAttribute("frustumScale");
-    m_defaultProgram.getUniformAttribute("zNear");
-    m_defaultProgram.getUniformAttribute("zFar");
+    m_defaultProgram.getUniformAttribute("perspectiveMatrix");
+
+    float theMatrix[16];
+    memset(theMatrix, 0, sizeof(float) * 16);
+
+    float fFrustumScale = 1.f, fzFar = 3.f, fzNear = 1.f;
+
+    theMatrix[0] = fFrustumScale;
+    theMatrix[5] = fFrustumScale;
+    theMatrix[10] = (fzFar + fzNear) / (fzNear - fzFar);
+    theMatrix[14] = (2 * fzFar * fzNear) / (fzNear - fzFar);
+    theMatrix[11] = -1.0f;
 
     m_defaultProgram.use();
     m_defaultProgram.setUniformAttribute("offset", 0.5f, 0.5f);
-    m_defaultProgram.setUniformAttribute("frustumScale", 1.f);
-    m_defaultProgram.setUniformAttribute("zNear", 1.f);
-    m_defaultProgram.setUniformAttribute("zFar", 3.f);
+    m_defaultProgram.setUniformAttribute("perspectiveMatrix", 1, GL_FALSE, theMatrix);
 
     VertexBuffer::release(GL_ARRAY_BUFFER);
     VertexArray::release();
