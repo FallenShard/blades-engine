@@ -4,8 +4,6 @@
 #include <map>
 #include "Renderer/Shader.h"
 
-
-
 class ShaderProgram
 {
 public:
@@ -26,6 +24,7 @@ public:
 
     void setUniformAttribute(std::string name, GLfloat value);
     void setUniformAttribute(std::string name, GLfloat x, GLfloat y);
+    void setUniformAttribute(std::string name, GLfloat x, GLfloat y, GLfloat z);
     void setUniformAttribute(std::string name, GLsizei count, GLboolean transpose, const GLfloat* values);
 
     GLuint getProgramId() const;

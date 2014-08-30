@@ -24,7 +24,7 @@ void VertexArray::create()
     glGenVertexArrays(1, &m_id);
 }
 
-void VertexArray::attachBuffer(VertexBuffer& buffer)
+void VertexArray::attachBuffer(VertexBufferF& buffer)
 {
     m_buffers.push_back(&buffer);
 
@@ -32,7 +32,7 @@ void VertexArray::attachBuffer(VertexBuffer& buffer)
         m_size = buffer.getSize();
 }
 
-void VertexArray::attachBuffers(std::vector<VertexBuffer*> buffers)
+void VertexArray::attachBuffers(std::vector<VertexBufferF*> buffers)
 {
     m_buffers.insert(m_buffers.end(), buffers.begin(), buffers.end());
 

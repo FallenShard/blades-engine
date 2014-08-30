@@ -2,7 +2,7 @@
 #define GL_RENDERER_H
 
 #include <vector>
-#include <unordered_map>
+#include <map>
 
 #include "OpenGL.h"
 #include "Renderer/ShaderProgram.h"
@@ -18,8 +18,6 @@ public:
     GLRenderer(int width, int height);
     ~GLRenderer();
 
-    
-
     void update(float timeDelta);
     void draw();
 
@@ -27,17 +25,26 @@ public:
 
 private:
     void init();
-    void shaderSetup();
 
     float m_aspectRatio;
-    ShaderProgram m_shaderProgram;
-    ShaderProgram m_defaultProgram;
 
-    std::vector<VertexArray*> m_vertexArrays;
-    std::vector<VertexBuffer*> m_vertexBuffers;
+    std::map<std::string, ShaderProgram*> m_shaderPrograms;
+    std::map<std::string, VertexArray*> m_vertexArrays;
+    std::map<std::string, VertexBufferF*> m_vertexBuffers;
+    std::map<std::string, VertexBufferS*> m_indexBuffers;
     std::vector<VertexAttribute*> m_vertexAttributes;
     
     float m_timePassed;
+
+    void prepareTriangleScene();
+    void drawTriangleScene();
+    
+    void preparePrismScene();
+    void drawPrismScene();
+
+    void prepareOverlapScene();
+    void drawOverlapScene();
+
 };
 
 

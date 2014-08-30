@@ -2,10 +2,11 @@
 #include <cassert>
 #include "Renderer/VertexBuffer.h"
 
-
+/*
 VertexBuffer::VertexBuffer(GLenum targetType, GLenum drawType)
     : m_targetType(targetType)
-    , m_drawType(drawType)
+    , m_usageType(drawType)
+    , m_vertexNumber(0)
 {
     create();
 }
@@ -29,7 +30,6 @@ void VertexBuffer::release(GLenum targetType)
     glBindBuffer(targetType, 0);
 }
 
-
 void VertexBuffer::create(GLfloat* vertices, int size, int packSize)
 {
     m_packSize = packSize;
@@ -37,7 +37,7 @@ void VertexBuffer::create(GLfloat* vertices, int size, int packSize)
     for (int i = 0; i < size; i++)
         m_vertices.push_back(vertices[i]);
 
-    glBufferData(m_targetType, sizeof(GLfloat) * m_vertices.size(), m_vertices.data(), m_drawType);
+    glBufferData(m_targetType, sizeof(GLfloat) * m_vertices.size(), m_vertices.data(), m_usageType);
 }
 
 void VertexBuffer::create(std::vector<GLfloat> vertices, int packSize)
@@ -46,7 +46,7 @@ void VertexBuffer::create(std::vector<GLfloat> vertices, int packSize)
 
     m_vertices = vertices;
 
-    glBufferData(m_targetType, sizeof(GLfloat) * m_vertices.size(), m_vertices.data(), m_drawType);
+    glBufferData(m_targetType, sizeof(GLfloat) * m_vertices.size(), m_vertices.data(), m_usageType);
 }
 
 GLsizei VertexBuffer::getSize() const
@@ -60,13 +60,17 @@ void VertexBuffer::loadFromFile(std::string fileName, int packSize)
 
     std::ifstream inputFile(fileName, std::ios::in);
 
+    // Read in number of vertices
+    inputFile >> m_vertexNumber;
+
+    // Load the vertex data
     float vertexData;
     while (inputFile >> vertexData)
     {
         m_vertices.push_back(vertexData);
     }
 
-    glBufferData(m_targetType, sizeof(GLfloat) * m_vertices.size(), m_vertices.data(), m_drawType);
+    glBufferData(m_targetType, sizeof(GLfloat) * m_vertices.size(), m_vertices.data(), m_usageType);
 }
 
 GLfloat& VertexBuffer::operator[](unsigned int index)
@@ -74,4 +78,4 @@ GLfloat& VertexBuffer::operator[](unsigned int index)
     assert(index >= 0 && index < m_vertices.size());
     
     return m_vertices[index];
-}
+}*/

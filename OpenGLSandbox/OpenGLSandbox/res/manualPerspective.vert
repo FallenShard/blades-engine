@@ -11,9 +11,7 @@ uniform mat4 perspectiveMatrix;
 
 void main()
 {
-
     vec4 cameraPos = vPosition + vec4(offset.x, offset.y, 0.0, 0.0);
-
 
     gl_Position = perspectiveMatrix * cameraPos;
     outColor = vColor;

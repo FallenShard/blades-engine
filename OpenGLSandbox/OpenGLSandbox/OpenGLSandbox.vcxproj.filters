@@ -142,11 +142,14 @@
     <None Include="res\circularMotion.vert" />
     <None Include="res\circularMotion.frag" />
     <None Include="res\manualPerspective.vert" />
+    <None Include="include\Renderer\VertexBuffer.inl" />
+    <None Include="res\manualOverlap.vert" />
   </ItemGroup>
   <ItemGroup>
     <Text Include="res\TrianglePositionData.txt" />
     <Text Include="res\TriangleColorData.txt" />
     <Text Include="res\PrismPosData.txt" />
     <Text Include="res\PrismColorData.txt" />
+    <Text Include="res\OverlapData.txt" />
   </ItemGroup>
 </Project>
