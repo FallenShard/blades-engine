@@ -9,6 +9,7 @@
 #include "Renderer/Shader.h"
 #include "Renderer/VertexArray.h"
 #include "Renderer/VertexBuffer.h"
+#include "Renderer/IndexBuffer.h"
 #include "Renderer/VertexAttribute.h"
 
 class GLRenderer
@@ -30,8 +31,8 @@ private:
 
     std::map<std::string, ShaderProgram*> m_shaderPrograms;
     std::map<std::string, VertexArray*> m_vertexArrays;
-    std::map<std::string, VertexBufferF*> m_vertexBuffers;
-    std::map<std::string, VertexBufferS*> m_indexBuffers;
+    std::map<std::string, VertexBuffer*> m_vertexBuffers;
+    std::map<std::string, IndexBuffer*> m_indexBuffers;
     std::vector<VertexAttribute*> m_vertexAttributes;
     
     float m_timePassed;
@@ -44,7 +45,6 @@ private:
 
     void prepareOverlapScene();
     void drawOverlapScene();
-
 };
 
 

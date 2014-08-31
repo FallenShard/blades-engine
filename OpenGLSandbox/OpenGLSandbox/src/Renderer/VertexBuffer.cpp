@@ -2,22 +2,16 @@
 #include <cassert>
 #include "Renderer/VertexBuffer.h"
 
-/*
 VertexBuffer::VertexBuffer(GLenum targetType, GLenum drawType)
     : m_targetType(targetType)
     , m_usageType(drawType)
-    , m_vertexNumber(0)
+    , m_dataPerVertex(0)
 {
-    create();
+    glGenBuffers(1, &m_id);
 }
 
 VertexBuffer::~VertexBuffer()
 {
-}
-
-void VertexBuffer::create()
-{
-    glGenBuffers(1, &m_id);
 }
 
 void VertexBuffer::bind() const
@@ -30,52 +24,61 @@ void VertexBuffer::release(GLenum targetType)
     glBindBuffer(targetType, 0);
 }
 
-void VertexBuffer::create(GLfloat* vertices, int size, int packSize)
+void VertexBuffer::release(const VertexBuffer& buffer)
 {
-    m_packSize = packSize;
-
-    for (int i = 0; i < size; i++)
-        m_vertices.push_back(vertices[i]);
-
-    glBufferData(m_targetType, sizeof(GLfloat) * m_vertices.size(), m_vertices.data(), m_usageType);
+    glBindBuffer(buffer.m_targetType, 0);
 }
 
-void VertexBuffer::create(std::vector<GLfloat> vertices, int packSize)
+void VertexBuffer::create(GLfloat* vertices, int size)
 {
-    m_packSize = packSize;
+    for (int i = 0; i < size; i++)
+        m_vertexData.push_back(vertices[i]);
 
-    m_vertices = vertices;
+    glBufferData(m_targetType, sizeof(GLfloat) * m_vertexData.size(), m_vertexData.data(), m_usageType);
+}
 
-    glBufferData(m_targetType, sizeof(GLfloat) * m_vertices.size(), m_vertices.data(), m_usageType);
+void VertexBuffer::create(std::vector<GLfloat> vertices)
+{
+    m_vertexData = vertices;
+
+    glBufferData(m_targetType, sizeof(GLfloat) * m_vertexData.size(), m_vertexData.data(), m_usageType);
+}
+
+void VertexBuffer::loadFromFile(std::string fileName)
+{
+    std::ifstream inputFile(fileName, std::ios::in);
+
+    // Load the vertex data
+    GLfloat vertexData;
+    while (inputFile >> vertexData)
+    {
+        m_vertexData.push_back(vertexData);
+    }
+
+    glBufferData(m_targetType, sizeof(GLfloat) * m_vertexData.size(), m_vertexData.data(), m_usageType);
+}
+
+void VertexBuffer::registerAttributeSize(int dataPerVertexAttribute)
+{
+    m_dataPerVertex += dataPerVertexAttribute;
 }
 
 GLsizei VertexBuffer::getSize() const
 {
-    return m_vertices.size();
+    return m_vertexData.size();
 }
 
-void VertexBuffer::loadFromFile(std::string fileName, int packSize)
+GLsizei VertexBuffer::getVertexAmount() const
 {
-    m_packSize = packSize;
+    if (m_dataPerVertex == 0)
+        return -1;
 
-    std::ifstream inputFile(fileName, std::ios::in);
-
-    // Read in number of vertices
-    inputFile >> m_vertexNumber;
-
-    // Load the vertex data
-    float vertexData;
-    while (inputFile >> vertexData)
-    {
-        m_vertices.push_back(vertexData);
-    }
-
-    glBufferData(m_targetType, sizeof(GLfloat) * m_vertices.size(), m_vertices.data(), m_usageType);
+    return m_vertexData.size() / m_dataPerVertex;
 }
 
 GLfloat& VertexBuffer::operator[](unsigned int index)
 {
-    assert(index >= 0 && index < m_vertices.size());
+    assert(index >= 0 && index < m_vertexData.size());
     
-    return m_vertices[index];
-}*/
+    return m_vertexData[index];
+}

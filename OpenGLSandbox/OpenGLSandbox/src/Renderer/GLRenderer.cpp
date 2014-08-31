@@ -9,7 +9,7 @@ namespace
         float theMatrix[16];
         memset(theMatrix, 0, sizeof(float) * 16);
 
-        float fFrustumScale = 1.f, fzFar = 3.f, fzNear = 1.f;
+        float fFrustumScale = 1.f, fzFar = 5.f, fzNear = 1.f;
 
         theMatrix[0] = fFrustumScale;
         theMatrix[5] = fFrustumScale;
@@ -20,21 +20,6 @@ namespace
         program.use();
         program.setUniformAttribute("perspectiveMatrix", 1, GL_FALSE, theMatrix);
     }
-
-    GLshort indexData[] =
-    {
-        0, 2, 1,
-        3, 2, 0,
-
-        4, 5, 6,
-        6, 7, 4,
-
-        8, 9, 10,
-        11, 13, 12,
-
-        14, 16, 15,
-        17, 16, 14,
-    };
 }
 
 GLRenderer::GLRenderer()
@@ -76,27 +61,34 @@ GLRenderer::~GLRenderer()
 
 void GLRenderer::init()
 {
-    //prepareTriangleScene();
-    //preparePrismScene();
+    prepareTriangleScene();
+    preparePrismScene();
     prepareOverlapScene();
     
-
+    
     glEnable(GL_CULL_FACE);
     glCullFace(GL_BACK);
     glFrontFace(GL_CW);
+    
+    glEnable(GL_DEPTH_TEST);
+    glDepthMask(GL_TRUE);
+    glDepthFunc(GL_LEQUAL);
+    glDepthRange(0.0f, 1.0f);
 
     glClearColor(0.f, 0.f, 0.3f, 1.f);
+    glClearDepth(1.0f);
 }
 
 void GLRenderer::draw()
 {
-    glClear(GL_COLOR_BUFFER_BIT);
+    
+    glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
-    //drawTriangleScene();
-    //drawPrismScene();
+    drawTriangleScene();
+    drawPrismScene();
     drawOverlapScene();
 
-    VertexBufferF::release(GL_ARRAY_BUFFER);
+    VertexBuffer::release(GL_ARRAY_BUFFER);
     VertexArray::release();
     ShaderProgram::release();
 }
@@ -167,36 +159,26 @@ void GLRenderer::prepareTriangleScene()
     m_vertexArrays["Triangles"] = new VertexArray(GL_TRIANGLES);
     m_vertexArrays["Triangles"]->bind();
 
-    VertexBufferF* positionBuffer = new VertexBufferF(GL_ARRAY_BUFFER, GL_STREAM_DRAW);
+    VertexBuffer* positionBuffer = new VertexBuffer(GL_ARRAY_BUFFER, GL_STREAM_DRAW);
     positionBuffer->bind();
-    positionBuffer->loadFromFile("res/TrianglePositionData.txt", 2);
+    positionBuffer->loadFromFile("res/TrianglePositionData.txt");
     m_vertexBuffers["TrianglePos"] = positionBuffer;
 
-    VertexAttribute* posAttribute = new VertexAttribute();
-    posAttribute->name = "vPosition";
-    posAttribute->location = glGetAttribLocation(program->getProgramId(), posAttribute->name.c_str());
-    posAttribute->normalized = GL_FALSE;
-    posAttribute->size = 2;
-    posAttribute->offset = (GLvoid*)0;
-    posAttribute->stride = 0;
-    posAttribute->type = GL_FLOAT;
+    VertexAttribute* posAttribute = new VertexAttribute("vPosition", 2, GL_FLOAT, GL_FALSE, 0, 0);
+    posAttribute->locate(program->getProgramId());
     posAttribute->enable();
+    positionBuffer->registerAttributeSize(posAttribute->size);
     m_vertexAttributes.push_back(posAttribute);
 
-    VertexBufferF* colorBuffer = new VertexBufferF(GL_ARRAY_BUFFER, GL_STREAM_DRAW);
+    VertexBuffer* colorBuffer = new VertexBuffer(GL_ARRAY_BUFFER, GL_STREAM_DRAW);
     colorBuffer->bind();
-    colorBuffer->loadFromFile("res/TriangleColorData.txt", 4);
+    colorBuffer->loadFromFile("res/TriangleColorData.txt");
     m_vertexBuffers["TriangleColor"] = colorBuffer;
 
-    VertexAttribute* colorAttribute = new VertexAttribute();
-    colorAttribute->name = "vColor";
-    colorAttribute->location = glGetAttribLocation(program->getProgramId(), colorAttribute->name.c_str());
-    colorAttribute->normalized = GL_FALSE;
-    colorAttribute->size = 4;
-    colorAttribute->offset = (GLvoid*)0;
-    colorAttribute->stride = 0;
-    colorAttribute->type = GL_FLOAT;
+    VertexAttribute* colorAttribute = new VertexAttribute("vColor", 4, GL_FLOAT, GL_FALSE, 0, 0);
+    colorAttribute->locate(program->getProgramId());
     colorAttribute->enable();
+    colorBuffer->registerAttributeSize(colorAttribute->size);
     m_vertexAttributes.push_back(colorAttribute);
 
     program->getUniformAttribute("time");
@@ -207,7 +189,7 @@ void GLRenderer::prepareTriangleScene()
     program->use();
     program->setUniformAttribute("screenHeight", 600);
 
-    VertexBufferF::release(GL_ARRAY_BUFFER);
+    VertexBuffer::release(GL_ARRAY_BUFFER);
     ShaderProgram::release();
     VertexArray::release();
 }
@@ -217,14 +199,16 @@ void GLRenderer::drawTriangleScene()
     // Triangles
     VertexArray* vArray = m_vertexArrays["Triangles"];
     ShaderProgram* program = m_shaderPrograms["Triangles"];
+    VertexBuffer* vBuffer = m_vertexBuffers["TrianglePos"];
     vArray->bind();
     program->use();
 
+    GLsizei vertexCount = vBuffer->getVertexAmount();
     program->setUniformAttribute("time", m_timePassed);
-    glDrawArrays(vArray->getPrimitiveType(), 0, 3);
+    glDrawArrays(vArray->getPrimitiveType(), 0, vertexCount);
 
     program->setUniformAttribute("time", m_timePassed + 4.f / 2);
-    glDrawArrays(vArray->getPrimitiveType(), 0, 3);
+    glDrawArrays(vArray->getPrimitiveType(), 0, vertexCount);
 }
 
 void GLRenderer::preparePrismScene()
@@ -251,36 +235,26 @@ void GLRenderer::preparePrismScene()
     m_vertexArrays["Prism"] = new VertexArray(GL_TRIANGLES);
     m_vertexArrays["Prism"]->bind();
 
-    VertexBufferF* prismPosBuffer = new VertexBufferF(GL_ARRAY_BUFFER, GL_STATIC_DRAW);
+    VertexBuffer* prismPosBuffer = new VertexBuffer(GL_ARRAY_BUFFER, GL_STATIC_DRAW);
     prismPosBuffer->bind();
-    prismPosBuffer->loadFromFile("res/PrismPosData.txt", 4);
+    prismPosBuffer->loadFromFile("res/PrismPosData.txt");
     m_vertexBuffers["PrismPos"] = prismPosBuffer;
 
-    VertexAttribute* prismPosAttribute = new VertexAttribute();
-    prismPosAttribute->name = "vPosition";
-    prismPosAttribute->location = glGetAttribLocation(program->getProgramId(), prismPosAttribute->name.c_str());
-    prismPosAttribute->normalized = GL_FALSE;
-    prismPosAttribute->size = 4;
-    prismPosAttribute->offset = (GLvoid*)0;
-    prismPosAttribute->stride = 0;
-    prismPosAttribute->type = GL_FLOAT;
+    VertexAttribute* prismPosAttribute = new VertexAttribute("vPosition", 4, GL_FLOAT, GL_FALSE, 0, 0);
+    prismPosAttribute->locate(program->getProgramId());
     prismPosAttribute->enable();
+    prismPosBuffer->registerAttributeSize(prismPosAttribute->size);
     m_vertexAttributes.push_back(prismPosAttribute);
 
-    VertexBufferF* prismColorBuffer = new VertexBufferF(GL_ARRAY_BUFFER, GL_STATIC_DRAW);
+    VertexBuffer* prismColorBuffer = new VertexBuffer(GL_ARRAY_BUFFER, GL_STATIC_DRAW);
     prismColorBuffer->bind();
-    prismColorBuffer->loadFromFile("res/PrismColorData.txt", 4);
+    prismColorBuffer->loadFromFile("res/PrismColorData.txt");
     m_vertexBuffers["PrismColor"] = prismColorBuffer;
 
-    VertexAttribute* prismColorAttribute = new VertexAttribute();
-    prismColorAttribute->name = "vColor";
-    prismColorAttribute->location = glGetAttribLocation(program->getProgramId(), prismColorAttribute->name.c_str());
-    prismColorAttribute->normalized = GL_FALSE;
-    prismColorAttribute->size = 4;
-    prismColorAttribute->offset = (GLvoid*)0;
-    prismColorAttribute->stride = 0;
-    prismColorAttribute->type = GL_FLOAT;
+    VertexAttribute* prismColorAttribute = new VertexAttribute("vColor", 4, GL_FLOAT, GL_FALSE, 0, 0);
+    prismColorAttribute->locate(program->getProgramId());
     prismColorAttribute->enable();
+    prismColorBuffer->registerAttributeSize(prismColorAttribute->size);
     m_vertexAttributes.push_back(prismColorAttribute);
 
     setupDefaultPerspectiveCamera(*program);
@@ -288,7 +262,7 @@ void GLRenderer::preparePrismScene()
     program->setUniformAttribute("offset", 0.5f, 0.5f);
 
 
-    VertexBufferF::release(GL_ARRAY_BUFFER);
+    VertexBuffer::release(GL_ARRAY_BUFFER);
     ShaderProgram::release();
     VertexArray::release();
 }
@@ -298,16 +272,18 @@ void GLRenderer::drawPrismScene()
     // Prism
     VertexArray* vArray = m_vertexArrays["Prism"];
     ShaderProgram* program = m_shaderPrograms["Prism"];
+    VertexBuffer* vBuffer = m_vertexBuffers["PrismPos"];
+
     vArray->bind();
     program->use();
 
-    glDrawArrays(vArray->getPrimitiveType(), 0, 36);
+    glDrawArrays(vArray->getPrimitiveType(), 0, vBuffer->getVertexAmount());
 }
 
 void GLRenderer::prepareOverlapScene()
 {
     Shader vShader(Shader::Vert);
-    vShader.loadFromFile("res/manualPerspective.vert");
+    vShader.loadFromFile("res/manualOverlap.vert");
     vShader.checkCompileStatus();
 
     Shader fShader(Shader::Frag);
@@ -326,78 +302,90 @@ void GLRenderer::prepareOverlapScene()
     
     setupDefaultPerspectiveCamera(*program);
     program->getUniformAttribute("offset");
+
+    GLshort indexData[] =
+    {
+        // Object 1
+        0, 2, 1,
+        3, 2, 0,
+
+        4, 5, 6,
+        6, 7, 4,
+
+        8, 9, 10,
+        11, 13, 12,
+
+        14, 16, 15,
+        17, 16, 14,
+
+        // Object 2
+        18, 20, 19, 
+        21, 20, 18,
+
+        22, 23, 24, 
+        24, 25, 22,
+
+        26, 27, 28, 
+        29, 31, 30,
+
+        32, 34, 33, 
+        35, 34, 32
+    };
     
     // Indexed overlap scene
     // Horizontal object
-    VertexBufferF* vertexBuffer = new VertexBufferF(GL_ARRAY_BUFFER, GL_STATIC_DRAW);
+    VertexBuffer* vertexBuffer = new VertexBuffer(GL_ARRAY_BUFFER, GL_STATIC_DRAW);
     vertexBuffer->bind();
-    vertexBuffer->loadFromFile("res/OverlapData.txt", 3);
+    vertexBuffer->loadFromFile("res/OverlapData.txt");
     m_vertexBuffers["Overlap"] = vertexBuffer;
-    VertexBufferF::release(*vertexBuffer);
+    VertexBuffer::release(*vertexBuffer);
     
-    VertexBufferS* indexBuffer = new VertexBufferS(GL_ELEMENT_ARRAY_BUFFER, GL_STATIC_DRAW);
+    IndexBuffer* indexBuffer = new IndexBuffer(GL_ELEMENT_ARRAY_BUFFER, GL_STATIC_DRAW);
     indexBuffer->bind();
-    indexBuffer->create(indexData, sizeof(indexData), 1);
+    indexBuffer->create(indexData, sizeof(indexData) / sizeof(GLshort));
     m_indexBuffers["Overlap"] = indexBuffer;
-    VertexBufferS::release(*indexBuffer);
+    IndexBuffer::release(*indexBuffer);
         
     m_vertexArrays["Overlap"] = new VertexArray(GL_TRIANGLES);
     m_vertexArrays["Overlap"]->bind();
-
-    GLsizei numberOfVertices = vertexBuffer->getSize();
-    GLint colorOffset = sizeof(GLfloat) * 3 * numberOfVertices;
     
     vertexBuffer->bind();
+
     VertexAttribute* posAttrib = new VertexAttribute("vPosition", 3, GL_FLOAT, GL_FALSE, 0, 0);
+    vertexBuffer->registerAttributeSize(posAttrib->size);
     posAttrib->locate(program->getProgramId());
     posAttrib->enable();
+    m_vertexAttributes.push_back(posAttrib);
     
-    VertexAttribute* colAttrib = new VertexAttribute("vColor", 4, GL_FLOAT, GL_FALSE, 0, colorOffset);
+    VertexAttribute* colAttrib = new VertexAttribute("vColor", 4, GL_FLOAT, GL_FALSE, 0, -1);
+    vertexBuffer->registerAttributeSize(colAttrib->size);
     colAttrib->locate(program->getProgramId());
-    colAttrib->enable();
-
-    indexBuffer->bind();
-      
-    VertexArray::release();
-
-    m_vertexArrays["Second"] = new VertexArray(GL_TRIANGLES);
-    m_vertexArrays["Second"]->bind();
-
-    vertexBuffer->bind();
-
-    GLint posDataOffset = sizeof(float) * 3 * (numberOfVertices / 2);
-    colorOffset += sizeof(float) * 4 * (numberOfVertices / 2);
-
-    posAttrib->offset = (const GLvoid*)posDataOffset;
-    posAttrib->enable();
-
+    GLint colorOffset = sizeof(GLfloat) * 3 * vertexBuffer->getVertexAmount();
     colAttrib->offset = (const GLvoid*)colorOffset;
     colAttrib->enable();
-    
+    m_vertexAttributes.push_back(colAttrib);
     indexBuffer->bind();
-
-    VertexBufferF::release(*vertexBuffer);
+      
     VertexArray::release();
 }
 
 void GLRenderer::drawOverlapScene()
 {
-    // Prism
+    // Overlap Scene
     VertexArray* vArray = m_vertexArrays["Overlap"];
-    VertexArray* vArray2 = m_vertexArrays["Second"];
     ShaderProgram* program = m_shaderPrograms["Overlap"];
     
     program->use();
 
-    GLsizei arrayCount = m_indexBuffers["Overlap"]->getSize();
+    GLsizei indexCount = m_indexBuffers["Overlap"]->getSize();
+    GLsizei vertexCount = m_vertexBuffers["Overlap"]->getVertexAmount();
 
     vArray->bind();
-    program->setUniformAttribute("offset", 0.0f, 0.0f, 0.0f);
-    glDrawElements(GL_TRIANGLES, arrayCount, GL_UNSIGNED_SHORT, 0);
+    program->setUniformAttribute("offset", 0.0f, 0.0f, -1.f);
+    glDrawElements(GL_TRIANGLES, indexCount, GL_UNSIGNED_SHORT, 0);
 
-    vArray2->bind();
-    program->setUniformAttribute("offset", 0.0f, 0.0f, -1.0f);
-    glDrawElements(GL_TRIANGLES, arrayCount, GL_UNSIGNED_SHORT, 0);
+    program->setUniformAttribute("offset", 0.0f, 0.0f, -1.f);
+    glDrawElementsBaseVertex(GL_TRIANGLES, indexCount, GL_UNSIGNED_SHORT, 0, vertexCount / 2);
 
     VertexArray::release();
     ShaderProgram::release();

@@ -17,8 +17,8 @@ public:
 
     ~VertexArray();
 
-    void attachBuffer(VertexBufferF& buffer);
-    void attachBuffers(std::vector<VertexBufferF*> buffers);
+    void attachBuffer(VertexBuffer& buffer);
+    void attachBuffers(std::vector<VertexBuffer*> buffers);
 
     void bind();
     static void release();
@@ -37,7 +37,7 @@ private:
     GLenum m_primitiveType;
     GLsizei m_size;
     std::map<std::string, GLuint> m_attributes;
-    std::vector<VertexBufferF*> m_buffers;
+    std::vector<VertexBuffer*> m_buffers;
 };
 
 

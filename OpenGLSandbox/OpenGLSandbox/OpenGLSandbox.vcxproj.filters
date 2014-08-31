@@ -79,6 +79,7 @@
     <ClCompile Include="src\Renderer\VertexArray.cpp" />
     <ClCompile Include="src\Renderer\VertexBuffer.cpp" />
     <ClCompile Include="src\Renderer\Vertex.cpp" />
+    <ClCompile Include="src\Renderer\IndexBuffer.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="include\Window\GLContext.h">
@@ -128,6 +129,7 @@
     <ClInclude Include="include\Renderer\VertexBuffer.h" />
     <ClInclude Include="include\Renderer\Vertex.h" />
     <ClInclude Include="include\Renderer\VertexAttribute.h" />
+    <ClInclude Include="include\Renderer\IndexBuffer.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include="include\Utils\Vector2D.inl">

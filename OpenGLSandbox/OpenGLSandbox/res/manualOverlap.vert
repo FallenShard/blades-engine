@@ -11,7 +11,7 @@ uniform vec3 offset;
 
 void main()
 {
-    vec4 cameraPos = vPosition;// + vec4(offset.x, offset.y, offset.z, 0.0);
+    vec4 cameraPos = vPosition + vec4(offset.x, offset.y, offset.z, 0.0);
 
     gl_Position = perspectiveMatrix * cameraPos;
     outColor = vColor;

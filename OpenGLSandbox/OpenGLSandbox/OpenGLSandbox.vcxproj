@@ -15,6 +15,7 @@
     <ClCompile Include="src\Core\Timer.cpp" />
     <ClCompile Include="src\main.cpp" />
     <ClCompile Include="src\Renderer\GLRenderer.cpp" />
+    <ClCompile Include="src\Renderer\IndexBuffer.cpp" />
     <ClCompile Include="src\Renderer\Shader.cpp" />
     <ClCompile Include="src\Renderer\ShaderProgram.cpp" />
     <ClCompile Include="src\Renderer\Vertex.cpp" />
@@ -32,6 +33,7 @@
     <ClInclude Include="include\Core\Timer.h" />
     <ClInclude Include="include\OpenGL.h" />
     <ClInclude Include="include\Renderer\GLRenderer.h" />
+    <ClInclude Include="include\Renderer\IndexBuffer.h" />
     <ClInclude Include="include\Renderer\Shader.h" />
     <ClInclude Include="include\Renderer\ShaderProgram.h" />
     <ClInclude Include="include\Renderer\Vertex.h" />
