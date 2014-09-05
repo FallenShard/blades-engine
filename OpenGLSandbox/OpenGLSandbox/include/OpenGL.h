@@ -4,6 +4,9 @@
 #include "GL/glew.h"
 #include "GL/wglew.h"
 
+#include "glm.hpp"
+#include "ext.hpp"
+
 #endif
 
 /*

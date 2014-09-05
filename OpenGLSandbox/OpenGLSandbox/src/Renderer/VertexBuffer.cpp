@@ -29,9 +29,9 @@ void VertexBuffer::release(const VertexBuffer& buffer)
     glBindBuffer(buffer.m_targetType, 0);
 }
 
-void VertexBuffer::create(GLfloat* vertices, int size)
+void VertexBuffer::create(GLfloat* vertices, unsigned int size)
 {
-    for (int i = 0; i < size; i++)
+    for (unsigned int i = 0; i < size; i++)
         m_vertexData.push_back(vertices[i]);
 
     glBufferData(m_targetType, sizeof(GLfloat) * m_vertexData.size(), m_vertexData.data(), m_usageType);

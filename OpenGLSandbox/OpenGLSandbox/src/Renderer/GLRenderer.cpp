@@ -1,4 +1,5 @@
 #include "Renderer/GLRenderer.h"
+#include "Window/Event.h"
 
 namespace
 {
@@ -9,7 +10,7 @@ namespace
         float theMatrix[16];
         memset(theMatrix, 0, sizeof(float) * 16);
 
-        float fFrustumScale = 1.f, fzFar = 5.f, fzNear = 1.f;
+        float fFrustumScale = 1.f, fzFar = 3.f, fzNear = 1.f;
 
         theMatrix[0] = fFrustumScale;
         theMatrix[5] = fFrustumScale;
@@ -61,9 +62,10 @@ GLRenderer::~GLRenderer()
 
 void GLRenderer::init()
 {
-    prepareTriangleScene();
-    preparePrismScene();
-    prepareOverlapScene();
+    //prepareTriangleScene();
+    //preparePrismScene();
+    //prepareOverlapScene();
+    prepareMotionScene();
     
     
     glEnable(GL_CULL_FACE);
@@ -84,13 +86,46 @@ void GLRenderer::draw()
     
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
-    drawTriangleScene();
-    drawPrismScene();
-    drawOverlapScene();
+    //drawTriangleScene();
+    //drawPrismScene();
+    //drawOverlapScene();
+    drawMotionScene();
 
     VertexBuffer::release(GL_ARRAY_BUFFER);
     VertexArray::release();
     ShaderProgram::release();
+}
+
+namespace
+{
+    bool DepthClamp = false;
+}
+
+void GLRenderer::handleEvents(const Event& event)
+{
+    switch (event.type)
+    {
+    case Event::KeyPressed:
+    {
+        switch (event.key.code)
+        {
+        case Keyboard::Space:
+        {
+            DepthClamp = !DepthClamp;
+
+            if (DepthClamp == true)
+                glEnable(GL_DEPTH_CLAMP);
+            else
+                glDisable(GL_DEPTH_CLAMP);
+        }
+
+        };
+
+        break;
+    }
+
+
+    };
 }
 
 void GLRenderer::update(float timeDelta)
@@ -317,19 +352,6 @@ void GLRenderer::prepareOverlapScene()
 
         14, 16, 15,
         17, 16, 14,
-
-        // Object 2
-        18, 20, 19, 
-        21, 20, 18,
-
-        22, 23, 24, 
-        24, 25, 22,
-
-        26, 27, 28, 
-        29, 31, 30,
-
-        32, 34, 33, 
-        35, 34, 32
     };
     
     // Indexed overlap scene
@@ -381,12 +403,225 @@ void GLRenderer::drawOverlapScene()
     GLsizei vertexCount = m_vertexBuffers["Overlap"]->getVertexAmount();
 
     vArray->bind();
-    program->setUniformAttribute("offset", 0.0f, 0.0f, -1.f);
+    program->setUniformAttribute("offset", 0.0f, 0.0f, 0.5f);
     glDrawElements(GL_TRIANGLES, indexCount, GL_UNSIGNED_SHORT, 0);
 
-    program->setUniformAttribute("offset", 0.0f, 0.0f, -1.f);
+    program->setUniformAttribute("offset", 0.0f, 0.0f, 0.5f);
     glDrawElementsBaseVertex(GL_TRIANGLES, indexCount, GL_UNSIGNED_SHORT, 0, vertexCount / 2);
 
     VertexArray::release();
     ShaderProgram::release();
 }
+
+namespace
+{
+    glm::mat4 cameraToClipMatrix;
+    glm::mat4 modelToCameraMatrix;
+
+    float CalcFrustumScale(float fovDegrees)
+    {
+        const float degToRad = 3.14159f / 180.f;
+        float fFovRad = fovDegrees * degToRad;
+        return 1.0f / tan(fFovRad / 2.0f);
+    }
+
+    float fFrustumScale = CalcFrustumScale(45.f);
+
+    struct Instance
+    {
+        typedef glm::vec3(*OffsetFunc)(float);
+
+        OffsetFunc CalcOffset;
+
+        glm::mat4 ConstructMatrix(float elapsedTime)
+        {
+            glm::mat4 theMat(1.0f);
+
+            theMat[3] = glm::vec4(CalcOffset(elapsedTime), 1.0f);
+
+            return theMat;
+        }
+    };
+    /*
+    Instance g_instanceList[] =
+    {
+    { StationaryOffset },
+    { OvalOffset },
+    { BottomCircleOffset }
+    };*/
+
+    Instance g_instanceList[3];
+
+
+
+    glm::vec3 StationaryOffset(float elapsedTime)
+    {
+        return glm::vec3(0.f, 0.f, -20.f);
+    }
+
+    glm::vec3 OvalOffset(float elapsedTime)
+    {
+        const float loopDuration = 3.f;
+        const float scale = 3.141592f * 2.f / loopDuration;
+
+        float currentTime = fmodf(elapsedTime, loopDuration);
+
+        return glm::vec3(cosf(currentTime * scale) * 4.f,
+            sinf(currentTime * scale) * 6.f, -20.f);
+    }
+
+    glm::vec3 BottomCircleOffset(float elapsedTime)
+    {
+        const float loopDuration = 12.f;
+        const float scale = 3.141592f * 2.f / loopDuration;
+
+        float currentTime = fmodf(elapsedTime, loopDuration);
+
+        return glm::vec3(cosf(currentTime * scale) * 5.f,
+            -3.5f,
+            sinf(currentTime * scale) * 5.f - 20.f);
+    }
+
+
+}
+
+void GLRenderer::prepareMotionScene()
+{
+    Shader vShader(Shader::Vert);
+    vShader.loadFromFile("res/motionVert.vert");
+    vShader.checkCompileStatus();
+
+    Shader fShader(Shader::Frag);
+    fShader.loadFromFile("res/default.frag");
+    fShader.checkCompileStatus();
+
+    // Create an accompanying shader program
+    ShaderProgram* program = new ShaderProgram();
+    m_shaderPrograms["Motion"] = program;
+    program->attachShader(vShader);
+    program->attachShader(fShader);
+    program->link();
+    program->checkLinkStatus();
+    program->detachShader(vShader);
+    program->detachShader(fShader);
+
+    program->getUniformAttribute("position");
+    program->getUniformAttribute("color");
+    program->getUniformAttribute("modelToCameraMatrix");
+    program->getUniformAttribute("cameraToClipMatrix");
+
+    float fzNear = 1.0f; float fzFar = 45.0f;
+
+    cameraToClipMatrix[0].x = fFrustumScale;
+    cameraToClipMatrix[1].y = fFrustumScale;
+    cameraToClipMatrix[2].z = (fzFar + fzNear) / (fzNear - fzFar);
+    cameraToClipMatrix[2].w = -1.0f;
+    cameraToClipMatrix[3].z = (2 * fzFar * fzNear) / (fzNear - fzFar);
+
+    program->use();
+    program->setUniformAttribute("cameraToClipMatrix", 1, GL_FALSE, glm::value_ptr(cameraToClipMatrix));
+    ShaderProgram::release();
+
+    GLfloat vertexData[] =
+    {
+        +1.0f, +1.0f, +1.0f,
+        -1.0f, -1.0f, +1.0f,
+        -1.0f, +1.0f, -1.0f,
+        +1.0f, -1.0f, -1.0f,
+
+        -1.0f, -1.0f, -1.0f,
+        +1.0f, +1.0f, -1.0f,
+        +1.0f, -1.0f, +1.0f,
+        -1.0f, +1.0f, +1.0f,
+
+        0.0f, 1.0f, 0.0f, 1.0f,
+        0.0f, 0.0f, 1.0f, 1.0f,
+        1.0f, 0.0f, 0.0f, 1.0f,
+        0.5f, 0.5f, 0.0f, 1.0f,
+
+        0.0f, 1.0f, 0.0f, 1.0f,
+        0.0f, 0.0f, 1.0f, 1.0f,
+        1.0f, 0.0f, 0.0f, 1.0f,
+        0.5f, 0.5f, 0.0f, 1.0f
+    };
+
+    GLshort indexData[] =
+    {
+        0, 1, 2,
+        1, 0, 3,
+        2, 3, 0,
+        3, 2, 1,
+
+        5, 4, 6,
+        4, 5, 7,
+        7, 6, 4,
+        6, 7, 5,
+    };
+
+    VertexBuffer* vBuffer = new VertexBuffer(GL_ARRAY_BUFFER, GL_STATIC_DRAW);
+    vBuffer->bind();
+    vBuffer->create(vertexData, sizeof(vertexData) / sizeof(float));
+    vBuffer->release(*vBuffer);
+    m_vertexBuffers["Motion"] = vBuffer;
+
+    IndexBuffer* indexBuffer = new IndexBuffer(GL_ELEMENT_ARRAY_BUFFER, GL_STATIC_DRAW);
+    indexBuffer->bind();
+    indexBuffer->create(indexData, sizeof(indexData) / sizeof(GLshort));
+    indexBuffer->release(*indexBuffer);
+    m_indexBuffers["Index"] = indexBuffer;
+
+    VertexArray* vArray = new VertexArray(GL_TRIANGLES);
+    vArray->bind();
+    m_vertexArrays["Motion"] = vArray;
+
+    vBuffer->bind();
+    VertexAttribute* posAttrib = new VertexAttribute("vPosition", 3, GL_FLOAT, GL_FALSE, 0, 0);
+    vBuffer->registerAttributeSize(posAttrib->size);
+    posAttrib->locate(program->getProgramId());
+    posAttrib->enable();
+    m_vertexAttributes.push_back(posAttrib);
+
+    GLsizei colorOffset = sizeof(GLfloat) * 3 * 8;
+    VertexAttribute* colorAttrib = new VertexAttribute("vColor", 4, GL_FLOAT, GL_FALSE, 0, colorOffset);
+    vBuffer->registerAttributeSize(colorAttrib->size);
+    colorAttrib->locate(program->getProgramId());
+    colorAttrib->enable();
+    m_vertexAttributes.push_back(colorAttrib);
+
+    indexBuffer->bind();
+    
+    VertexArray::release();
+
+    g_instanceList[0] = { StationaryOffset };
+    g_instanceList[1] = { OvalOffset };
+    g_instanceList[2] = { BottomCircleOffset };
+}
+
+
+
+void GLRenderer::drawMotionScene()
+{
+    glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+
+    ShaderProgram* program = m_shaderPrograms["Motion"];
+    VertexArray* vArray = m_vertexArrays["Motion"];
+    IndexBuffer* iBuffer = m_indexBuffers["Index"];
+
+    program->use();
+    vArray->bind();
+
+
+    for (int iLoop = 0; iLoop < 3; iLoop++)
+    {
+        Instance &currInst = g_instanceList[iLoop];
+        const glm::mat4 &transformMatrix = currInst.ConstructMatrix(m_timePassed);
+
+        program->setUniformAttribute("modelToCameraMatrix", 1, GL_FALSE, glm::value_ptr(transformMatrix));
+        glDrawElements(GL_TRIANGLES, iBuffer->getSize(), GL_UNSIGNED_SHORT, 0);
+    }
+}
+
+
+
+
+

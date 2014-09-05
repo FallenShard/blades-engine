@@ -66,6 +66,8 @@ void Application::processInput()
 
         if (event.type == Event::Resized)
             m_renderer->resize(event.size.width, event.size.height);
+
+        m_renderer->handleEvents(event);
     }
 }
 

@@ -12,6 +12,8 @@
 #include "Renderer/IndexBuffer.h"
 #include "Renderer/VertexAttribute.h"
 
+struct Event;
+
 class GLRenderer
 {
 public:
@@ -19,6 +21,7 @@ public:
     GLRenderer(int width, int height);
     ~GLRenderer();
 
+    void handleEvents(const Event& event);
     void update(float timeDelta);
     void draw();
 
@@ -45,6 +48,9 @@ private:
 
     void prepareOverlapScene();
     void drawOverlapScene();
+
+    void prepareMotionScene();
+    void drawMotionScene();
 };
 
 

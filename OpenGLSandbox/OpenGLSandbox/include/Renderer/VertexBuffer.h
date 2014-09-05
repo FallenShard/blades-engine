@@ -16,7 +16,7 @@ public:
     static void release(GLenum targetType);
     static void release(const VertexBuffer& vertexBuffer);
 
-    void create(GLfloat* vertices, int size);
+    void create(GLfloat* vertices, unsigned int size);
     void create(std::vector<GLfloat> vertices);
     void loadFromFile(std::string fileName);
 
