@@ -18,10 +18,10 @@ struct VertexAttribute
     {
     }
 
-    VertexAttribute(std::string name, GLint size, GLenum type, GLboolean normalized, GLsizei stride, GLint offset)
+    VertexAttribute(std::string name, GLint perVertexData, GLenum type, GLboolean normalized, GLsizei stride, GLint offset)
     {
         this->name = name;
-        this->size = size;
+        this->size = perVertexData;
         this->type = type;
         this->normalized = normalized;
         this->stride = stride;

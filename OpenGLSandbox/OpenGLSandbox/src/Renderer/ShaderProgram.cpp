@@ -4,30 +4,41 @@
 ShaderProgram::ShaderProgram()
 {
     // Create an identifier to recognize this program among others
-    m_identifier = glCreateProgram();
+    m_id = glCreateProgram();
 }
 
 ShaderProgram::~ShaderProgram()
 {
-    m_shaders.clear();
+    //m_shaders.clear();
 }
 
 void ShaderProgram::attachShader(Shader& shader)
 {
     // Attach the shader to this program
-    glAttachShader(m_identifier, shader.getShaderId());
+    glAttachShader(m_id, shader.getShaderId());
     
-    // Create and insert shader map element
-    std::pair<std::string, Shader*> attachedShader;
-    attachedShader.first = shader.getSourceFileName();
-    attachedShader.second = &shader;
-    m_shaders.insert(attachedShader);
+    // Add the shader to the map with its filename as key
+    m_shaders[shader.getSourceFileName()] = std::make_shared<Shader>(shader);
+}
+
+void ShaderProgram::attachShader(Shader::Type type, std::string sourceFileName)
+{
+    // Create a shader first
+    Shader shader(type);
+    shader.loadFromFile("res/" + sourceFileName);
+    shader.checkCompileStatus();
+
+    // Attach it to this program
+    glAttachShader(m_id, shader.getShaderId());
+
+    // Add the shader to the map
+    m_shaders[shader.getSourceFileName()] = std::make_shared<Shader>(shader);
 }
 
 void ShaderProgram::detachShader(Shader& shader)
 {
     // Detach the shader from this program
-    glDetachShader(m_identifier, shader.getShaderId());
+    glDetachShader(m_id, shader.getShaderId());
 
     // Remove the shader from current map
     auto foundShader = m_shaders.find(shader.getSourceFileName());
@@ -37,7 +48,6 @@ void ShaderProgram::detachShader(Shader& shader)
 
 void ShaderProgram::compile()
 {
-    // Compile all attached shaders
     for (auto& shader : m_shaders)
     {
         shader.second->compile();
@@ -47,12 +57,16 @@ void ShaderProgram::compile()
 void ShaderProgram::link()
 {
     // Link the program
-    glLinkProgram(m_identifier);
+    glLinkProgram(m_id);
+
+    
+    GLint tralala = glGetAttribLocation(m_id, "vPosition");
+    GLint tralala2 = glGetAttribLocation(m_id, "vColor");
 }
 
 void ShaderProgram::use()
 {
-    glUseProgram(m_identifier);
+    glUseProgram(m_id);
 }
 
 void ShaderProgram::release()
@@ -69,7 +83,7 @@ bool ShaderProgram::checkLinkStatus()
     bool hasError = 0;
 
     // Get linking status of a program
-    glGetProgramiv(m_identifier, GL_LINK_STATUS, &linkStatus);
+    glGetProgramiv(m_id, GL_LINK_STATUS, &linkStatus);
 
     // If GL_FALSE was written in linkStatus, there was an error with linking
     if (linkStatus == GL_FALSE)
@@ -78,12 +92,12 @@ bool ShaderProgram::checkLinkStatus()
         int infoLogLength = 0;
 
         // Log the additional info
-        glGetProgramiv(m_identifier, GL_INFO_LOG_LENGTH, &infoLogLength);
+        glGetProgramiv(m_id, GL_INFO_LOG_LENGTH, &infoLogLength);
         GLchar* buffer = new GLchar[infoLogLength];
         GLsizei charsWritten = 0;
-        glGetProgramInfoLog(m_identifier, infoLogLength, &charsWritten, buffer);
+        glGetProgramInfoLog(m_id, infoLogLength, &charsWritten, buffer);
 
-        Logger::getInstance()->log(buffer);
+        Logger::log(buffer);
 
         delete[] buffer;
     }
@@ -94,7 +108,7 @@ bool ShaderProgram::checkLinkStatus()
 GLint ShaderProgram::getUniformAttribute(std::string name)
 {
     // Query the location from OpenGL
-    GLint location = glGetUniformLocation(m_identifier, name.c_str());
+    GLint location = glGetUniformLocation(m_id, name.c_str());
 
     // Insert the name and location into attribute hash table
     m_uniformAttributes[name] = location;
@@ -125,5 +139,5 @@ void ShaderProgram::setUniformAttribute(std::string name, GLsizei count, GLboole
 
 GLuint ShaderProgram::getProgramId() const
 {
-    return m_identifier;
+    return m_id;
 }

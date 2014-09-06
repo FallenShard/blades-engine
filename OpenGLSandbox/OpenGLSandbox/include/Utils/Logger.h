@@ -8,9 +8,9 @@ class Logger
 {
 public:
     static Logger* getInstance();
-
-    void log(std::string message);
-    void flush();
+    
+    static void log(std::string message);
+    static void flush();
 
     ~Logger();
 

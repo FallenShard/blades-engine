@@ -18,6 +18,10 @@
     <ClCompile Include="src\Renderer\IndexBuffer.cpp" />
     <ClCompile Include="src\Renderer\Shader.cpp" />
     <ClCompile Include="src\Renderer\ShaderProgram.cpp" />
+    <ClCompile Include="src\Scenes\OverlapScene.cpp" />
+    <ClCompile Include="src\Scenes\PrismScene.cpp" />
+    <ClCompile Include="src\Scenes\TransformationScene.cpp" />
+    <ClCompile Include="src\Scenes\TriangleScene.cpp" />
     <ClCompile Include="src\Renderer\Vertex.cpp" />
     <ClCompile Include="src\Renderer\VertexArray.cpp" />
     <ClCompile Include="src\Renderer\VertexBuffer.cpp" />
@@ -34,8 +38,13 @@
     <ClInclude Include="include\OpenGL.h" />
     <ClInclude Include="include\Renderer\GLRenderer.h" />
     <ClInclude Include="include\Renderer\IndexBuffer.h" />
+    <ClInclude Include="include\Scenes\OverlapScene.h" />
+    <ClInclude Include="include\Scenes\PrismScene.h" />
+    <ClInclude Include="include\Scenes\Scene.h" />
     <ClInclude Include="include\Renderer\Shader.h" />
     <ClInclude Include="include\Renderer\ShaderProgram.h" />
+    <ClInclude Include="include\Scenes\TransformationScene.h" />
+    <ClInclude Include="include\Scenes\TriangleScene.h" />
     <ClInclude Include="include\Renderer\Vertex.h" />
     <ClInclude Include="include\Renderer\VertexArray.h" />
     <ClInclude Include="include\Renderer\VertexAttribute.h" />
@@ -64,6 +73,7 @@
     <Text Include="res\PrismColorData.txt" />
     <Text Include="res\PrismPosData.txt" />
     <Text Include="res\OverlapData.txt" />
+    <Text Include="res\TranslationData.txt" />
     <Text Include="res\TriangleColorData.txt" />
     <Text Include="res\TrianglePositionData.txt" />
   </ItemGroup>

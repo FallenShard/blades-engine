@@ -1,6 +1,7 @@
 #ifndef SHADER_PROGRAM_H
 #define SHADER_PROGRAM_H
 
+#include <memory>
 #include <map>
 #include "Renderer/Shader.h"
 
@@ -11,6 +12,7 @@ public:
     ~ShaderProgram();
 
     void attachShader(Shader& shader);
+    void attachShader(Shader::Type type, std::string fileName);
     void detachShader(Shader& shader);
 
     void compile();
@@ -30,9 +32,11 @@ public:
     GLuint getProgramId() const;
 
 private:
-    GLuint m_identifier;
+    GLuint m_id;
 
-    std::map<std::string, Shader*> m_shaders;
+    typedef std::shared_ptr<Shader> ShaderPtr;
+
+    std::map<std::string, ShaderPtr> m_shaders;
     std::map<std::string, GLint> m_uniformAttributes;
 };
 

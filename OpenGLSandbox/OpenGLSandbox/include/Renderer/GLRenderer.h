@@ -11,6 +11,7 @@
 #include "Renderer/VertexBuffer.h"
 #include "Renderer/IndexBuffer.h"
 #include "Renderer/VertexAttribute.h"
+#include "Scenes/Scene.h"
 
 struct Event;
 
@@ -32,11 +33,19 @@ private:
 
     float m_aspectRatio;
 
-    std::map<std::string, ShaderProgram*> m_shaderPrograms;
-    std::map<std::string, VertexArray*> m_vertexArrays;
-    std::map<std::string, VertexBuffer*> m_vertexBuffers;
-    std::map<std::string, IndexBuffer*> m_indexBuffers;
-    std::vector<VertexAttribute*> m_vertexAttributes;
+    typedef std::unique_ptr<ShaderProgram> ProgramPtr;
+    typedef std::unique_ptr<VertexArray> VertexArrayPtr;
+    typedef std::unique_ptr<VertexBuffer> VertexBufferPtr;
+    typedef std::unique_ptr<VertexBuffer> IndexBufferPtr;
+    typedef std::unique_ptr<VertexAttribute> AttributePtr;
+
+    std::map<std::string, ProgramPtr> m_shaderPrograms;
+    std::map<std::string, VertexArrayPtr> m_vertexArrays;
+    std::map<std::string, VertexBufferPtr> m_vertexBuffers;
+    std::map<std::string, IndexBufferPtr> m_indexBuffers;
+    std::map<std::string, AttributePtr> m_vertexAttributes;
+
+    std::vector<Scene*> m_scenes;
     
     float m_timePassed;
 

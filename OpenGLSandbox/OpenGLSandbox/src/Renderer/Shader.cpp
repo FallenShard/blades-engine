@@ -77,7 +77,7 @@ bool Shader::checkCompileStatus()
         GLsizei charsWritten = 0;
         glGetShaderInfoLog(m_identifier, infoLogLength, &charsWritten, buffer);
         
-        Logger::getInstance()->log(buffer);
+        Logger::log(buffer);
         
         delete[] buffer;
     }

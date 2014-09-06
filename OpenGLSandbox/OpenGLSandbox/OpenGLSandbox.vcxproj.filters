@@ -80,6 +80,10 @@
     <ClCompile Include="src\Renderer\VertexBuffer.cpp" />
     <ClCompile Include="src\Renderer\Vertex.cpp" />
     <ClCompile Include="src\Renderer\IndexBuffer.cpp" />
+    <ClCompile Include="src\Scenes\TriangleScene.cpp" />
+    <ClCompile Include="src\Scenes\TransformationScene.cpp" />
+    <ClCompile Include="src\Scenes\OverlapScene.cpp" />
+    <ClCompile Include="src\Scenes\PrismScene.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="include\Window\GLContext.h">
@@ -130,6 +134,11 @@
     <ClInclude Include="include\Renderer\Vertex.h" />
     <ClInclude Include="include\Renderer\VertexAttribute.h" />
     <ClInclude Include="include\Renderer\IndexBuffer.h" />
+    <ClInclude Include="include\Scenes\Scene.h" />
+    <ClInclude Include="include\Scenes\TriangleScene.h" />
+    <ClInclude Include="include\Scenes\PrismScene.h" />
+    <ClInclude Include="include\Scenes\OverlapScene.h" />
+    <ClInclude Include="include\Scenes\TransformationScene.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include="include\Utils\Vector2D.inl">
@@ -153,5 +162,6 @@
     <Text Include="res\PrismPosData.txt" />
     <Text Include="res\PrismColorData.txt" />
     <Text Include="res\OverlapData.txt" />
+    <Text Include="res\TranslationData.txt" />
   </ItemGroup>
 </Project>

@@ -1,6 +1,5 @@
 #version 440 core
 
-in vec4 outColor;
 out vec4 fColor;
 
 const vec4 firstColor = vec4(1.f, 0.f, 0.f, 1.f);

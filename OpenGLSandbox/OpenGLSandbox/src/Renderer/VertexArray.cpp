@@ -2,14 +2,16 @@
 #include "Renderer/VertexBuffer.h"
 
 VertexArray::VertexArray()
-    : m_size(0)
+    : m_vertexCount(0)
+    , m_indexType(GL_UNSIGNED_SHORT)
 {
     create();
 }
 
 VertexArray::VertexArray(GLenum primitiveType)
     : m_primitiveType(primitiveType)
-    , m_size(0)
+    , m_vertexCount(0)
+    , m_indexType(GL_UNSIGNED_SHORT)
 {
     create();
 }
@@ -24,20 +26,18 @@ void VertexArray::create()
     glGenVertexArrays(1, &m_id);
 }
 
-void VertexArray::attachBuffer(VertexBuffer& buffer)
+void VertexArray::attachBuffer(std::string name, VertexBuffer* buffer)
 {
-    m_buffers.push_back(&buffer);
-
-    if (m_size == 0)
-        m_size = buffer.getSize();
+    m_buffers[name] = buffer;
 }
 
-void VertexArray::attachBuffers(std::vector<VertexBuffer*> buffers)
+void VertexArray::attachIndexBuffer(IndexBuffer* buffer)
 {
-    m_buffers.insert(m_buffers.end(), buffers.begin(), buffers.end());
+    m_indexBuffer = buffer;
 
-    if (m_size == 0)
-        m_size = buffers[0]->getSize();
+    m_indexCount = m_indexBuffer->getSize();
+
+    m_indexBuffer->bind();
 }
 
 void VertexArray::bind()
@@ -59,3 +59,35 @@ GLenum VertexArray::getPrimitiveType() const
 {
     return m_primitiveType;
 }
+
+void VertexArray::setVertexCount(GLsizei vertexCount)
+{
+    m_vertexCount = vertexCount;
+}
+
+GLsizei VertexArray::getVertexCount() const
+{
+    return m_vertexCount;
+}
+
+void VertexArray::render()
+{
+    glDrawArrays(m_primitiveType, 0, m_vertexCount);
+}
+
+void VertexArray::render(GLint first, GLsizei count)
+{
+    glDrawArrays(m_primitiveType, first, count);
+}
+
+void VertexArray::renderIndexed()
+{
+    glDrawElements(m_primitiveType, m_indexCount, m_indexType, 0);
+}
+
+void VertexArray::renderIndexed(GLsizei offset)
+{
+    glDrawElementsBaseVertex(m_primitiveType, m_indexCount, m_indexType, 0, offset);
+}
+
+

@@ -1,11 +1,13 @@
 #include <fstream>
+#include <sstream>
 #include <cassert>
+#include <algorithm>
 #include "Renderer/VertexBuffer.h"
 
 VertexBuffer::VertexBuffer(GLenum targetType, GLenum drawType)
     : m_targetType(targetType)
     , m_usageType(drawType)
-    , m_dataPerVertex(0)
+    , m_vertexCount(0)
 {
     glGenBuffers(1, &m_id);
 }
@@ -47,20 +49,74 @@ void VertexBuffer::create(std::vector<GLfloat> vertices)
 void VertexBuffer::loadFromFile(std::string fileName)
 {
     std::ifstream inputFile(fileName, std::ios::in);
+    std::string line;
 
     // Load the vertex data
-    GLfloat vertexData;
-    while (inputFile >> vertexData)
+    int positionDataCount = 0;
+    int colorDataCount = 0;
+    int perVertexDataCount = 0;
+
+    // Read the file lines one by one and register the attributes
+    while (std::getline(inputFile, line))
     {
-        m_vertexData.push_back(vertexData);
+        positionDataCount = loadAttributeFromFile(line, "Vertices", inputFile);
+        perVertexDataCount += positionDataCount;
+
+        colorDataCount = loadAttributeFromFile(line, "Colors", inputFile);
+        perVertexDataCount += colorDataCount;
     }
+
+    m_vertexCount = m_vertexData.size() / perVertexDataCount;
+
+    registerAttribute("Position", positionDataCount, 0);
+
+    GLint colorOffset = m_vertexCount * positionDataCount * sizeof GLfloat;
+    registerAttribute("Color", colorDataCount, colorOffset);
 
     glBufferData(m_targetType, sizeof(GLfloat) * m_vertexData.size(), m_vertexData.data(), m_usageType);
 }
 
-void VertexBuffer::registerAttributeSize(int dataPerVertexAttribute)
+int VertexBuffer::loadAttributeFromFile(std::string& line, std::string attribute, std::ifstream& stream)
 {
-    m_dataPerVertex += dataPerVertexAttribute;
+    GLfloat vertexData;
+    int attributeDataCount = 0;
+    int dataCounter = 0;
+
+    // Try to find attribute header
+    if (line.find(attribute) != std::string::npos)
+    {
+        // If so, continue reading file line by line
+        while (std::getline(stream, line))
+        {
+            std::stringstream lineStream(line);
+
+            // Read all coordinates one by one per line
+            dataCounter = 0;
+            while (lineStream >> vertexData)
+            {
+                m_vertexData.push_back(vertexData);
+                dataCounter++;
+            }
+
+            // Remember the highest seen per vertex attribute data
+            attributeDataCount = std::max(attributeDataCount, dataCounter);
+
+            // End reading session if there's no data anymore for this attribute
+            if (dataCounter == 0 && line != "")
+                break;
+        }
+    }
+
+    return attributeDataCount;
+}
+
+void VertexBuffer::registerAttribute(std::string name, GLint dataPerAttribute, GLint offset)
+{
+    if (dataPerAttribute != 0)
+    {
+        VertexAttribute attribute(name, dataPerAttribute, GL_FLOAT, GL_FALSE, 0, offset);
+        m_vertexAttributes[name] = std::make_shared<VertexAttribute>(attribute);
+    }
 }
 
 GLsizei VertexBuffer::getSize() const
@@ -68,12 +124,12 @@ GLsizei VertexBuffer::getSize() const
     return m_vertexData.size();
 }
 
-GLsizei VertexBuffer::getVertexAmount() const
+GLsizei VertexBuffer::getVertexCount() const
 {
-    if (m_dataPerVertex == 0)
+    if (m_vertexCount == 0)
         return -1;
 
-    return m_vertexData.size() / m_dataPerVertex;
+    return m_vertexCount;
 }
 
 GLfloat& VertexBuffer::operator[](unsigned int index)
@@ -81,4 +137,9 @@ GLfloat& VertexBuffer::operator[](unsigned int index)
     assert(index >= 0 && index < m_vertexData.size());
     
     return m_vertexData[index];
+}
+
+VertexBuffer::AttributeMap& VertexBuffer::getAttributeMap()
+{
+    return m_vertexAttributes;
 }

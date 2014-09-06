@@ -19,20 +19,26 @@ Logger* Logger::getInstance()
 
 void Logger::log(std::string message)
 {
+    Logger* logger = Logger::getInstance();
+
     SYSTEMTIME time;
     GetLocalTime(&time);
-    m_logFile << '\n' << time.wHour << ":" << time.wMinute << ":" << time.wSecond << " ";
-    m_logFile << message;
+    logger->m_logFile << '\n' << time.wHour << ":" << time.wMinute << ":" << time.wSecond << " ";
+    logger->m_logFile << message;
 }
 
 void Logger::flush()
 {
-    m_logFile.close();
-
-    m_logFile.open("error.log", std::ios::app);
+    Logger* logger = Logger::getInstance();
+    
+    logger->m_logFile.close();
+    logger->m_logFile.open("error.log", std::ios::app);
 }
 
 Logger::~Logger()
 {
     m_logFile.close();
+
+    delete m_instance;
+    m_instance = nullptr;
 }
