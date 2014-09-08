@@ -137,3 +137,8 @@ void OverlapScene::render()
     VertexArray::release();
     ShaderProgram::release();
 }
+
+bool OverlapScene::reshape(int width, int height)
+{
+    return false;
+}

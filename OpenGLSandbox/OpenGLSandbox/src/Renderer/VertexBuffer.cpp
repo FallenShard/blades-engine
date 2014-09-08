@@ -52,9 +52,10 @@ void VertexBuffer::loadFromFile(std::string fileName)
     std::string line;
 
     // Load the vertex data
+    int perVertexDataCount = 0;
+
     int positionDataCount = 0;
     int colorDataCount = 0;
-    int perVertexDataCount = 0;
 
     // Read the file lines one by one and register the attributes
     while (std::getline(inputFile, line))
@@ -68,10 +69,10 @@ void VertexBuffer::loadFromFile(std::string fileName)
 
     m_vertexCount = m_vertexData.size() / perVertexDataCount;
 
-    registerAttribute("Position", positionDataCount, 0);
+    registerAttribute("vPosition", positionDataCount, 0);
 
     GLint colorOffset = m_vertexCount * positionDataCount * sizeof GLfloat;
-    registerAttribute("Color", colorDataCount, colorOffset);
+    registerAttribute("vColor", colorDataCount, colorOffset);
 
     glBufferData(m_targetType, sizeof(GLfloat) * m_vertexData.size(), m_vertexData.data(), m_usageType);
 }

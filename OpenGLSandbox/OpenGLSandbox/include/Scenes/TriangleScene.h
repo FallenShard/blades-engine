@@ -13,6 +13,8 @@ public:
     virtual void update(float timeDelta);
     virtual void render();
 
+    virtual bool reshape(int width, int height);
+
 private:
     float m_timePassed;
 };

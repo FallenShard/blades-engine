@@ -4,7 +4,6 @@
 #include <string>
 #include "OpenGL.h"
 
-
 class Shader
 {
 public:
@@ -24,7 +23,7 @@ public:
 
     ~Shader();
 
-    void create(Type type);
+    bool create(Type type);
 
     void loadFromFile(std::string fileName, Type type = None);
     void compile();
@@ -35,11 +34,9 @@ public:
     bool checkCompileStatus();
 
 private:
-    void setShaderType(Type type);
-
     std::string m_sourceFileName;
     std::string m_source;
-    GLuint m_identifier;
+    GLuint m_id;
     GLenum m_type;
 };
 

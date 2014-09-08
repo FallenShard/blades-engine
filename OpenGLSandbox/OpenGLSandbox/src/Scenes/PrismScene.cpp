@@ -2,11 +2,12 @@
 
 namespace
 {
+    float theMatrix[16];
+
     void setupDefaultPerspectiveCamera(ShaderProgram& program)
     {
         program.getUniformAttribute("perspectiveMatrix");
 
-        float theMatrix[16];
         memset(theMatrix, 0, sizeof(float) * 16);
 
         float fFrustumScale = 1.f, fzFar = 3.f, fzNear = 1.f;
@@ -20,6 +21,9 @@ namespace
         program.use();
         program.setUniformAttribute("perspectiveMatrix", 1, GL_FALSE, theMatrix);
     }
+
+    float frustumScale = 1.f;
+    float eyeOffset[3];
 }
 
 PrismScene::PrismScene()
@@ -62,8 +66,12 @@ void PrismScene::prepare()
 
     setupDefaultPerspectiveCamera(*program);
     program->getUniformAttribute("offset");
+    program->getUniformAttribute("frustumScale");
+    program->getUniformAttribute("eyeOffset");
     program->use();
     program->setUniformAttribute("offset", 0.5f, 0.5f);
+    program->setUniformAttribute("frustumScale", frustumScale);
+    program->setUniformAttribute("eyeOffset", +0.5f, -0.0f, -1.f);
 
     VertexBuffer::release(*buffer);
     ShaderProgram::release();
@@ -72,6 +80,21 @@ void PrismScene::prepare()
 
 void PrismScene::handleEvents(const Event& event)
 {
+    switch (event.type)
+    {
+    case Event::KeyPressed:
+        switch (event.key.code)
+        {
+        case Keyboard::A:
+            frustumScale += 0.1f;
+            break;
+
+        case Keyboard::D:
+            frustumScale -= 0.1f;
+            break;
+        };
+        break;
+    };
 }
 
 void PrismScene::update(float timeDelta)
@@ -83,8 +106,21 @@ void PrismScene::render()
 {
     VertexArray* vArray = m_vertexArrays["Prism"].get();
     ShaderProgram* program = m_shaderPrograms["Prism"].get();
-    vArray->bind();
     program->use();
+    program->setUniformAttribute("frustumScale", frustumScale);
+    program->setUniformAttribute("perspectiveMatrix", 1, GL_FALSE, theMatrix);
+    vArray->bind();
+    
 
     vArray->render();
+}
+
+bool PrismScene::reshape(int width, int height)
+{
+   /* theMatrix[0] = frustumScale / (width / (float)height);
+    theMatrix[5] = frustumScale;
+
+    glViewport(0, 0, (GLsizei)width, (GLsizei)height);*/
+
+    return false;
 }

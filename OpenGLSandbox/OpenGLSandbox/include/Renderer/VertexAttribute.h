@@ -18,6 +18,16 @@ struct VertexAttribute
     {
     }
 
+    VertexAttribute(std::string name, GLint perVertexData, GLsizei stride, GLint offset)
+    {
+        this->name = name;
+        this->size = perVertexData;
+        this->type = GL_FLOAT;
+        this->normalized = GL_FALSE;
+        this->stride = stride;
+        this->offset = (const GLvoid*)offset;
+    }
+
     VertexAttribute(std::string name, GLint perVertexData, GLenum type, GLboolean normalized, GLsizei stride, GLint offset)
     {
         this->name = name;
@@ -38,6 +48,18 @@ struct VertexAttribute
         glEnableVertexAttribArray(location);
         glVertexAttribPointer(location, size, type, normalized, stride, offset);
     }
+
+    void enable(GLuint programId)
+    {
+        location = glGetAttribLocation(programId, name.c_str());
+        glEnableVertexAttribArray(location);
+        glVertexAttribPointer(location, size, type, normalized, stride, offset);
+    }
+
+    void disable()
+    {
+        glDisableVertexAttribArray(location);
+    }
 };
 
-#endif
+#endif // VERTEX_ATTRIBUTE_H

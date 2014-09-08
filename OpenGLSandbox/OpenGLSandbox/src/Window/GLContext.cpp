@@ -40,6 +40,7 @@ void GLContext::initialize()
     wglMakeCurrent(m_deviceContextHandle, dummyContextHandle);
 
     // Initialize GLEW
+    glewExperimental = GL_TRUE;
     glewInit();
 
     // Get the current version on the device

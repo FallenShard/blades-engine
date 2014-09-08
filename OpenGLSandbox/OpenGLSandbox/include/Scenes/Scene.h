@@ -21,6 +21,8 @@ public:
     virtual void update(float timeDelta) = 0;
     virtual void render() = 0;
 
+    virtual bool reshape(int width, int height) = 0;
+
 protected:
     typedef std::unique_ptr<ShaderProgram> ProgramPtr;
     typedef std::unique_ptr<VertexArray> VertexArrayPtr;

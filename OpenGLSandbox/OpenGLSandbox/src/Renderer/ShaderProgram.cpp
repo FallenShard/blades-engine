@@ -24,8 +24,7 @@ void ShaderProgram::attachShader(Shader& shader)
 void ShaderProgram::attachShader(Shader::Type type, std::string sourceFileName)
 {
     // Create a shader first
-    Shader shader(type);
-    shader.loadFromFile("res/" + sourceFileName);
+    Shader shader(sourceFileName, type);
     shader.checkCompileStatus();
 
     // Attach it to this program
@@ -59,9 +58,11 @@ void ShaderProgram::link()
     // Link the program
     glLinkProgram(m_id);
 
-    
-    GLint tralala = glGetAttribLocation(m_id, "vPosition");
-    GLint tralala2 = glGetAttribLocation(m_id, "vColor");
+    // Detach all the shaders to free up GPU memory
+    for (auto& shader : m_shaders)
+    {
+        glDetachShader(m_id, shader.second->getShaderId());
+    }
 }
 
 void ShaderProgram::use()

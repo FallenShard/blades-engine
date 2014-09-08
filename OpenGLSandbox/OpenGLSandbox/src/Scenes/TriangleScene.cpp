@@ -73,3 +73,8 @@ void TriangleScene::render()
     program->setUniformAttribute("time", m_timePassed + 4.f / 2);
     vArray->render();
 }
+
+bool TriangleScene::reshape(int width, int height)
+{
+    return false;
+}

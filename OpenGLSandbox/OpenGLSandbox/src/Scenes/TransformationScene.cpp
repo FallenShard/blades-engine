@@ -127,10 +127,6 @@ void TransformationScene::prepare()
 
 
     VertexBuffer::AttributeMap attributeMap = buffer->getAttributeMap();
-    if (attributeMap.find("Position") != attributeMap.end())
-        attributeMap["Position"]->name = "vPosition";
-    if (attributeMap.find("Color") != attributeMap.end())
-        attributeMap["Color"]->name = "vColor";
 
     for (auto& attribute : attributeMap)
     {
@@ -169,4 +165,9 @@ void TransformationScene::render()
         program->setUniformAttribute("modelToCameraMatrix", 1, GL_FALSE, glm::value_ptr(transformMatrix));
         vArray->renderIndexed();
     }
+}
+
+bool TransformationScene::reshape(int width, int height)
+{
+    return false;
 }

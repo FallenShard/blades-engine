@@ -22,19 +22,13 @@ GLRenderer::GLRenderer(int width, int height)
 
 GLRenderer::~GLRenderer()
 {
-    m_shaderPrograms.clear();
-    m_vertexArrays.clear();
-    m_vertexBuffers.clear();
-    m_indexBuffers.clear();
-    m_vertexAttributes.clear();
-
     for (auto& scene : m_scenes)
         delete scene;
 }
 
 void GLRenderer::init()
 {
-    Scene* scene = new TransformationScene();
+    Scene* scene = new PrismScene();
     m_scenes.push_back(scene);
     
 
@@ -83,26 +77,38 @@ void GLRenderer::update(float timeDelta)
 
 void GLRenderer::resize(int width, int height)
 {
-    float resWidth = static_cast<float>(width);
-    float resHeight = static_cast<float>(height);
-    float newRatio = resWidth / resHeight;
+    bool hasReshaped = false;
 
-    float newWidth;
-    float newHeight;
-
-    if (newRatio > m_aspectRatio)
+    for (auto& scene : m_scenes)
     {
-        newWidth = resHeight * m_aspectRatio;
-        newHeight = resHeight;
-    }
-    else
-    {
-        newHeight = resWidth / m_aspectRatio;
-        newWidth = resWidth;
+        hasReshaped = scene->reshape(width, height);
+        if (hasReshaped == true)
+            break;
     }
 
-    GLint x = static_cast<GLint>((resWidth - newWidth) / 2);
-    GLint y = static_cast<GLint>((resHeight - newHeight) / 2);
+    if (hasReshaped == false)
+    {
+        float resWidth = static_cast<float>(width);
+        float resHeight = static_cast<float>(height);
+        float newRatio = resWidth / resHeight;
 
-    glViewport(x, y, static_cast<GLsizei>(newWidth), static_cast<GLsizei>(newHeight));
+        float newWidth;
+        float newHeight;
+
+        if (newRatio > m_aspectRatio)
+        {
+            newWidth = resHeight * m_aspectRatio;
+            newHeight = resHeight;
+        }
+        else
+        {
+            newHeight = resWidth / m_aspectRatio;
+            newWidth = resWidth;
+        }
+
+        GLint x = static_cast<GLint>((resWidth - newWidth) / 2);
+        GLint y = static_cast<GLint>((resHeight - newHeight) / 2);
+
+        glViewport(x, y, static_cast<GLsizei>(newWidth), static_cast<GLsizei>(newHeight));
+    }
 }
