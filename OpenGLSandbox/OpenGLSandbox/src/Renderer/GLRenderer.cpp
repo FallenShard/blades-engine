@@ -5,6 +5,7 @@
 #include "Scenes/PrismScene.h"
 #include "Scenes/OverlapScene.h"
 #include "Scenes/TransformationScene.h"
+#include "Scenes/GraphScene.h"
 
 GLRenderer::GLRenderer()
     : m_aspectRatio(4.f / 3)
@@ -28,7 +29,8 @@ GLRenderer::~GLRenderer()
 
 void GLRenderer::init()
 {
-    Scene* scene = new PrismScene();
+    //Scene* scene = new PrismScene();
+    Scene* scene = new GraphScene();
     m_scenes.push_back(scene);
     
 

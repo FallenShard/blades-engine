@@ -10,12 +10,12 @@ namespace
 
         memset(theMatrix, 0, sizeof(float) * 16);
 
-        float fFrustumScale = 1.f, fzFar = 3.f, fzNear = 1.f;
+        float frustumScale = 1.f, zNear = 1.f, zFar = 3.f;
 
-        theMatrix[0] = fFrustumScale;
-        theMatrix[5] = fFrustumScale;
-        theMatrix[10] = (fzFar + fzNear) / (fzNear - fzFar);
-        theMatrix[14] = (2 * fzFar * fzNear) / (fzNear - fzFar);
+        theMatrix[0] = frustumScale;
+        theMatrix[5] = frustumScale;
+        theMatrix[10] = (zNear + zFar) / (zNear - zFar);
+        theMatrix[14] = (2 * zNear * zFar) / (zNear - zFar);
         theMatrix[11] = -1.0f;
 
         program.use();
@@ -23,7 +23,15 @@ namespace
     }
 
     float frustumScale = 1.f;
-    float eyeOffset[3];
+    float zNear = 1.f;
+    float zFar = 3.f;
+
+    bool aPressed = false;
+    bool dPressed = false;
+    bool sPressed = false;
+    bool wPressed = false;
+    bool fPressed = false;
+    bool gPressed = false;
 }
 
 PrismScene::PrismScene()
@@ -49,29 +57,14 @@ void PrismScene::prepare()
     m_vertexBuffers["Prism"] = std::make_unique<VertexBuffer>(GL_ARRAY_BUFFER, GL_STATIC_DRAW);
     VertexBuffer* buffer = m_vertexBuffers["Prism"].get();
     buffer->bind();
-    buffer->loadFromFile("res/PrismPosData.txt");
+    buffer->loadFromFile("res/PrismData.txt");
     vArray->setVertexCount(buffer->getVertexCount());
 
     VertexBuffer::AttributeMap attributeMap = buffer->getAttributeMap();
-    if (attributeMap.find("Position") != attributeMap.end())
-        attributeMap["Position"]->name = "vPosition";
-    if (attributeMap.find("Color") != attributeMap.end())
-        attributeMap["Color"]->name = "vColor";
-
     for (auto& attribute : attributeMap)
-    {
-        attribute.second->locate(program->getProgramId());
-        attribute.second->enable();
-    }
+        attribute.second->enable(program->getProgramId());
 
     setupDefaultPerspectiveCamera(*program);
-    program->getUniformAttribute("offset");
-    program->getUniformAttribute("frustumScale");
-    program->getUniformAttribute("eyeOffset");
-    program->use();
-    program->setUniformAttribute("offset", 0.5f, 0.5f);
-    program->setUniformAttribute("frustumScale", frustumScale);
-    program->setUniformAttribute("eyeOffset", +0.5f, -0.0f, -1.f);
 
     VertexBuffer::release(*buffer);
     ShaderProgram::release();
@@ -86,11 +79,56 @@ void PrismScene::handleEvents(const Event& event)
         switch (event.key.code)
         {
         case Keyboard::A:
-            frustumScale += 0.1f;
+            aPressed = true;
             break;
 
         case Keyboard::D:
-            frustumScale -= 0.1f;
+            dPressed = true;
+            break;
+
+        case Keyboard::W:
+            wPressed = true;
+            break;
+
+        case Keyboard::S:
+            sPressed = true;
+            break;
+
+        case Keyboard::F:
+            fPressed = true;
+            break;
+
+        case Keyboard::G:
+            gPressed = true;
+            break;
+        };
+        break;
+
+    case Event::KeyReleased:
+        switch (event.key.code)
+        {
+        case Keyboard::A:
+            aPressed = false;
+            break;
+
+        case Keyboard::D:
+            dPressed = false;
+            break;
+
+        case Keyboard::W:
+            wPressed = false;
+            break;
+
+        case Keyboard::S:
+            sPressed = false;
+            break;
+
+        case Keyboard::F:
+            fPressed = false;
+            break;
+
+        case Keyboard::G:
+            gPressed = false;
             break;
         };
         break;
@@ -100,6 +138,19 @@ void PrismScene::handleEvents(const Event& event)
 void PrismScene::update(float timeDelta)
 {
     m_timePassed += timeDelta;
+
+    if (aPressed)
+        theMatrix[12] -= 0.02f;
+    if (dPressed)
+        theMatrix[12] += 0.02f;
+    if (wPressed)
+        theMatrix[13] += 0.02f;
+    if (sPressed)
+        theMatrix[13] -= 0.02f;
+    if (fPressed)
+        theMatrix[11] -= 0.02f;
+    if (gPressed)
+        theMatrix[11] += 0.02f;
 }
 
 void PrismScene::render()
@@ -107,20 +158,23 @@ void PrismScene::render()
     VertexArray* vArray = m_vertexArrays["Prism"].get();
     ShaderProgram* program = m_shaderPrograms["Prism"].get();
     program->use();
-    program->setUniformAttribute("frustumScale", frustumScale);
-    program->setUniformAttribute("perspectiveMatrix", 1, GL_FALSE, theMatrix);
     vArray->bind();
-    
+
+    program->setUniformAttribute("perspectiveMatrix", 1, GL_FALSE, theMatrix);
 
     vArray->render();
 }
 
 bool PrismScene::reshape(int width, int height)
 {
-   /* theMatrix[0] = frustumScale / (width / (float)height);
+    theMatrix[0] = frustumScale / (width / (float)height);
     theMatrix[5] = frustumScale;
 
-    glViewport(0, 0, (GLsizei)width, (GLsizei)height);*/
+    ShaderProgram* program = m_shaderPrograms["Prism"].get();
+    program->use();
+    program->setUniformAttribute("perspectiveMatrix", 1, GL_FALSE, theMatrix);
 
-    return false;
+    glViewport(0, 0, (GLsizei)width, (GLsizei)height);
+
+    return true;
 }

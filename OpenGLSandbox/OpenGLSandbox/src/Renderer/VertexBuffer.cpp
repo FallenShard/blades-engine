@@ -33,6 +33,8 @@ void VertexBuffer::release(const VertexBuffer& buffer)
 
 void VertexBuffer::create(GLfloat* vertices, unsigned int size)
 {
+    m_vertexData.clear();
+
     for (unsigned int i = 0; i < size; i++)
         m_vertexData.push_back(vertices[i]);
 

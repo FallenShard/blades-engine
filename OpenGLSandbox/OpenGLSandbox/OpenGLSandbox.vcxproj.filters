@@ -84,6 +84,7 @@
     <ClCompile Include="src\Scenes\TransformationScene.cpp" />
     <ClCompile Include="src\Scenes\OverlapScene.cpp" />
     <ClCompile Include="src\Scenes\PrismScene.cpp" />
+    <ClCompile Include="src\Scenes\GraphScene.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="include\Window\GLContext.h">
@@ -139,6 +140,7 @@
     <ClInclude Include="include\Scenes\PrismScene.h" />
     <ClInclude Include="include\Scenes\OverlapScene.h" />
     <ClInclude Include="include\Scenes\TransformationScene.h" />
+    <ClInclude Include="include\Scenes\GraphScene.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include="include\Utils\Vector2D.inl">
@@ -159,9 +161,8 @@
   <ItemGroup>
     <Text Include="res\TrianglePositionData.txt" />
     <Text Include="res\TriangleColorData.txt" />
-    <Text Include="res\PrismPosData.txt" />
-    <Text Include="res\PrismColorData.txt" />
     <Text Include="res\OverlapData.txt" />
     <Text Include="res\TranslationData.txt" />
+    <Text Include="res\PrismData.txt" />
   </ItemGroup>
 </Project>

@@ -18,6 +18,7 @@
     <ClCompile Include="src\Renderer\IndexBuffer.cpp" />
     <ClCompile Include="src\Renderer\Shader.cpp" />
     <ClCompile Include="src\Renderer\ShaderProgram.cpp" />
+    <ClCompile Include="src\Scenes\GraphScene.cpp" />
     <ClCompile Include="src\Scenes\OverlapScene.cpp" />
     <ClCompile Include="src\Scenes\PrismScene.cpp" />
     <ClCompile Include="src\Scenes\TransformationScene.cpp" />
@@ -38,6 +39,7 @@
     <ClInclude Include="include\OpenGL.h" />
     <ClInclude Include="include\Renderer\GLRenderer.h" />
     <ClInclude Include="include\Renderer\IndexBuffer.h" />
+    <ClInclude Include="include\Scenes\GraphScene.h" />
     <ClInclude Include="include\Scenes\OverlapScene.h" />
     <ClInclude Include="include\Scenes\PrismScene.h" />
     <ClInclude Include="include\Scenes\Scene.h" />
@@ -70,8 +72,7 @@
     <None Include="res\motionVert.vert" />
   </ItemGroup>
   <ItemGroup>
-    <Text Include="res\PrismColorData.txt" />
-    <Text Include="res\PrismPosData.txt" />
+    <Text Include="res\PrismData.txt" />
     <Text Include="res\OverlapData.txt" />
     <Text Include="res\TranslationData.txt" />
     <Text Include="res\TriangleColorData.txt" />
