@@ -1,11 +1,16 @@
 #include "Renderer/VertexArray.h"
-#include "Renderer/VertexBuffer.h"
+
+namespace
+{
+    GLuint previouslyBoundVAO = 0;
+}
 
 VertexArray::VertexArray()
-    : m_vertexCount(0)
+    : m_primitiveType(GL_TRIANGLES)
+    , m_vertexCount(0)
     , m_indexType(GL_UNSIGNED_SHORT)
 {
-    create();
+    glGenVertexArrays(1, &m_id);
 }
 
 VertexArray::VertexArray(GLenum primitiveType)
@@ -13,7 +18,7 @@ VertexArray::VertexArray(GLenum primitiveType)
     , m_vertexCount(0)
     , m_indexType(GL_UNSIGNED_SHORT)
 {
-    create();
+    glGenVertexArrays(1, &m_id);
 }
 
 VertexArray::~VertexArray()
@@ -21,43 +26,24 @@ VertexArray::~VertexArray()
     glDeleteVertexArrays(1, &m_id);
 }
 
-void VertexArray::create()
-{
-    glGenVertexArrays(1, &m_id);
-}
-
-void VertexArray::attachBuffer(std::string name, VertexBuffer* buffer)
-{
-    m_buffers[name] = buffer;
-}
-
-void VertexArray::attachIndexBuffer(IndexBuffer* buffer)
-{
-    m_indexBuffer = buffer;
-
-    m_indexCount = m_indexBuffer->getSize();
-
-    m_indexBuffer->bind();
-}
-
 void VertexArray::bind()
 {
-    glBindVertexArray(m_id);
+    if (m_id != previouslyBoundVAO)
+    {
+        glBindVertexArray(m_id);
+        previouslyBoundVAO = m_id;
+    }
 }
 
 void VertexArray::release()
 {
     glBindVertexArray(0);
+    previouslyBoundVAO = 0;
 }
 
-void VertexArray::setPrimitiveType(GLenum primitiveType)
+GLuint VertexArray::getVertexArrayId() const
 {
-    m_primitiveType = primitiveType;
-}
-
-GLenum VertexArray::getPrimitiveType() const
-{
-    return m_primitiveType;
+    return m_id;
 }
 
 void VertexArray::setVertexCount(GLsizei vertexCount)
@@ -68,6 +54,37 @@ void VertexArray::setVertexCount(GLsizei vertexCount)
 GLsizei VertexArray::getVertexCount() const
 {
     return m_vertexCount;
+}
+
+GLsizei VertexArray::getPerVertexDataCount() const
+{
+    GLsizei count = 0;
+    for (auto& attribute : m_attributes)
+        count += attribute.second.size;
+
+    return count;
+}
+
+void VertexArray::attachBuffer(std::string name, VertexBuffer* buffer)
+{
+    m_buffers[name] = buffer;
+}
+
+void VertexArray::attachIndexBuffer(IndexBuffer* buffer)
+{
+    m_indexBuffer = buffer;
+    m_indexCount = m_indexBuffer->getSize();
+}
+
+void VertexArray::attachAttribute(VertexAttribute attribute)
+{
+    m_attributes[attribute.name] = attribute;
+}
+
+void VertexArray::enableAttributes(GLuint programId)
+{
+    for (auto& attribute : m_attributes)
+        attribute.second.enable(programId);
 }
 
 void VertexArray::render()

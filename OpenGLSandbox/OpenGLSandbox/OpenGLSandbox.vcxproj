@@ -11,11 +11,15 @@
     </ProjectConfiguration>
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="src\Utils\VertexLoader.cpp" />
     <ClCompile Include="src\Core\Application.cpp" />
     <ClCompile Include="src\Core\Timer.cpp" />
     <ClCompile Include="src\main.cpp" />
+    <ClCompile Include="src\Renderer\Camera.cpp" />
     <ClCompile Include="src\Renderer\GLRenderer.cpp" />
     <ClCompile Include="src\Renderer\IndexBuffer.cpp" />
+    <ClCompile Include="src\Renderer\MatrixStack.cpp" />
+    <ClCompile Include="src\Renderer\SceneGraph.cpp" />
     <ClCompile Include="src\Renderer\Shader.cpp" />
     <ClCompile Include="src\Renderer\ShaderProgram.cpp" />
     <ClCompile Include="src\Scenes\GraphScene.cpp" />
@@ -27,6 +31,7 @@
     <ClCompile Include="src\Renderer\VertexArray.cpp" />
     <ClCompile Include="src\Renderer\VertexBuffer.cpp" />
     <ClCompile Include="src\Utils\Logger.cpp" />
+    <ClCompile Include="src\Utils\MatrixFactory.cpp" />
     <ClCompile Include="src\Window\GLContext.cpp" />
     <ClCompile Include="src\Window\Keyboard.cpp" />
     <ClCompile Include="src\Window\Mouse.cpp" />
@@ -37,8 +42,11 @@
     <ClInclude Include="include\Core\Application.h" />
     <ClInclude Include="include\Core\Timer.h" />
     <ClInclude Include="include\OpenGL.h" />
+    <ClInclude Include="include\Renderer\Camera.h" />
     <ClInclude Include="include\Renderer\GLRenderer.h" />
     <ClInclude Include="include\Renderer\IndexBuffer.h" />
+    <ClInclude Include="include\Renderer\MatrixStack.h" />
+    <ClInclude Include="include\Renderer\SceneGraph.h" />
     <ClInclude Include="include\Scenes\GraphScene.h" />
     <ClInclude Include="include\Scenes\OverlapScene.h" />
     <ClInclude Include="include\Scenes\PrismScene.h" />
@@ -51,8 +59,10 @@
     <ClInclude Include="include\Renderer\VertexArray.h" />
     <ClInclude Include="include\Renderer\VertexAttribute.h" />
     <ClInclude Include="include\Renderer\VertexBuffer.h" />
+    <ClInclude Include="include\Utils\VertexLoader.h" />
     <ClInclude Include="include\Utils\GraphicsUtils.h" />
     <ClInclude Include="include\Utils\Logger.h" />
+    <ClInclude Include="include\Utils\MatrixFactory.h" />
     <ClInclude Include="include\Utils\Vector2D.h" />
     <ClInclude Include="include\Window\Event.h" />
     <ClInclude Include="include\Window\GLContext.h" />
@@ -75,8 +85,7 @@
     <Text Include="res\PrismData.txt" />
     <Text Include="res\OverlapData.txt" />
     <Text Include="res\TranslationData.txt" />
-    <Text Include="res\TriangleColorData.txt" />
-    <Text Include="res\TrianglePositionData.txt" />
+    <Text Include="res\TrianglePosData.txt" />
   </ItemGroup>
   <PropertyGroup Label="Globals">
     <ProjectGuid>{C78F7A58-C68B-4FDB-B61B-215B531D06AC}</ProjectGuid>

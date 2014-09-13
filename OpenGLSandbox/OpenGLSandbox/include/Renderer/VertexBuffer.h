@@ -1,52 +1,63 @@
 #ifndef VERTEX_BUFFER_H
 #define VERTEX_BUFFER_H
 
-#include <memory>
 #include <string>
 #include <vector>
-#include <map>
 #include "OpenGL.h"
-#include "VertexAttribute.h"
 
 class VertexBuffer
 {
 public:
-    typedef std::shared_ptr<VertexAttribute> AttributePtr;
-    typedef std::map<std::string, AttributePtr> AttributeMap;
+    // Creates a vertex buffer with GL_ARRAY_BUFFER target and provided usage type
+    VertexBuffer(GLenum usageType);
 
-    VertexBuffer(GLenum targetType, GLenum drawType);
+    // Generates a vertex buffer with provided target and usage type
+    VertexBuffer(GLenum targetType, GLenum usageType);
 
+    // Deletes a vertex buffer
     ~VertexBuffer();
 
+    // Binds the vertex buffer its target type
     void bind() const;
+    
+    // Unbinds any buffer currently bound to GL_ARRAY_BUFFER type
+    static void release();
+
+    // Releases any buffer bound to provided target type
     static void release(GLenum targetType);
+
+    // Releases provided vertex buffer bound to its target type
     static void release(const VertexBuffer& vertexBuffer);
 
-    void create(GLfloat* vertices, unsigned int size);
-    void create(std::vector<GLfloat> vertices);
+    // Creates a vertex buffer from provided vertex data
+    void create(GLfloat* vertexData, unsigned int size);
+
+    // Creates a vertex buffer from provided vector
+    void create(std::vector<GLfloat> vertexData);
+
+    // Loads vertex data from specified file
     void loadFromFile(std::string fileName);
 
-    GLsizei getSize() const;
+    // Sets the number in bytes that each vertex uses
+    void setDataCountPerVertex(GLsizei dataCountPerVertex);
+
+    // Returns vertex count
     GLsizei getVertexCount() const;
 
-    GLuint getId() const;
+    // Returns OpenGL ID of the vertex buffer
+    GLuint getBufferId() const;
 
+    // Returns an element in vertex buffer with specified index
     GLfloat& operator[](unsigned int index);
 
-    AttributeMap& getAttributeMap();
-
 private:
-    int loadAttributeFromFile(std::string& line, std::string attribute, std::ifstream& stream);
-    void registerAttribute(std::string name, GLint dataPerAttribute, GLint offset);
-
     GLuint m_id;
+
     GLenum m_targetType;
     GLenum m_usageType;
-    GLsizei m_vertexCount;
 
+    GLsizei m_dataCountPerVertex;
     std::vector<GLfloat> m_vertexData;
-
-    AttributeMap m_vertexAttributes;
 };
 
 #endif // VERTEX_BUFFER_H

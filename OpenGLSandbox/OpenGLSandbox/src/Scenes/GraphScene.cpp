@@ -180,9 +180,9 @@ void GraphScene::render()
 
     program->use();
 
-    glLineWidth(1.f);
-    VAOedges->bind();
-    VAOedges->render();
+    //glLineWidth(1.f);
+    //VAOedges->bind();
+    //VAOedges->render();
 
     glLineWidth(3.f);
     VAOPath->bind();

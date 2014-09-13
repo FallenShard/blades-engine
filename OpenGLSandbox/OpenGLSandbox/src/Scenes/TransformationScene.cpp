@@ -109,32 +109,30 @@ void TransformationScene::prepare()
     };
 
     // Translation
-    m_vertexArrays["Translation"] = std::make_unique<VertexArray>(GL_TRIANGLES);
+    m_vertexArrays["Translation"] = std::make_unique<VertexArray>();
     VertexArray* vArray = m_vertexArrays["Translation"].get();
     vArray->bind();
 
-    m_vertexBuffers["Object"] = std::make_unique<VertexBuffer>(GL_ARRAY_BUFFER, GL_STATIC_DRAW);
+    m_vertexBuffers["Object"] = std::make_unique<VertexBuffer>(GL_STATIC_DRAW);
     VertexBuffer* buffer = m_vertexBuffers["Object"].get();
     buffer->bind();
     buffer->loadFromFile("res/TranslationData.txt");
+    buffer->setDataCountPerVertex(7);
     vArray->setVertexCount(buffer->getVertexCount());
 
-    m_indexBuffers["Object"] = std::make_unique<IndexBuffer>(GL_ELEMENT_ARRAY_BUFFER, GL_STATIC_DRAW);
+    m_indexBuffers["Object"] = std::make_unique<IndexBuffer>(GL_STATIC_DRAW);
     IndexBuffer* indexBuffer = m_indexBuffers["Object"].get();
     indexBuffer->bind();
     indexBuffer->create(indexData, sizeof(indexData) / sizeof(GLshort));
     vArray->attachIndexBuffer(indexBuffer);
 
-
-    VertexBuffer::AttributeMap attributeMap = buffer->getAttributeMap();
-
-    for (auto& attribute : attributeMap)
-    {
-        attribute.second->locate(program->getProgramId());
-        attribute.second->enable();
-    }
+    vArray->attachAttribute(VertexAttribute("vPosition", 3, 0, 0));
+    vArray->attachAttribute(VertexAttribute("vColor", 4, 0, 3 * sizeof(GLfloat) * buffer->getVertexCount()));
+    vArray->enableAttributes(program->getProgramId());
 
     VertexArray::release();
+    IndexBuffer::release();
+    VertexBuffer::release();
 
     g_instanceList[0] = { StationaryOffset };
     g_instanceList[1] = { OvalOffset };

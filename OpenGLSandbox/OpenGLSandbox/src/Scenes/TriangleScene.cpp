@@ -5,6 +5,18 @@ TriangleScene::TriangleScene()
 {
 }
 
+namespace
+{
+    GLuint vao, vbo;
+
+    GLfloat data[] = { 0.0f, 0.5f,
+
+        0.5f, -0.366f,
+
+        -0.5f, -0.366f };
+
+}
+
 void TriangleScene::prepare()
 {
     // Create an accompanying shader program
@@ -14,29 +26,21 @@ void TriangleScene::prepare()
     program->attachShader(Shader::Frag, "circularMotion.frag");
     program->link();
     program->checkLinkStatus();
-
+    
     // Triangles
-    m_vertexArrays["Triangles"] = std::make_unique<VertexArray>(GL_TRIANGLES);
+    m_vertexArrays["Triangles"] = std::make_unique<VertexArray>();
     VertexArray* vArray = m_vertexArrays["Triangles"].get();
     vArray->bind();
-
-    m_vertexBuffers["Triangle"] = std::make_unique<VertexBuffer>(GL_ARRAY_BUFFER, GL_STREAM_DRAW);
-    VertexBuffer* buffer = m_vertexBuffers["Triangle"].get();
+    
+    m_vertexBuffers["Triangles"] = std::make_unique<VertexBuffer>(GL_STATIC_DRAW);
+    VertexBuffer* buffer = m_vertexBuffers["Triangles"].get();
     buffer->bind();
-    buffer->loadFromFile("res/TrianglePositionData.txt");
+    buffer->loadFromFile("res/TrianglePosData.txt");
+    buffer->setDataCountPerVertex(2);
     vArray->setVertexCount(buffer->getVertexCount());
 
-    VertexBuffer::AttributeMap attributeMap = buffer->getAttributeMap();
-    if (attributeMap.find("Position") != attributeMap.end())
-        attributeMap["Position"]->name = "vPosition";
-    if (attributeMap.find("Color") != attributeMap.end())
-        attributeMap["Color"]->name = "vColor";
-
-    for (auto& attribute : attributeMap)
-    {
-        attribute.second->locate(program->getProgramId());
-        attribute.second->enable();
-    }
+    vArray->attachAttribute(VertexAttribute("vPosition", 2, 0, 0));
+    vArray->enableAttributes(program->getProgramId());
 
     program->getUniformAttribute("time");
     program->getUniformAttribute("loopDuration");
@@ -46,9 +50,9 @@ void TriangleScene::prepare()
     program->use();
     program->setUniformAttribute("screenHeight", 600);
 
-    VertexBuffer::release(*buffer);
-    ShaderProgram::release();
     VertexArray::release();
+    VertexBuffer::release();
+    ShaderProgram::release();
 }
 
 void TriangleScene::handleEvents(const Event& event)
@@ -64,8 +68,9 @@ void TriangleScene::render()
 {
     VertexArray* vArray = m_vertexArrays["Triangles"].get();
     ShaderProgram* program = m_shaderPrograms["Triangles"].get();
-    vArray->bind();
+
     program->use();
+    vArray->bind();
 
     program->setUniformAttribute("time", m_timePassed);
     vArray->render();

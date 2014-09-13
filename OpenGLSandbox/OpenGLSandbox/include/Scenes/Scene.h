@@ -28,13 +28,11 @@ protected:
     typedef std::unique_ptr<VertexArray> VertexArrayPtr;
     typedef std::unique_ptr<VertexBuffer> VertexBufferPtr;
     typedef std::unique_ptr<IndexBuffer> IndexBufferPtr;
-    typedef std::unique_ptr<VertexAttribute> AttributePtr;
 
     std::map<std::string, ProgramPtr> m_shaderPrograms;
     std::map<std::string, VertexArrayPtr> m_vertexArrays;
     std::map<std::string, VertexBufferPtr> m_vertexBuffers;
     std::map<std::string, IndexBufferPtr> m_indexBuffers;
-    std::map<std::string, AttributePtr> m_vertexAttributes;
 };
 
 #endif // SCENE_H

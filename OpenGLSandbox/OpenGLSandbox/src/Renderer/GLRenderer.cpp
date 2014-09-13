@@ -25,14 +25,17 @@ GLRenderer::~GLRenderer()
 {
     for (auto& scene : m_scenes)
         delete scene;
+    m_scenes.clear();
 }
 
 void GLRenderer::init()
 {
+    //Scene* scene = new TriangleScene();
     //Scene* scene = new PrismScene();
-    Scene* scene = new GraphScene();
+    //Scene* scene = new OverlapScene();
+    //Scene* scene = new GraphScene();
+    Scene* scene = new TransformationScene();
     m_scenes.push_back(scene);
-    
 
     for (auto& scene : m_scenes)
         scene->prepare();
@@ -52,13 +55,12 @@ void GLRenderer::init()
 
 void GLRenderer::draw()
 {
-    
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
     for (auto& scene : m_scenes)
         scene->render();
 
-    VertexBuffer::release(GL_ARRAY_BUFFER);
+    VertexBuffer::release();
     VertexArray::release();
     ShaderProgram::release();
 }

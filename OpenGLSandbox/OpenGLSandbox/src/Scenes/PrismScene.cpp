@@ -50,19 +50,20 @@ void PrismScene::prepare()
     program->checkLinkStatus();
 
     // Prism
-    m_vertexArrays["Prism"] = std::make_unique<VertexArray>(GL_TRIANGLES);
+    m_vertexArrays["Prism"] = std::make_unique<VertexArray>();
     VertexArray* vArray = m_vertexArrays["Prism"].get();
     vArray->bind();
 
-    m_vertexBuffers["Prism"] = std::make_unique<VertexBuffer>(GL_ARRAY_BUFFER, GL_STATIC_DRAW);
+    m_vertexBuffers["Prism"] = std::make_unique<VertexBuffer>(GL_STATIC_DRAW);
     VertexBuffer* buffer = m_vertexBuffers["Prism"].get();
     buffer->bind();
     buffer->loadFromFile("res/PrismData.txt");
+    buffer->setDataCountPerVertex(8);
     vArray->setVertexCount(buffer->getVertexCount());
 
-    VertexBuffer::AttributeMap attributeMap = buffer->getAttributeMap();
-    for (auto& attribute : attributeMap)
-        attribute.second->enable(program->getProgramId());
+    vArray->attachAttribute(VertexAttribute("vPosition", 4, 0, 0));
+    vArray->attachAttribute(VertexAttribute("vColor",    4, 0, 4 * sizeof(GLfloat) * buffer->getVertexCount()));
+    vArray->enableAttributes(program->getProgramId());
 
     setupDefaultPerspectiveCamera(*program);
 

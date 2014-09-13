@@ -45,15 +45,16 @@ struct VertexAttribute
 
     void enable()
     {
-        glEnableVertexAttribArray(location);
         glVertexAttribPointer(location, size, type, normalized, stride, offset);
+        glEnableVertexAttribArray(location);
     }
 
     void enable(GLuint programId)
     {
         location = glGetAttribLocation(programId, name.c_str());
-        glEnableVertexAttribArray(location);
         glVertexAttribPointer(location, size, type, normalized, stride, offset);
+        glEnableVertexAttribArray(location);
+
     }
 
     void disable()

@@ -42,14 +42,15 @@ void OverlapScene::prepare()
     program->getUniformAttribute("offset");
 
     // Overlap
-    m_vertexArrays["Overlap"] = std::make_unique<VertexArray>(GL_TRIANGLES);
+    m_vertexArrays["Overlap"] = std::make_unique<VertexArray>();
     VertexArray* vArray = m_vertexArrays["Overlap"].get();
     vArray->bind();
 
-    m_vertexBuffers["Overlap"] = std::make_unique<VertexBuffer>(GL_ARRAY_BUFFER, GL_STREAM_DRAW);
+    m_vertexBuffers["Overlap"] = std::make_unique<VertexBuffer>(GL_STATIC_DRAW);
     VertexBuffer* buffer = m_vertexBuffers["Overlap"].get();
     buffer->bind();
     buffer->loadFromFile("res/OverlapData.txt");
+    buffer->setDataCountPerVertex(7);
     vArray->setVertexCount(buffer->getVertexCount());
 
     GLshort indexData[] =
@@ -73,19 +74,11 @@ void OverlapScene::prepare()
     indexBuffer->create(indexData, sizeof(indexData) / sizeof(GLshort));
     vArray->attachIndexBuffer(indexBuffer);
 
-    VertexBuffer::AttributeMap attributeMap = buffer->getAttributeMap();
-    if (attributeMap.find("Position") != attributeMap.end())
-        attributeMap["Position"]->name = "vPosition";
-    if (attributeMap.find("Color") != attributeMap.end())
-        attributeMap["Color"]->name = "vColor";
+    vArray->attachAttribute(VertexAttribute("vPosition", 3, 0, 0));
+    vArray->attachAttribute(VertexAttribute("vColor",    4, 0, 3 * sizeof(GLfloat) * buffer->getVertexCount()));
+    vArray->enableAttributes(program->getProgramId());
 
-    for (auto& attribute : attributeMap)
-    {
-        attribute.second->locate(program->getProgramId());
-        attribute.second->enable();
-    }
-
-    VertexBuffer::release(*buffer);
+    VertexBuffer::release();
     ShaderProgram::release();
     VertexArray::release();
 }
