@@ -2,7 +2,7 @@
 
 namespace
 {
-    GLuint previouslyBoundVAO = 0;
+    GLuint boundVAO = 0;
 }
 
 VertexArray::VertexArray()
@@ -28,17 +28,17 @@ VertexArray::~VertexArray()
 
 void VertexArray::bind()
 {
-    if (m_id != previouslyBoundVAO)
+    if (m_id != boundVAO)
     {
         glBindVertexArray(m_id);
-        previouslyBoundVAO = m_id;
+        boundVAO = m_id;
     }
 }
 
 void VertexArray::release()
 {
     glBindVertexArray(0);
-    previouslyBoundVAO = 0;
+    boundVAO = 0;
 }
 
 GLuint VertexArray::getVertexArrayId() const

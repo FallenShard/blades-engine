@@ -3,10 +3,10 @@
 
 #include "Scene.h"
 
-class TransformationScene : public Scene
+class TranslationScene : public Scene
 {
 public:
-    TransformationScene();
+    TranslationScene();
 
     virtual void prepare();
     virtual void handleEvents(const Event& event);

@@ -4,7 +4,7 @@
 
 namespace
 {
-    GLuint previouslyBoundIBO = 0;
+    GLuint boundIBO = 0;
 }
 
 IndexBuffer::IndexBuffer()
@@ -34,36 +34,36 @@ IndexBuffer::~IndexBuffer()
 
 void IndexBuffer::bind() const
 {
-    if (previouslyBoundIBO != m_id)
+    if (boundIBO != m_id)
     {
         glBindBuffer(m_targetType, m_id);
-        previouslyBoundIBO = m_id;
+        boundIBO = m_id;
     }
 }
 
 void IndexBuffer::release()
 {
     glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, 0);
-    previouslyBoundIBO = 0;
+    boundIBO = 0;
 }
 
 void IndexBuffer::release(GLenum targetType)
 {
     glBindBuffer(targetType, 0);
-    previouslyBoundIBO = 0;
+    boundIBO = 0;
 }
 
 void IndexBuffer::release(const IndexBuffer& buffer)
 {
     glBindBuffer(buffer.m_targetType, 0);
-    previouslyBoundIBO = 0;
+    boundIBO = 0;
 }
 
-void IndexBuffer::create(GLshort* vertices, int size)
+void IndexBuffer::create(GLshort* vertices, unsigned int size)
 {
     m_indices.clear();
 
-    for (int i = 0; i < size; i++)
+    for (unsigned int i = 0; i < size; i++)
         m_indices.push_back(vertices[i]);
 
     glBufferData(m_targetType, sizeof(GLshort) * m_indices.size(), m_indices.data(), m_usageType);

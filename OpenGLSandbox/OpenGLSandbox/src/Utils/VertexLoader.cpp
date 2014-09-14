@@ -1,14 +1,16 @@
 #include <fstream>
 #include <sstream>
+#include <algorithm>
+#include <numeric>
 
 #include "Utils/VertexLoader.h"
 #include "Renderer/VertexBuffer.h"
+#include "Renderer/VertexArray.h"
 
 VertexLoader::VertexLoader()
 {
-
 }
-/*
+
 void VertexLoader::loadFromFile(std::string fileName, VertexBuffer& buffer)
 {
     std::ifstream inputFile(fileName, std::ios::in);
@@ -16,59 +18,65 @@ void VertexLoader::loadFromFile(std::string fileName, VertexBuffer& buffer)
 
     // Load the vertex data
     int dataPerVertexCount = 0;
+    int dataPerAttribute = 0;
+    int lineDataCounter = 0;
+    int vertexCount = 0;
 
-    int positionDataCount = 0;
-    int colorDataCount = 0;
+    GLfloat vertexData;
 
     // Read the file lines one by one and register the attributes
     while (std::getline(inputFile, line))
     {
-        positionDataCount = loadAttribute(line, "Vertices", inputFile, buffer);
-        dataPerVertexCount += positionDataCount;
+        std::stringstream lineStream(line);
 
-        colorDataCount = loadAttribute(line, "Colors", inputFile, buffer);
-        dataPerVertexCount += colorDataCount;
-    }
-
-    // Calculate vertex count
-    //m_vertexCount = m_vertexData.size() / dataPerVertexCount;
-
-    //registerAttribute("vPosition", positionDataCount, 0);
-
-    //GLint colorOffset = m_vertexCount * positionDataCount * sizeof GLfloat;
-    //registerAttribute("vColor", colorDataCount, colorOffset);
-}
-
-int VertexLoader::loadAttribute(std::string& line, std::string attribute, std::ifstream& stream, VertexBuffer& buffer)
-{
-    GLfloat vertexData;
-    int attributeDataCount = 0;
-    int dataCounter = 0;
-
-    // Try to find attribute header
-    if (line.find(attribute) != std::string::npos)
-    {
-        // If so, continue reading file line by line
-        while (std::getline(stream, line))
+        lineDataCounter = 0;
+        // Check if a float value could be read
+        while (lineStream >> vertexData)
         {
-            std::stringstream lineStream(line);
+            m_vertexData.push_back(vertexData);
+            lineDataCounter++;
+        }
 
-            // Read all coordinates one by one per line
-            dataCounter = 0;
-            while (lineStream >> vertexData)
+        // If there was no data, check if the string wasn't empty
+        if (lineDataCounter == 0)
+        {
+            // If it wasn't empty, it marked a new attribute
+            if (line != "" && dataPerAttribute != 0)
             {
-                m_vertexData.push_back(vertexData);
-                dataCounter++;
+                m_attributeSizes.push_back(dataPerAttribute);
+                dataPerAttribute = 0;
             }
-
-            // Remember the highest seen per vertex attribute data
-            attributeDataCount = std::max(attributeDataCount, dataCounter);
-
-            // End reading session if there's no data anymore for this attribute
-            if (dataCounter == 0 && line != "")
-                break;
+        }
+        else
+        {
+            // If there was data, compute current data per attribute
+            dataPerAttribute = std::max(dataPerAttribute, lineDataCounter);
         }
     }
+    inputFile.close();
+    m_attributeSizes.push_back(dataPerAttribute);
 
-    return attributeDataCount;
-}*/
+    dataPerVertexCount = std::accumulate(m_attributeSizes.begin(), m_attributeSizes.end(), 0);
+    vertexCount = m_vertexData.size() / dataPerVertexCount;
+
+    m_attributeOffsets.push_back(0);
+    int i = 0;
+    while (m_attributeOffsets.size() < m_attributeSizes.size())
+    {
+        m_attributeOffsets.push_back(m_attributeOffsets[i] + m_attributeSizes[i] * sizeof(GLfloat) * vertexCount);
+        i++;
+    }
+
+    buffer.create(m_vertexData);
+    buffer.setDataCountPerVertex(dataPerVertexCount);
+}
+
+std::vector<int> VertexLoader::getAttributeSizes()
+{
+    return m_attributeSizes;
+}
+
+std::vector<int> VertexLoader::getAttributeOffsets()
+{
+    return m_attributeOffsets;
+}

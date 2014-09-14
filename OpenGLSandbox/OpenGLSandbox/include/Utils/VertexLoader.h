@@ -2,6 +2,8 @@
 #define VERTEX_LOADER_H
 
 #include <string>
+#include <vector>
+#include "OpenGL.h"
 
 class VertexBuffer;
 
@@ -11,9 +13,14 @@ public:
     VertexLoader();
 
     void loadFromFile(std::string fileName, VertexBuffer& buffer);
+    std::vector<int> getAttributeSizes();
+    std::vector<int> getAttributeOffsets();
 
 private:
-    int loadAttribute(std::string& line, std::string attribute, std::ifstream& stream, VertexBuffer& buffer);
+    std::vector<int> m_attributeSizes;
+    std::vector<int> m_attributeOffsets;
+
+    std::vector<GLfloat> m_vertexData;
 };
 
 #endif // VERTEX_LOADER_H

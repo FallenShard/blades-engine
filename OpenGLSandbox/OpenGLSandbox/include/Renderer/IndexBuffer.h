@@ -32,7 +32,7 @@ public:
     static void release(const IndexBuffer& indexBuffer);
 
     // Fills an index buffer with provided indices
-    void create(GLshort* indices, int size);
+    void create(GLshort* indices, unsigned int size);
 
     // Fills an index buffer with provided indices
     void create(std::vector<GLshort> indices);

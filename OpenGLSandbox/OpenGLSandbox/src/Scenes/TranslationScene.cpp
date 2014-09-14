@@ -1,18 +1,10 @@
-#include "Scenes/TransformationScene.h"
+#include "Scenes/TranslationScene.h"
+#include "Utils/VertexLoader.h"
+#include "Renderer/Camera.h"
 
 namespace
 {
-    glm::mat4 cameraToClipMatrix;
     glm::mat4 modelToCameraMatrix;
-
-    float CalcFrustumScale(float fovDegrees)
-    {
-        const float degToRad = 3.14159f / 180.f;
-        float fFovRad = fovDegrees * degToRad;
-        return 1.0f / tan(fFovRad / 2.0f);
-    }
-
-    float fFrustumScale = CalcFrustumScale(45.f);
 
     struct Instance
     {
@@ -31,8 +23,6 @@ namespace
     };
 
     Instance g_instanceList[3];
-
-
 
     glm::vec3 StationaryOffset(float elapsedTime)
     {
@@ -63,12 +53,12 @@ namespace
     }
 }
 
-TransformationScene::TransformationScene()
+TranslationScene::TranslationScene()
     : m_timePassed(0.f)
 {
 }
 
-void TransformationScene::prepare()
+void TranslationScene::prepare()
 {
     // Create an accompanying shader program
     m_shaderPrograms["Translation"] = std::make_unique<ShaderProgram>();
@@ -78,22 +68,10 @@ void TransformationScene::prepare()
     program->link();
     program->checkLinkStatus();
 
-    program->getUniformAttribute("position");
-    program->getUniformAttribute("color");
     program->getUniformAttribute("modelToCameraMatrix");
-    program->getUniformAttribute("cameraToClipMatrix");
 
-    float fzNear = 1.0f; float fzFar = 45.0f;
-
-    cameraToClipMatrix[0].x = fFrustumScale;
-    cameraToClipMatrix[1].y = fFrustumScale;
-    cameraToClipMatrix[2].z = (fzFar + fzNear) / (fzNear - fzFar);
-    cameraToClipMatrix[2].w = -1.0f;
-    cameraToClipMatrix[3].z = (2 * fzFar * fzNear) / (fzNear - fzFar);
-
-    program->use();
-    program->setUniformAttribute("cameraToClipMatrix", 1, GL_FALSE, glm::value_ptr(cameraToClipMatrix));
-    ShaderProgram::release();
+    Camera camera(45.f);
+    camera.set("cameraToClipMatrix", *program);
 
     GLshort indexData[] =
     {
@@ -116,8 +94,8 @@ void TransformationScene::prepare()
     m_vertexBuffers["Object"] = std::make_unique<VertexBuffer>(GL_STATIC_DRAW);
     VertexBuffer* buffer = m_vertexBuffers["Object"].get();
     buffer->bind();
-    buffer->loadFromFile("res/TranslationData.txt");
-    buffer->setDataCountPerVertex(7);
+    VertexLoader vLoader;
+    vLoader.loadFromFile("res/TranslationData.txt", *buffer);
     vArray->setVertexCount(buffer->getVertexCount());
 
     m_indexBuffers["Object"] = std::make_unique<IndexBuffer>(GL_STATIC_DRAW);
@@ -127,7 +105,7 @@ void TransformationScene::prepare()
     vArray->attachIndexBuffer(indexBuffer);
 
     vArray->attachAttribute(VertexAttribute("vPosition", 3, 0, 0));
-    vArray->attachAttribute(VertexAttribute("vColor", 4, 0, 3 * sizeof(GLfloat) * buffer->getVertexCount()));
+    vArray->attachAttribute(VertexAttribute("vColor",    4, 0, 3 * sizeof(GLfloat) * buffer->getVertexCount()));
     vArray->enableAttributes(program->getProgramId());
 
     VertexArray::release();
@@ -139,21 +117,21 @@ void TransformationScene::prepare()
     g_instanceList[2] = { BottomCircleOffset };
 }
 
-void TransformationScene::handleEvents(const Event& event)
+void TranslationScene::handleEvents(const Event& event)
 {
 }
 
-void TransformationScene::update(float timeDelta)
+void TranslationScene::update(float timeDelta)
 {
     m_timePassed += timeDelta;
 }
 
-void TransformationScene::render()
+void TranslationScene::render()
 {
     VertexArray* vArray = m_vertexArrays["Translation"].get();
     ShaderProgram* program = m_shaderPrograms["Translation"].get();
-    vArray->bind();
     program->use();
+    vArray->bind();
 
     for (int iLoop = 0; iLoop < 3; iLoop++)
     {
@@ -165,7 +143,7 @@ void TransformationScene::render()
     }
 }
 
-bool TransformationScene::reshape(int width, int height)
+bool TranslationScene::reshape(int width, int height)
 {
     return false;
 }

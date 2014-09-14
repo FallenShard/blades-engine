@@ -5,7 +5,7 @@
 
 namespace
 {
-    GLuint previouslyBoundVBO = 0;
+    GLuint boundVBO = 0;
 }
 
 VertexBuffer::VertexBuffer(GLenum usageType)
@@ -31,29 +31,29 @@ VertexBuffer::~VertexBuffer()
 
 void VertexBuffer::bind() const
 {
-    if (previouslyBoundVBO != m_id)
+    if (boundVBO != m_id)
     {
         glBindBuffer(m_targetType, m_id);
-        previouslyBoundVBO = m_id;
+        boundVBO = m_id;
     }
 }
 
 void VertexBuffer::release()
 {
     glBindBuffer(GL_ARRAY_BUFFER, 0);
-    previouslyBoundVBO = 0;
+    boundVBO = 0;
 }
 
 void VertexBuffer::release(GLenum targetType)
 {
     glBindBuffer(targetType, 0);
-    previouslyBoundVBO = 0;
+    boundVBO = 0;
 }
 
 void VertexBuffer::release(const VertexBuffer& buffer)
 {
     glBindBuffer(buffer.m_targetType, 0);
-    previouslyBoundVBO = 0;
+    boundVBO = 0;
 }
 
 void VertexBuffer::create(GLfloat* vertices, unsigned int size)
