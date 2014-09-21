@@ -1,5 +1,4 @@
-#ifndef VECTOR_2D_H
-#define VECTOR_2D_H
+#pragma once
 
 // A template class that represents a simple 2d Euclidean vector
 template <typename T>
@@ -45,5 +44,3 @@ typedef Vector2D<float>        Vector2Df;
 typedef Vector2D<double>       Vector2Dd;
 
 #include "Vector2D.inl"
-
-#endif

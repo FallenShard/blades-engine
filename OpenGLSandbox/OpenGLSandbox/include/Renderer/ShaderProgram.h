@@ -1,5 +1,4 @@
-#ifndef SHADER_PROGRAM_H
-#define SHADER_PROGRAM_H
+#pragma once
 
 #include <memory>
 #include <map>
@@ -39,6 +38,3 @@ private:
     std::map<std::string, ShaderPtr> m_shaders;
     std::map<std::string, GLint> m_uniformAttributes;
 };
-
-
-#endif // SHADER_PROGRAM_H

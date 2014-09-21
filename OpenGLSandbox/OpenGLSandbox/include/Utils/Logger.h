@@ -1,5 +1,4 @@
-#ifndef LOGGER_H
-#define LOGGER_H
+#pragma once
 
 #include <string>
 #include <fstream>
@@ -20,5 +19,3 @@ private:
     static Logger* m_instance;
     std::ofstream m_logFile;
 };
-
-#endif

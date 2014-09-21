@@ -1,5 +1,4 @@
-#ifndef MOUSE_H
-#define MOUSE_H
+#pragma once
 
 #include "Utils/Vector2D.h"
 
@@ -27,5 +26,3 @@ public:
     static void setPosition(const Vector2Di& position);
     static void setPosition(const Vector2Di& position, const Window& relativeTo);
 };
-
-#endif

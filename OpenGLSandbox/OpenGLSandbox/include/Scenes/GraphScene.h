@@ -1,5 +1,4 @@
-#ifndef GRAPH_SCENE_H
-#define GRAPH_SCENE_H
+#pragma once
 
 #include <random>
 #include <functional>
@@ -28,5 +27,3 @@ private:
     std::default_random_engine generator;
     std::uniform_real_distribution<float> distribution;
 };
-
-#endif // GRAPH_SCENE_H

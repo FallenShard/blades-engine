@@ -1,5 +1,4 @@
-#ifndef GL_RENDERER_H
-#define GL_RENDERER_H
+#pragma once
 
 #include <vector>
 #include <map>
@@ -36,5 +35,3 @@ private:
 
     std::vector<Scene*> m_scenes;
 };
-
-#endif // GL_RENDERER_H

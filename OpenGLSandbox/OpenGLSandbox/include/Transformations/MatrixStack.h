@@ -1,5 +1,4 @@
-#ifndef MATRIX_STACK_H
-#define MATRIX_STACK_H
+#pragma once
 
 #include <stack>
 #include "glm.hpp"
@@ -21,6 +20,7 @@ public:
 
     void push();
     void pop();
+    void set(glm::mat4 matrix);
 
 private:
     glm::mat3 rotateXpriv(float degrees);
@@ -30,5 +30,3 @@ private:
     glm::mat4 m_currentMatrix;
     std::stack<glm::mat4> m_matrices;
 };
-
-#endif

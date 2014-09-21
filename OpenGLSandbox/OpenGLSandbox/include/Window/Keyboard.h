@@ -1,5 +1,4 @@
-#ifndef KEYBOARD_H
-#define KEYBOARD_H
+#pragma once
 
 class Keyboard
 {
@@ -117,5 +116,3 @@ public:
 
     static bool isKeyPressed(Key key);
 };
-
-#endif

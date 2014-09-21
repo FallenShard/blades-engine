@@ -40,6 +40,11 @@ namespace
     GLenum error;
     glm::mat4 cameraToClipMatrix(0.0f);
 
+    float degToRad(float degrees)
+    {
+        return degrees * 3.141592f / 180.f;
+    }
+
     float CalcFrustumScale(float fFovDeg)
     {
         const float degToRad = 3.14159f * 2.0f / 360.0f;
@@ -48,6 +53,49 @@ namespace
     }
 
     const float fFrustumScale = CalcFrustumScale(45.0f);
+
+    glm::mat4 CalcLookAtMatrix(const glm::vec3 &cameraPt, const glm::vec3 &lookPt, const glm::vec3 &upPt)
+    {
+        glm::vec3 lookDir = glm::normalize(lookPt - cameraPt);
+        glm::vec3 upDir = glm::normalize(upPt);
+
+        glm::vec3 rightDir = glm::normalize(glm::cross(lookDir, upDir));
+        glm::vec3 perpUpDir = glm::cross(rightDir, lookDir);
+
+        glm::mat4 rotMat(1.0f);
+        rotMat[0] = glm::vec4(rightDir, 0.0f);
+        rotMat[1] = glm::vec4(perpUpDir, 0.0f);
+        rotMat[2] = glm::vec4(-lookDir, 0.0f);
+
+        rotMat = glm::transpose(rotMat);
+
+        glm::mat4 transMat(1.0f);
+        transMat[3] = glm::vec4(-cameraPt, 1.0f);
+
+        return rotMat * transMat;
+    }
+
+    static bool g_bDrawLookatPoint = false;
+    static glm::vec3 g_camTarget(0.0f, 0.4f, 0.0f);
+
+    //In spherical coordinates.
+    static glm::vec3 g_sphereCamRelPos(67.5f, -46.0f, 150.0f);
+
+    glm::vec3 ResolveCamPosition()
+    {
+        MatrixStack tempMat;
+
+        float phi = degToRad(g_sphereCamRelPos.x);
+        float theta = degToRad(g_sphereCamRelPos.y + 90.0f);
+
+        float fSinTheta = sinf(theta);
+        float fCosTheta = cosf(theta);
+        float fCosPhi = cosf(phi);
+        float fSinPhi = sinf(phi);
+
+        glm::vec3 dirToCamera(fSinTheta * fCosPhi, fCosTheta, fSinTheta * fSinPhi);
+        return (dirToCamera * g_sphereCamRelPos.z) + g_camTarget;
+    }
 }
 
 RobotArmScene::RobotArmScene()
@@ -67,22 +115,11 @@ void RobotArmScene::prepare()
 
     error = glGetError();
 
-    program->getUniformAttribute("modelToCameraMatrix");
+    program->getUniformAttribute("modelToWorldMatrix");
+    program->getUniformAttribute("worldToCameraMatrix");
+    
 
-    program->getUniformAttribute("cameraToClipMatrix");
-
-    float fzNear = 1.0f; float fzFar = 100.0f;
-    cameraToClipMatrix[0].x = fFrustumScale;
-    cameraToClipMatrix[1].y = fFrustumScale;
-    cameraToClipMatrix[2].z = (fzFar + fzNear) / (fzNear - fzFar);
-    cameraToClipMatrix[2].w = -1.0f;
-    cameraToClipMatrix[3].z = (2 * fzFar * fzNear) / (fzNear - fzFar);
-
-    program->use();
-    program->setUniformAttribute("cameraToClipMatrix", 1, GL_FALSE, glm::value_ptr(cameraToClipMatrix));
-    ShaderProgram::release();
-
-    //m_camera.set("cameraToClipMatrix", *program);
+    m_camera.set("cameraToClipMatrix", *program);
 
     m_vertexArrays["RobotArm"] = std::make_unique<VertexArray>();
     VertexArray* vArray = m_vertexArrays["RobotArm"].get();
@@ -104,10 +141,10 @@ void RobotArmScene::prepare()
     vArray->attachAttribute(VertexAttribute("vPosition", 3, 0, 0));
     vArray->attachAttribute(VertexAttribute("vColor", 4, 0, 3 * sizeof(GLfloat) * buffer->getVertexCount()));
     vArray->enableAttributes(program->getProgramId());
-
-    //VertexArray::release();
 }
 
+bool camUp = false;
+bool camDown = false;
 
 void RobotArmScene::handleEvents(const Event& event)
 {
@@ -116,6 +153,14 @@ void RobotArmScene::handleEvents(const Event& event)
     case Event::KeyPressed:
         switch (event.key.code)
         {
+        case Keyboard::Up:
+            camUp = true;
+            break;
+
+        case Keyboard::Down:
+            camDown = true;
+            break;
+
         case Keyboard::A:
             aPressed = true;
             break;
@@ -169,6 +214,14 @@ void RobotArmScene::handleEvents(const Event& event)
     case Event::KeyReleased:
         switch (event.key.code)
         {
+        case Keyboard::Up:
+            camUp = false;
+            break;
+
+        case Keyboard::Down:
+            camDown = false;
+            break;
+
         case Keyboard::A:
             aPressed = false;
             break;
@@ -226,6 +279,11 @@ void RobotArmScene::update(float timeDelta)
 {
     m_timePassed += timeDelta;
 
+    if (camUp)
+        g_camTarget.z -= 0.1f;
+    if (camDown)
+        g_camTarget.z += 0.1f;
+
     if (aPressed)
         m_robotArm.moveBase(true);
     if (dPressed)
@@ -259,6 +317,12 @@ void RobotArmScene::render()
 
     program->use();
     vArray->bind();
+
+    glm::vec3 camPos = ResolveCamPosition();
+    MatrixStack cameraMatrix;
+    cameraMatrix.set(CalcLookAtMatrix(camPos, g_camTarget, glm::vec3(0.f, 1.f, 0.f)));
+
+    program->setUniformAttribute("worldToCameraMatrix", 1, GL_FALSE, glm::value_ptr(cameraMatrix.top()));
 
     m_robotArm.draw(*vArray, *program);
 

@@ -1,5 +1,4 @@
-#ifndef VIDEO_MODE_H
-#define VIDEO_MODE_H
+#pragma once
 
 #include <vector>
 
@@ -36,5 +35,3 @@ private:
     unsigned int m_modeHeight;
     unsigned int m_modeBitsPerPixel;
 };
-
-#endif

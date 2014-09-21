@@ -1,5 +1,4 @@
-#ifndef PRISM_SCENE_H
-#define PRISM_SCENE_H
+#pragma once
 
 #include "Scene.h"
 
@@ -18,5 +17,3 @@ public:
 private:
     float m_timePassed;
 };
-
-#endif // PRISM_SCENE_H

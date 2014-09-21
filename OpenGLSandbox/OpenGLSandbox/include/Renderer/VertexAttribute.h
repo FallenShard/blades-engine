@@ -1,5 +1,4 @@
-#ifndef VERTEX_ATTRIBUTE_H
-#define VERTEX_ATTRIBUTE_H
+#pragma once
 
 #include <string>
 #include "OpenGL.h"
@@ -62,5 +61,3 @@ struct VertexAttribute
         glDisableVertexAttribArray(location);
     }
 };
-
-#endif // VERTEX_ATTRIBUTE_H

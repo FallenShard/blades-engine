@@ -1,13 +1,10 @@
-#ifndef OPEN_GL_H
-#define OPEN_GL_H
+#pragma once
 
 #include "GL/glew.h"
 #include "GL/wglew.h"
 
 #include "glm.hpp"
 #include "ext.hpp"
-
-#endif
 
 /*
         Vertex Array functions

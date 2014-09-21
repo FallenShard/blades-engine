@@ -1,5 +1,4 @@
-#ifndef INDEX_BUFFER_H
-#define INDEX_BUFFER_H
+#pragma once
 
 #include <string>
 #include <vector>
@@ -57,5 +56,3 @@ private:
 
     std::vector<GLshort> m_indices;
 };
-
-#endif // INDEX_BUFFER_H

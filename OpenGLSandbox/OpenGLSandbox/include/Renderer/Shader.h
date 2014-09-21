@@ -1,5 +1,4 @@
-#ifndef SHADER_H
-#define SHADER_H
+#pragma once
 
 #include <string>
 #include "OpenGL.h"
@@ -39,6 +38,3 @@ private:
     GLuint m_id;
     GLenum m_type;
 };
-
-
-#endif // SHADER_H

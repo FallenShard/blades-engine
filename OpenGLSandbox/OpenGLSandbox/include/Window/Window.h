@@ -1,5 +1,4 @@
-#ifndef WINDOW_H
-#define WINDOW_H
+#pragma once
 
 #include <windows.h>
 
@@ -71,5 +70,3 @@ private:
     bool m_containsMouse;
     bool m_isResizing;
 };
-
-#endif // WINDOW_H

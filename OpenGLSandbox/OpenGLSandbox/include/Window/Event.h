@@ -1,5 +1,4 @@
-#ifndef EVENT_H
-#define EVENT_H
+#pragma once
 
 #include "Window/Keyboard.h"
 #include "Window/Mouse.h"
@@ -62,5 +61,3 @@ struct Event
         SizeEvent            size;
     };
 };
-
-#endif

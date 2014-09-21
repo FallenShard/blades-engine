@@ -1,5 +1,4 @@
-#ifndef APP_H
-#define APP_H
+#pragma once
 
 #include "Window/Window.h"
 #include "Renderer/GLRenderer.h"
@@ -22,5 +21,3 @@ private:
 
     float backColor;
 };
-
-#endif

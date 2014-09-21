@@ -1,5 +1,4 @@
-#ifndef SCENE_H
-#define SCENE_H
+#pragma once
 
 #include <memory>
 
@@ -35,5 +34,3 @@ protected:
     std::map<std::string, VertexBufferPtr> m_vertexBuffers;
     std::map<std::string, IndexBufferPtr> m_indexBuffers;
 };
-
-#endif // SCENE_H

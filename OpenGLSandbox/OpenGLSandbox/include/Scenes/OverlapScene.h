@@ -1,5 +1,4 @@
-#ifndef OVERLAP_SCENE_H
-#define OVERLAP_SCENE_H
+#pragma once
 
 #include "Scene.h"
 
@@ -19,5 +18,3 @@ private:
     float m_timePassed;
     bool m_depthClamp;
 };
-
-#endif // OVERLAP_SCENE_H

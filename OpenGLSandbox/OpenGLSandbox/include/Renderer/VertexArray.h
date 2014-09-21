@@ -1,5 +1,4 @@
-#ifndef VERTEX_ARRAY_H
-#define VERTEX_ARRAY_H
+#pragma once
 
 #include <map>
 #include "OpenGL.h"
@@ -75,5 +74,3 @@ private:
     std::map<std::string, VertexAttribute> m_attributes;
     IndexBuffer* m_indexBuffer;
 };
-
-#endif // VERTEX_ARRAY_H

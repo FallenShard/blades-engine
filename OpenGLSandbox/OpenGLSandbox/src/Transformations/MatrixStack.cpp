@@ -63,6 +63,11 @@ void MatrixStack::pop()
     m_matrices.pop();
 }
 
+void MatrixStack::set(glm::mat4 matrix)
+{
+    m_currentMatrix = matrix;
+}
+
 glm::mat3 MatrixStack::rotateXpriv(float degrees)
 {
     float angRad = degToRad(degrees);

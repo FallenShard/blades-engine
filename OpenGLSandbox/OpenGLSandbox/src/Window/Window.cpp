@@ -438,8 +438,8 @@ LRESULT CALLBACK Window::WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM 
     }
     
     // Prevent WM_CLOSE to reach default handling procedure because it will destroy the window
-    if (message == WM_CLOSE)
-        return 0;
+    //if (message == WM_CLOSE)
+    //    return 0;
 
     // Default windows procedure for handling and discarding unprocessed messages
     return DefWindowProc(hWnd, message, wParam, lParam);

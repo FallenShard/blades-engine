@@ -8,14 +8,14 @@ namespace
 Camera::Camera()
     : m_frustumScale(1.f)
     , m_zNear(1.f)
-    , m_zFar(100.f)
+    , m_zFar(1000.f)
 {
     setPerspectiveMatrix(m_zNear, m_zFar, m_frustumScale);
 }
 
 Camera::Camera(float fovDegrees)
     : m_zNear(1.f)
-    , m_zFar(100.f)
+    , m_zFar(1000.f)
 {
     float fovRad = fovDegrees * degToRad;
     m_frustumScale = 1.0f / tan(fovRad / 2.0f);
@@ -55,7 +55,7 @@ void Camera::adjustViewport(int width, int height, ShaderProgram& program)
 
     program.use();
     program.setUniformAttribute("cameraToClipMatrix", 1, GL_FALSE, glm::value_ptr(m_perspectiveMatrix));
-    glUseProgram(0);
+    ShaderProgram::release();
 
     glViewport(0, 0, static_cast<GLsizei>(width), static_cast<GLsizei>(height));
 }

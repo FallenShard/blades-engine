@@ -1,5 +1,4 @@
-#ifndef CAMERA_H
-#define CAMERA_H
+#pragma once
 
 #include "OpenGL.h"
 #include "Renderer/ShaderProgram.h"
@@ -23,5 +22,3 @@ private:
     float m_zFar;
     glm::mat4 m_perspectiveMatrix;
 };
-
-#endif // CAMERA_H

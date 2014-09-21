@@ -1,5 +1,4 @@
-#ifndef GLCONTEXT_H
-#define GLCONTEXT_H
+#pragma once
 
 #include <windows.h>
 
@@ -27,6 +26,3 @@ private:
     unsigned int m_stencilBufferBits;
     unsigned int m_antiAliasingLevel;
 };
-
-
-#endif

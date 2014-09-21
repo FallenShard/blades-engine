@@ -1,5 +1,4 @@
-#ifndef TRIANGLE_SCENE_H
-#define TRIANGLE_SCENE_H
+#pragma once
 
 #include "Scene.h"
 
@@ -18,5 +17,3 @@ public:
 private:
     float m_timePassed;
 };
-
-#endif

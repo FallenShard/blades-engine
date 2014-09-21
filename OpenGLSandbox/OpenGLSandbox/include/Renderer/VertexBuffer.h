@@ -1,5 +1,4 @@
-#ifndef VERTEX_BUFFER_H
-#define VERTEX_BUFFER_H
+#pragma once
 
 #include <string>
 #include <vector>
@@ -59,5 +58,3 @@ private:
     GLsizei m_dataCountPerVertex;
     std::vector<GLfloat> m_vertexData;
 };
-
-#endif // VERTEX_BUFFER_H

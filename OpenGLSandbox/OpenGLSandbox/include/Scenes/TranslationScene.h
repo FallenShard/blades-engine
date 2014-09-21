@@ -1,5 +1,4 @@
-#ifndef TRANSFORMATION_SCENE_H
-#define TRANSFORMATION_SCENE_H
+#pragma once
 
 #include "Scene.h"
 
@@ -18,5 +17,3 @@ public:
 private:
     float m_timePassed;
 };
-
-#endif // TRANSFORMATION_SCENE_H

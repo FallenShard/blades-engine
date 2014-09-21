@@ -1,5 +1,4 @@
-#ifndef VERTEX_LOADER_H
-#define VERTEX_LOADER_H
+#pragma once
 
 #include <string>
 #include <vector>
@@ -22,5 +21,3 @@ private:
 
     std::vector<GLfloat> m_vertexData;
 };
-
-#endif // VERTEX_LOADER_H

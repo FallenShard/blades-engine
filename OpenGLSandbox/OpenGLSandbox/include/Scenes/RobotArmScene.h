@@ -1,5 +1,4 @@
-#ifndef ROBOT_ARM_SCENE_H
-#define ROBOT_ARM_SCENE_H
+#pragma once
 
 #include "Scene.h"
 
@@ -24,5 +23,3 @@ private:
     Camera m_camera;
     RobotArm m_robotArm;
 };
-
-#endif // ROBOT_ARM_SCENE_H

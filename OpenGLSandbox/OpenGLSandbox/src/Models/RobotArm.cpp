@@ -45,33 +45,33 @@ RobotArm::RobotArm()
 
 void RobotArm::draw(VertexArray& vArray, ShaderProgram& program)
 {
-    MatrixStack modelToCameraStack;
+    MatrixStack modelToWorldStack;
 
     program.use();
     vArray.bind();
 
-    modelToCameraStack.translate(m_posBase);
-    modelToCameraStack.rotateY(m_angBase);
+    modelToWorldStack.translate(m_posBase);
+    modelToWorldStack.rotateY(m_angBase);
 
     //Draw left base
-    modelToCameraStack.push();
-    modelToCameraStack.translate(m_posBaseLeft);
-    modelToCameraStack.scale(glm::vec3(1.0f, 1.0f, m_scaleBaseZ));
-    program.setUniformAttribute("modelToCameraMatrix", 1, GL_FALSE, glm::value_ptr(modelToCameraStack.top()));
+    modelToWorldStack.push();
+    modelToWorldStack.translate(m_posBaseLeft);
+    modelToWorldStack.scale(glm::vec3(1.0f, 1.0f, m_scaleBaseZ));
+    program.setUniformAttribute("modelToWorldMatrix", 1, GL_FALSE, glm::value_ptr(modelToWorldStack.top()));
     vArray.renderIndexed();
-    modelToCameraStack.pop();
+    modelToWorldStack.pop();
     
 
     //Draw right base
-    modelToCameraStack.push();
-    modelToCameraStack.translate(m_posBaseRight);
-    modelToCameraStack.scale(glm::vec3(1.0f, 1.0f, m_scaleBaseZ));
-    program.setUniformAttribute("modelToCameraMatrix", 1, GL_FALSE, glm::value_ptr(modelToCameraStack.top()));
+    modelToWorldStack.push();
+    modelToWorldStack.translate(m_posBaseRight);
+    modelToWorldStack.scale(glm::vec3(1.0f, 1.0f, m_scaleBaseZ));
+    program.setUniformAttribute("modelToWorldMatrix", 1, GL_FALSE, glm::value_ptr(modelToWorldStack.top()));
     vArray.renderIndexed();
-    modelToCameraStack.pop();
+    modelToWorldStack.pop();
 
     //Draw main arm.
-    drawUpperArm(modelToCameraStack, vArray, program);
+    drawUpperArm(modelToWorldStack, vArray, program);
 }
 
 void RobotArm::moveBase(bool increment)
@@ -110,117 +110,117 @@ void RobotArm::moveFingerOpen(bool increment)
     m_angFingerOpen = clamp(m_angFingerOpen, 9.0f, 180.0f);
 }
 
-void RobotArm::drawUpperArm(MatrixStack& modelToCameraStack, VertexArray& vArray, ShaderProgram& program)
+void RobotArm::drawUpperArm(MatrixStack& modelToWorldStack, VertexArray& vArray, ShaderProgram& program)
 {
-    modelToCameraStack.push();
-    modelToCameraStack.rotateX(m_angUpperArm);
+    modelToWorldStack.push();
+    modelToWorldStack.rotateX(m_angUpperArm);
 
-    modelToCameraStack.push();
-    modelToCameraStack.translate(glm::vec3(0.0f, 0.0f, (m_sizeUpperArm / 2.0f) - 1.0f));
-    modelToCameraStack.scale(glm::vec3(1.0f, 1.0f, m_sizeUpperArm / 2.0f));
-    program.setUniformAttribute("modelToCameraMatrix", 1, GL_FALSE, glm::value_ptr(modelToCameraStack.top()));
+    modelToWorldStack.push();
+    modelToWorldStack.translate(glm::vec3(0.0f, 0.0f, (m_sizeUpperArm / 2.0f) - 1.0f));
+    modelToWorldStack.scale(glm::vec3(1.0f, 1.0f, m_sizeUpperArm / 2.0f));
+    program.setUniformAttribute("modelToWorldMatrix", 1, GL_FALSE, glm::value_ptr(modelToWorldStack.top()));
     vArray.renderIndexed();
-    modelToCameraStack.pop();
+    modelToWorldStack.pop();
 
-    drawLowerArm(modelToCameraStack, vArray, program);
+    drawLowerArm(modelToWorldStack, vArray, program);
 
-    modelToCameraStack.pop();
+    modelToWorldStack.pop();
 }
 
-void RobotArm::drawLowerArm(MatrixStack &modelToCameraStack, VertexArray& vArray, ShaderProgram& program)
+void RobotArm::drawLowerArm(MatrixStack &modelToWorldStack, VertexArray& vArray, ShaderProgram& program)
 {
-    modelToCameraStack.push();
-    modelToCameraStack.translate(m_posLowerArm);
-    modelToCameraStack.rotateX(m_angLowerArm);
+    modelToWorldStack.push();
+    modelToWorldStack.translate(m_posLowerArm);
+    modelToWorldStack.rotateX(m_angLowerArm);
 
-    modelToCameraStack.push();
-    modelToCameraStack.translate(glm::vec3(0.0f, 0.0f, m_lenLowerArm / 2.0f));
-    modelToCameraStack.scale(glm::vec3(m_widthLowerArm / 2.0f, m_widthLowerArm / 2.0f, m_lenLowerArm / 2.0f));
-    program.setUniformAttribute("modelToCameraMatrix", 1, GL_FALSE, glm::value_ptr(modelToCameraStack.top()));
+    modelToWorldStack.push();
+    modelToWorldStack.translate(glm::vec3(0.0f, 0.0f, m_lenLowerArm / 2.0f));
+    modelToWorldStack.scale(glm::vec3(m_widthLowerArm / 2.0f, m_widthLowerArm / 2.0f, m_lenLowerArm / 2.0f));
+    program.setUniformAttribute("modelToWorldMatrix", 1, GL_FALSE, glm::value_ptr(modelToWorldStack.top()));
     vArray.renderIndexed();
-    modelToCameraStack.pop();
+    modelToWorldStack.pop();
 
-    drawWrist(modelToCameraStack, vArray, program);
+    drawWrist(modelToWorldStack, vArray, program);
 
-    modelToCameraStack.pop();
+    modelToWorldStack.pop();
 }
 
-void RobotArm::drawWrist(MatrixStack &modelToCameraStack, VertexArray& vArray, ShaderProgram& program)
+void RobotArm::drawWrist(MatrixStack &modelToWorldStack, VertexArray& vArray, ShaderProgram& program)
 {
-    modelToCameraStack.push();
-    modelToCameraStack.translate(m_posWrist);
-    modelToCameraStack.rotateZ(m_angWristRoll);
-    modelToCameraStack.rotateX(m_angWristPitch);
+    modelToWorldStack.push();
+    modelToWorldStack.translate(m_posWrist);
+    modelToWorldStack.rotateZ(m_angWristRoll);
+    modelToWorldStack.rotateX(m_angWristPitch);
 
-    modelToCameraStack.push();
-    modelToCameraStack.scale(glm::vec3(m_widthWrist / 2.0f, m_widthWrist / 2.0f, m_lenWrist / 2.0f));
-    program.setUniformAttribute("modelToCameraMatrix", 1, GL_FALSE, glm::value_ptr(modelToCameraStack.top()));
+    modelToWorldStack.push();
+    modelToWorldStack.scale(glm::vec3(m_widthWrist / 2.0f, m_widthWrist / 2.0f, m_lenWrist / 2.0f));
+    program.setUniformAttribute("modelToWorldMatrix", 1, GL_FALSE, glm::value_ptr(modelToWorldStack.top()));
     vArray.renderIndexed();
-    modelToCameraStack.pop();
+    modelToWorldStack.pop();
 
-    drawFingers(modelToCameraStack, vArray, program);
+    drawFingers(modelToWorldStack, vArray, program);
 
-    modelToCameraStack.pop();
+    modelToWorldStack.pop();
 }
 
-void RobotArm::drawFingers(MatrixStack &modelToCameraStack, VertexArray& vArray, ShaderProgram& program)
+void RobotArm::drawFingers(MatrixStack &modelToWorldStack, VertexArray& vArray, ShaderProgram& program)
 {
     //Draw left finger
-    modelToCameraStack.push();
-    modelToCameraStack.translate(m_posLeftFinger);
-    modelToCameraStack.rotateY(m_angFingerOpen);
+    modelToWorldStack.push();
+    modelToWorldStack.translate(m_posLeftFinger);
+    modelToWorldStack.rotateY(m_angFingerOpen);
 
-        modelToCameraStack.push();
-        modelToCameraStack.translate(glm::vec3(0.0f, 0.0f, m_lenFinger / 2.0f));
-        modelToCameraStack.scale(glm::vec3(m_widthFinger / 2.0f, m_widthFinger / 2.0f, m_lenFinger / 2.0f));
-        program.setUniformAttribute("modelToCameraMatrix", 1, GL_FALSE, glm::value_ptr(modelToCameraStack.top()));
+        modelToWorldStack.push();
+        modelToWorldStack.translate(glm::vec3(0.0f, 0.0f, m_lenFinger / 2.0f));
+        modelToWorldStack.scale(glm::vec3(m_widthFinger / 2.0f, m_widthFinger / 2.0f, m_lenFinger / 2.0f));
+        program.setUniformAttribute("modelToWorldMatrix", 1, GL_FALSE, glm::value_ptr(modelToWorldStack.top()));
         vArray.renderIndexed();
-        modelToCameraStack.pop();
+        modelToWorldStack.pop();
 
         //Draw left lower finger
-        modelToCameraStack.push();
-        modelToCameraStack.translate(glm::vec3(0.0f, 0.0f, m_lenFinger));
-        modelToCameraStack.rotateY(-m_angLowerFinger);
+        modelToWorldStack.push();
+        modelToWorldStack.translate(glm::vec3(0.0f, 0.0f, m_lenFinger));
+        modelToWorldStack.rotateY(-m_angLowerFinger);
 
-            modelToCameraStack.push();
-            modelToCameraStack.translate(glm::vec3(0.0f, 0.0f, m_lenFinger / 2.0f));
-            modelToCameraStack.scale(glm::vec3(m_widthFinger / 2.0f, m_widthFinger / 2.0f, m_lenFinger / 2.0f));
-            program.setUniformAttribute("modelToCameraMatrix", 1, GL_FALSE, glm::value_ptr(modelToCameraStack.top()));
+            modelToWorldStack.push();
+            modelToWorldStack.translate(glm::vec3(0.0f, 0.0f, m_lenFinger / 2.0f));
+            modelToWorldStack.scale(glm::vec3(m_widthFinger / 2.0f, m_widthFinger / 2.0f, m_lenFinger / 2.0f));
+            program.setUniformAttribute("modelToWorldMatrix", 1, GL_FALSE, glm::value_ptr(modelToWorldStack.top()));
             vArray.renderIndexed();
-            modelToCameraStack.pop();
+            modelToWorldStack.pop();
 
-        modelToCameraStack.pop();
+        modelToWorldStack.pop();
     
 
-    modelToCameraStack.pop();
+    modelToWorldStack.pop();
 
     //Draw right finger
-    modelToCameraStack.push();
-    modelToCameraStack.translate(m_posRightFinger);
-    modelToCameraStack.rotateY(-m_angFingerOpen);
+    modelToWorldStack.push();
+    modelToWorldStack.translate(m_posRightFinger);
+    modelToWorldStack.rotateY(-m_angFingerOpen);
 
-        modelToCameraStack.push();
-        modelToCameraStack.translate(glm::vec3(0.0f, 0.0f, m_lenFinger / 2.0f));
-        modelToCameraStack.scale(glm::vec3(m_widthFinger / 2.0f, m_widthFinger / 2.0f, m_lenFinger / 2.0f));
-        program.setUniformAttribute("modelToCameraMatrix", 1, GL_FALSE, glm::value_ptr(modelToCameraStack.top()));
+        modelToWorldStack.push();
+        modelToWorldStack.translate(glm::vec3(0.0f, 0.0f, m_lenFinger / 2.0f));
+        modelToWorldStack.scale(glm::vec3(m_widthFinger / 2.0f, m_widthFinger / 2.0f, m_lenFinger / 2.0f));
+        program.setUniformAttribute("modelToWorldMatrix", 1, GL_FALSE, glm::value_ptr(modelToWorldStack.top()));
         vArray.renderIndexed();
-        modelToCameraStack.pop();
+        modelToWorldStack.pop();
     
     //Draw right lower finger
-        modelToCameraStack.push();
-        modelToCameraStack.translate(glm::vec3(0.0f, 0.0f, m_lenFinger));
-        modelToCameraStack.rotateY(m_angLowerFinger);
+        modelToWorldStack.push();
+        modelToWorldStack.translate(glm::vec3(0.0f, 0.0f, m_lenFinger));
+        modelToWorldStack.rotateY(m_angLowerFinger);
 
-            modelToCameraStack.push();
-            modelToCameraStack.translate(glm::vec3(0.0f, 0.0f, m_lenFinger / 2.0f));
-            modelToCameraStack.scale(glm::vec3(m_widthFinger / 2.0f, m_widthFinger / 2.0f, m_lenFinger / 2.0f));
-            program.setUniformAttribute("modelToCameraMatrix", 1, GL_FALSE, glm::value_ptr(modelToCameraStack.top()));
+            modelToWorldStack.push();
+            modelToWorldStack.translate(glm::vec3(0.0f, 0.0f, m_lenFinger / 2.0f));
+            modelToWorldStack.scale(glm::vec3(m_widthFinger / 2.0f, m_widthFinger / 2.0f, m_lenFinger / 2.0f));
+            program.setUniformAttribute("modelToWorldMatrix", 1, GL_FALSE, glm::value_ptr(modelToWorldStack.top()));
             vArray.renderIndexed();
-            modelToCameraStack.pop();
+            modelToWorldStack.pop();
 
-        modelToCameraStack.pop();
+        modelToWorldStack.pop();
 
-    modelToCameraStack.pop();
+    modelToWorldStack.pop();
 }
 
 

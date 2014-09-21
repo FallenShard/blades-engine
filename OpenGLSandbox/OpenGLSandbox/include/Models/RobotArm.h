@@ -1,5 +1,4 @@
-#ifndef ROBOT_ARM_H
-#define ROBOT_ARM_H
+#pragma once
 
 #include "Transformations/MatrixStack.h"
 #include "Renderer/VertexArray.h"
@@ -53,5 +52,3 @@ private:
     float     m_widthFinger;
     float     m_angLowerFinger;
 };
-
-#endif // ROBOT_ARM_H

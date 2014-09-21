@@ -1,5 +1,4 @@
-#ifndef TIMER_H
-#define TIMER_H
+#pragma once
 
 #include <windows.h>
 
@@ -19,5 +18,3 @@ private:
 
     LARGE_INTEGER m_accumulatedTime;
 };
-
-#endif // TIMER_H

@@ -1,5 +1,4 @@
-#ifndef GRAPHICSUTILS_H
-#define GRAPHICSUTILS_H
+#pragma once
 
 namespace fi
 {
@@ -32,8 +31,6 @@ typedef struct Color
         rgba = colorCode;
         uintToChar(colorCode);
     }
-
-    
 };
 
 static const Color Blue(0x0000FFFF);
@@ -41,4 +38,3 @@ static const Color Red(0xFF0000FF);
 static const Color Green(0x00FF00FF);
 
 }
-#endif

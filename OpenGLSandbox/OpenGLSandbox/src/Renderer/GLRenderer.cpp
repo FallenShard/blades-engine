@@ -31,12 +31,12 @@ GLRenderer::~GLRenderer()
 
 void GLRenderer::init()
 {
-    //Scene* scene = new TriangleScene();
+    Scene* scene = new TriangleScene();
     //Scene* scene = new PrismScene();
     //Scene* scene = new OverlapScene();
     //Scene* scene = new GraphScene();
     //Scene* scene = new TranslationScene();
-    Scene* scene = new RobotArmScene();
+    //Scene* scene = new RobotArmScene();
     m_scenes.push_back(scene);
 
     for (auto& scene : m_scenes)
