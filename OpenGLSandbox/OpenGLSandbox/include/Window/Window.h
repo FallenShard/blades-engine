@@ -43,6 +43,7 @@ public:
     void close();
 
     Vector2Du getSize() const;
+    HWND getWindowHandle() const;
 
 private:
     // Called only the first time to register type of window created

@@ -12,6 +12,8 @@
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\Models\RobotArm.cpp" />
+    <ClCompile Include="src\Renderer\AbstractCamera.cpp" />
+    <ClCompile Include="src\Renderer\FreeCamera.cpp" />
     <ClCompile Include="src\Scenes\RobotArmScene.cpp" />
     <ClCompile Include="src\Transformations\MatrixStack.cpp" />
     <ClCompile Include="src\Utils\VertexLoader.cpp" />
@@ -44,10 +46,13 @@
     <ClInclude Include="include\Core\Timer.h" />
     <ClInclude Include="include\Models\RobotArm.h" />
     <ClInclude Include="include\OpenGL.h" />
+    <ClInclude Include="include\Renderer\AbstractCamera.h" />
     <ClInclude Include="include\Renderer\Camera.h" />
+    <ClInclude Include="include\Renderer\FreeCamera.h" />
     <ClInclude Include="include\Renderer\GLRenderer.h" />
     <ClInclude Include="include\Renderer\IndexBuffer.h" />
     <ClInclude Include="include\Renderer\SceneGraph.h" />
+    <ClInclude Include="include\Renderer\TargetCamera.h" />
     <ClInclude Include="include\Scenes\GraphScene.h" />
     <ClInclude Include="include\Scenes\OverlapScene.h" />
     <ClInclude Include="include\Scenes\PrismScene.h" />
@@ -79,11 +84,13 @@
     <None Include="res\default.frag" />
     <None Include="res\default.vert" />
     <None Include="res\circularMotion.frag" />
+    <None Include="res\defProj.vert" />
     <None Include="res\manualOverlap.vert" />
     <None Include="res\manualPerspective.vert" />
     <None Include="res\motionVert.vert" />
   </ItemGroup>
   <ItemGroup>
+    <Text Include="error.log" />
     <Text Include="res\PrismData.txt" />
     <Text Include="res\OverlapData.txt" />
     <Text Include="res\RobotArmMesh.txt" />

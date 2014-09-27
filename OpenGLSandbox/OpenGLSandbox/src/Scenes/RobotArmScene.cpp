@@ -1,8 +1,11 @@
 #include "Scenes/RobotArmScene.h"
+
 #include "Renderer/Camera.h"
+
 
 namespace
 {
+    const float PI = 3.141592f;
     GLshort indexData[] =
     {
         0, 1, 2,
@@ -39,6 +42,9 @@ namespace
 
     GLenum error;
     glm::mat4 cameraToClipMatrix(0.0f);
+
+    int state = 0, oldX = 0, oldY = 0;
+    float rX = 0, rY = 0, fov = 45;
 
     float degToRad(float degrees)
     {
@@ -117,9 +123,23 @@ void RobotArmScene::prepare()
 
     program->getUniformAttribute("modelToWorldMatrix");
     program->getUniformAttribute("worldToCameraMatrix");
-    
+    program->getUniformAttribute("cameraToClipMatrix");
 
-    m_camera.set("cameraToClipMatrix", *program);
+    /* CAMERA SETUP */
+    glm::vec3 p = glm::vec3(5);
+    m_freeCamera.setPosition(p);
+    glm::vec3 look = glm::normalize(p);
+    float yaw = glm::degrees(float(atan2(look.z, look.x) + PI));
+    float pitch = glm::degrees(asin(look.y));
+    rX = yaw;
+    rY = pitch;
+    m_freeCamera.rotate(rX, rY, 0);
+    /*******************/
+
+   // m_camera.set("cameraToClipMatrix", program);
+    program->use();
+    program->setUniformAttribute("cameraToClipMatrix", 1, GL_FALSE, m_camera.getProjectionMatrix());
+    ShaderProgram::release();
 
     m_vertexArrays["RobotArm"] = std::make_unique<VertexArray>();
     VertexArray* vArray = m_vertexArrays["RobotArm"].get();
@@ -137,19 +157,231 @@ void RobotArmScene::prepare()
     indexBuffer->bind();
     indexBuffer->create(indexData, sizeof(indexData) / sizeof(GLshort));
     vArray->attachIndexBuffer(indexBuffer);
-    
+
     vArray->attachAttribute(VertexAttribute("vPosition", 3, 0, 0));
     vArray->attachAttribute(VertexAttribute("vColor", 4, 0, 3 * sizeof(GLfloat) * buffer->getVertexCount()));
     vArray->enableAttributes(program->getProgramId());
+
+    m_vertexArrays["Grid"] = std::make_unique<VertexArray>(GL_LINES);
+    VertexArray* gridArray = m_vertexArrays["Grid"].get();
+    gridArray->bind();
+
+    m_vertexBuffers["Grid"] = std::make_unique<VertexBuffer>(GL_STATIC_DRAW);
+    VertexBuffer* gridBuffer = m_vertexBuffers["Grid"].get();
+    gridBuffer->bind();
+
+    const int halfSquareSize = 500;
+    // XZ plane
+    for (int z = -halfSquareSize; z <= halfSquareSize; z+=10)
+    {
+        gridBuffer->push(-1 * halfSquareSize);
+        gridBuffer->push(0.f);
+        gridBuffer->push(1.f * z);
+        gridBuffer->push(0.6f);
+        gridBuffer->push(0.f);
+        gridBuffer->push(0.f);
+        gridBuffer->push(1.f);
+
+        gridBuffer->push(1.f * halfSquareSize);
+        gridBuffer->push(0.f);
+        gridBuffer->push(1.f * z);
+        gridBuffer->push(0.6f);
+        gridBuffer->push(0.f);
+        gridBuffer->push(0.f);
+        gridBuffer->push(1.f);
+    }
+
+    
+    for (int x = -halfSquareSize; x <= halfSquareSize; x+=10)
+    {
+        gridBuffer->push(1.f * x);
+        gridBuffer->push(0.f);
+        gridBuffer->push(-1.f * halfSquareSize);
+        gridBuffer->push(0.6f);
+        gridBuffer->push(0.f);
+        gridBuffer->push(0.f);
+        gridBuffer->push(1.f);
+
+        gridBuffer->push(1.f * x);
+        gridBuffer->push(0.f);
+        gridBuffer->push(1.f * halfSquareSize);
+        gridBuffer->push(0.6f);
+        gridBuffer->push(0.f);
+        gridBuffer->push(0.f);
+        gridBuffer->push(1.f);
+    }
+
+    /*// XY plane
+    for (int x = -halfSquareSize; x <= halfSquareSize; x += 10)
+    {
+        gridBuffer->push(1.f * x);
+        gridBuffer->push(-1.f * halfSquareSize);
+        gridBuffer->push(0.f);
+        gridBuffer->push(0.f);
+        gridBuffer->push(0.6f);
+        gridBuffer->push(0.f);
+        gridBuffer->push(1.f);
+
+        gridBuffer->push(1.f * x);
+        gridBuffer->push(1.f * halfSquareSize);
+        gridBuffer->push(0.f);
+        gridBuffer->push(0.f);
+        gridBuffer->push(0.6f);
+        gridBuffer->push(0.f);
+        gridBuffer->push(1.f);
+    }
+
+    for (int y = -halfSquareSize; y <= halfSquareSize; y += 10)
+    {
+        gridBuffer->push(-1.f * halfSquareSize);
+        gridBuffer->push(1.f * y);
+        gridBuffer->push(0.f);
+        gridBuffer->push(0.f);
+        gridBuffer->push(0.6f);
+        gridBuffer->push(0.f);
+        gridBuffer->push(1.f);
+
+        gridBuffer->push(1.f * halfSquareSize);
+        gridBuffer->push(1.f * y);
+        gridBuffer->push(0.f);
+        gridBuffer->push(0.f);
+        gridBuffer->push(0.6f);
+        gridBuffer->push(0.f);
+        gridBuffer->push(1.f);
+    }
+
+    // YZ plane
+    for (int z = -halfSquareSize; z <= halfSquareSize; z += 10)
+    {
+        gridBuffer->push(0.f);
+        gridBuffer->push(-1 * halfSquareSize);
+        gridBuffer->push(1.f * z);
+        gridBuffer->push(0.f);
+        gridBuffer->push(0.f);
+        gridBuffer->push(0.6f);
+        gridBuffer->push(1.f);
+
+        gridBuffer->push(0.f);
+        gridBuffer->push(1.f * halfSquareSize);
+        gridBuffer->push(1.f * z);
+        gridBuffer->push(0.f);
+        gridBuffer->push(0.f);
+        gridBuffer->push(0.6f);
+        gridBuffer->push(1.f);
+    }
+
+    for (int y = -halfSquareSize; y <= halfSquareSize; y += 10)
+    {
+        gridBuffer->push(0.f);
+        gridBuffer->push(1.f * y);
+        gridBuffer->push(-1.f * halfSquareSize);
+        gridBuffer->push(0.f);
+        gridBuffer->push(0.f);
+        gridBuffer->push(0.6f);
+        gridBuffer->push(1.f);
+
+        gridBuffer->push(0.f);
+        gridBuffer->push(1.f * y);
+        gridBuffer->push(1.f * halfSquareSize);
+        gridBuffer->push(0.f);
+        gridBuffer->push(0.f);
+        gridBuffer->push(0.6f);
+        gridBuffer->push(1.f);
+    }*/
+
+    gridBuffer->setDataCountPerVertex(7);
+    gridBuffer->uploadData();
+    gridArray->setVertexCount(gridBuffer->getVertexCount());
+
+    glPointSize(2.f);
+
+    gridArray->attachAttribute(VertexAttribute("vPosition", 3, 7 * sizeof(GLfloat), 0));
+    gridArray->attachAttribute(VertexAttribute("vColor", 4, 7 * sizeof(GLfloat), 3 * sizeof(GLfloat)));
+    gridArray->enableAttributes(program->getProgramId());
+
+    m_vertexArrays["CameraTarget"] = std::make_unique<VertexArray>(GL_POINTS);
+    VertexArray* targetArray = m_vertexArrays["CameraTarget"].get();
+    targetArray->bind();
+
+    m_vertexBuffers["CameraTarget"] = std::make_unique<VertexBuffer>(GL_STATIC_DRAW);
+    VertexBuffer* targetBuffer = m_vertexBuffers["CameraTarget"].get();
+    targetBuffer->bind();
+
+    targetBuffer->push(0.f);
+    targetBuffer->push(0.f);
+    targetBuffer->push(0.f);
+    targetBuffer->push(0.f);
+    targetBuffer->push(0.f);
+    targetBuffer->push(1.f);
+    targetBuffer->push(1.f);
+    targetBuffer->setDataCountPerVertex(7);
+    targetBuffer->uploadData();
+    targetArray->setVertexCount(targetBuffer->getVertexCount());
+
+    targetArray->attachAttribute(VertexAttribute("vPosition", 3, 7 * sizeof(GLfloat), 0));
+    targetArray->attachAttribute(VertexAttribute("vColor", 4, 7 * sizeof(GLfloat), 3 * sizeof(GLfloat)));
+    targetArray->enableAttributes(program->getProgramId());
+
+    VertexArray::release();
 }
 
-bool camUp = false;
-bool camDown = false;
+namespace
+{
+    bool camUp = false;
+    bool camDown = false;
+
+    glm::mat4 CameraMatrix(1.f);
+
+    Vector2Di mousePosPrev;
+    Vector2Di mousePos;
+
+    int yDir = 0;
+    int xDir = 0;
+
+    bool panning = false;
+
+    glm::vec3 target(0.f, 0.f, -10.f);
+}
+
 
 void RobotArmScene::handleEvents(const Event& event)
 {
     switch (event.type)
     {
+    case Event::MouseButtonPressed:
+        switch (event.mouseButton.button)
+        {
+        case Mouse::Left:
+            mousePosPrev = mousePos;
+            mousePos = Vector2Di(event.mouseButton.x, event.mouseButton.y);
+            panning = true;
+            break;
+            
+        }
+        break;
+
+    case Event::MouseMoved:
+        if (panning == true)
+        {
+            mousePosPrev = mousePos;
+            mousePos = Vector2Di(event.mouseMove.x, event.mouseMove.y);
+
+            yDir = mousePos.getY() - mousePosPrev.getY();
+            xDir = mousePos.getX() - mousePosPrev.getX();
+        }
+        break;
+
+    case Event::MouseButtonReleased:
+        switch (event.mouseButton.button)
+        {
+        case Mouse::Left:
+            mousePosPrev = mousePos = Vector2Di();
+            panning = false;
+            break;
+        }
+
+        break;
+
     case Event::KeyPressed:
         switch (event.key.code)
         {
@@ -279,10 +511,52 @@ void RobotArmScene::update(float timeDelta)
 {
     m_timePassed += timeDelta;
 
+    VertexBuffer* camTarget = m_vertexBuffers["CameraTarget"].get();
+
+    if (yDir < 0 && panning)
+        CameraMatrix[3].y += 0.1f;
+
+    if (yDir > 0 && panning)
+        CameraMatrix[3].y -= 0.1f;
+
+    if (xDir < 0 && panning)
+    {
+        target.x -= 0.1f;
+        target.y = 0.f;
+        target.z = -10.f;
+        (*camTarget)[0] = target.x;
+        (*camTarget)[1] = target.y;
+        (*camTarget)[2] = target.z;
+        camTarget->uploadData();
+
+        CameraMatrix[3].x -= 0.1f;
+    }
+
+    if (xDir > 0 && panning)
+    {
+        target.x += 0.1f;
+        target.y = 0.f;
+        target.z = -10.f;
+        (*camTarget)[0] = target.x;
+        (*camTarget)[1] = target.y;
+        (*camTarget)[2] = target.z;
+        camTarget->uploadData();
+
+        CameraMatrix[3].x += 0.1f;
+    }
+
+
     if (camUp)
-        g_camTarget.z -= 0.1f;
+    {
+        //g_camTarget.z -= 0.1f;
+        CameraMatrix[3].y += 0.1f;
+    }
+
     if (camDown)
-        g_camTarget.z += 0.1f;
+    {
+        //g_camTarget.z += 0.1f;
+        CameraMatrix[3].y -= 0.1f;
+    }
 
     if (aPressed)
         m_robotArm.moveBase(true);
@@ -314,24 +588,39 @@ void RobotArmScene::render()
 {
     ShaderProgram* program = m_shaderPrograms["RobotArm"].get();
     VertexArray* vArray = m_vertexArrays["RobotArm"].get();
+    VertexArray* gridArray = m_vertexArrays["Grid"].get();
 
+    error = glGetError();
     program->use();
-    vArray->bind();
-
+    error = glGetError();
     glm::vec3 camPos = ResolveCamPosition();
     MatrixStack cameraMatrix;
     cameraMatrix.set(CalcLookAtMatrix(camPos, g_camTarget, glm::vec3(0.f, 1.f, 0.f)));
 
-    program->setUniformAttribute("worldToCameraMatrix", 1, GL_FALSE, glm::value_ptr(cameraMatrix.top()));
+    //program->setUniformAttribute("worldToCameraMatrix", 1, GL_FALSE, glm::value_ptr(cameraMatrix.top()));
+    //program->setUniformAttribute("worldToCameraMatrix", 1, GL_FALSE, glm::value_ptr(CameraMatrix));
 
+    glm::mat4 mat = glm::lookAt(glm::vec3(0.f, 1.f, 0.f), target, glm::vec3(0, 1, 0));
+    program->setUniformAttribute("worldToCameraMatrix", 1, GL_FALSE, glm::value_ptr(mat));
+
+    program->setUniformAttribute("modelToWorldMatrix", 1, GL_FALSE, glm::value_ptr(glm::mat4(1.f)));
+    gridArray->bind();
+    gridArray->render();
+
+    m_vertexArrays["CameraTarget"]->bind();
+    m_vertexArrays["CameraTarget"]->render();
+
+    vArray->bind();
     m_robotArm.draw(*vArray, *program);
-
-    error = glGetError();
 }
 
 bool RobotArmScene::reshape(int width, int height)
 {
-    m_camera.adjustViewport(width, height, *(m_shaderPrograms["RobotArm"].get()));
+    m_shaderPrograms["RobotArm"]->use();
+    m_shaderPrograms["RobotArm"]->setUniformAttribute("cameraToClipMatrix", 1, GL_FALSE, m_camera.getProjectionMatrix());
+    ShaderProgram::release();
+    m_freeCamera.setupProjection(45, (GLfloat)width / height);
 
+    glViewport(0, 0, static_cast<GLsizei>(width), static_cast<GLsizei>(height));
     return true;
 }

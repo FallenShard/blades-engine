@@ -1,4 +1,8 @@
+#include <windows.h>
+
 #include "Window/Mouse.h"
+#include "Window/Window.h"
+
 
 bool Mouse::isButtonPressed(Button button)
 {
@@ -7,12 +11,25 @@ bool Mouse::isButtonPressed(Button button)
 
 Vector2Di Mouse::getPosition()
 {
-    return Vector2Di(0, 0);
+    POINT point;
+    GetCursorPos(&point);
+    return Vector2Di(point.x, point.y);
 }
 
-Vector2Di Mouse::getPosition(const Window& relativeTo)
+Vector2Di Mouse::getPosition(const Window& window)
 {
-    return Vector2Di(0, 0);
+    HWND handle = window.getWindowHandle();
+    if (handle != nullptr)
+    {
+        POINT point;
+        GetCursorPos(&point);
+        ScreenToClient(handle, &point);
+        return Vector2Di(point.x, point.y);
+    }
+    else
+    {
+        return Vector2Di();
+    }
 }
 
 void Mouse::setPosition(const Vector2Di& position)

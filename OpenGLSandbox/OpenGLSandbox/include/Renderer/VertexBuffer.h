@@ -37,6 +37,12 @@ public:
     // Loads vertex data from specified file
     void loadFromFile(std::string fileName);
 
+    // Pushes a single float value into the vertex buffer
+    void push(GLfloat value);
+
+    // Uploads buffer data to the GPU
+    void uploadData();
+
     // Sets the number in bytes that each vertex uses
     void setDataCountPerVertex(GLsizei dataCountPerVertex);
 

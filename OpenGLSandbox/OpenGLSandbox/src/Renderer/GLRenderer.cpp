@@ -8,6 +8,8 @@
 #include "Scenes/GraphScene.h"
 #include "Scenes/RobotArmScene.h"
 
+
+
 GLRenderer::GLRenderer()
     : m_aspectRatio(4.f / 3)
     , m_timePassed(0.f)
@@ -31,12 +33,12 @@ GLRenderer::~GLRenderer()
 
 void GLRenderer::init()
 {
-    Scene* scene = new TriangleScene();
+    //Scene* scene = new TriangleScene();
     //Scene* scene = new PrismScene();
     //Scene* scene = new OverlapScene();
     //Scene* scene = new GraphScene();
     //Scene* scene = new TranslationScene();
-    //Scene* scene = new RobotArmScene();
+    Scene* scene = new RobotArmScene();
     m_scenes.push_back(scene);
 
     for (auto& scene : m_scenes)
@@ -51,7 +53,7 @@ void GLRenderer::init()
     glDepthFunc(GL_LEQUAL);
     glDepthRange(0.0f, 1.0f);
 
-    glClearColor(0.f, 0.f, 0.3f, 1.f);
+    glClearColor(0.1f, 0.1f, 0.1f, 1.f);
     glClearDepth(1.0f);
 }
 

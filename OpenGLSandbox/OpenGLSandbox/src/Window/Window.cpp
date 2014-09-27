@@ -438,8 +438,8 @@ LRESULT CALLBACK Window::WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM 
     }
     
     // Prevent WM_CLOSE to reach default handling procedure because it will destroy the window
-    //if (message == WM_CLOSE)
-    //    return 0;
+    if (message == WM_CLOSE)
+        return 0;
 
     // Default windows procedure for handling and discarding unprocessed messages
     return DefWindowProc(hWnd, message, wParam, lParam);
@@ -631,4 +631,9 @@ Vector2Du Window::getSize() const
     GetClientRect(m_windowHandle, &rect);
 
     return Vector2Du(rect.right - rect.left, rect.bottom - rect.top);
+}
+
+HWND Window::getWindowHandle() const
+{
+    return m_windowHandle;
 }

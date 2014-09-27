@@ -69,9 +69,11 @@ void TranslationScene::prepare()
     program->checkLinkStatus();
 
     program->getUniformAttribute("modelToCameraMatrix");
+    program->getUniformAttribute("cameraToClipMatrix");
 
     Camera camera(45.f);
-    camera.set("cameraToClipMatrix", *program);
+    program->use();
+    program->setUniformAttribute("cameraToClipMatrix", 1, GL_FALSE, camera.getProjectionMatrix());
 
     GLshort indexData[] =
     {

@@ -5,6 +5,7 @@
 
 namespace
 {
+
     GLuint boundVBO = 0;
 }
 
@@ -90,6 +91,16 @@ void VertexBuffer::loadFromFile(std::string fileName)
             m_vertexData.push_back(vertexData);
     }
 
+    glBufferData(m_targetType, sizeof(GLfloat) * m_vertexData.size(), m_vertexData.data(), m_usageType);
+}
+
+void VertexBuffer::push(GLfloat value)
+{
+    m_vertexData.push_back(value);
+}
+
+void VertexBuffer::uploadData()
+{
     glBufferData(m_targetType, sizeof(GLfloat) * m_vertexData.size(), m_vertexData.data(), m_usageType);
 }
 

@@ -10,7 +10,7 @@ Camera::Camera()
     , m_zNear(1.f)
     , m_zFar(1000.f)
 {
-    setPerspectiveMatrix(m_zNear, m_zFar, m_frustumScale);
+    setProjectionMatrix(m_zNear, m_zFar, m_frustumScale);
 }
 
 Camera::Camera(float fovDegrees)
@@ -20,7 +20,7 @@ Camera::Camera(float fovDegrees)
     float fovRad = fovDegrees * degToRad;
     m_frustumScale = 1.0f / tan(fovRad / 2.0f);
 
-    setPerspectiveMatrix(m_zNear, m_zFar, m_frustumScale);
+    setProjectionMatrix(m_zNear, m_zFar, m_frustumScale);
 }
 
 Camera::Camera(float zNear, float zFar, float frustumScale)
@@ -28,34 +28,45 @@ Camera::Camera(float zNear, float zFar, float frustumScale)
     , m_zFar(zFar)
     , m_frustumScale(frustumScale)
 {
-    setPerspectiveMatrix(zNear, zFar, frustumScale);
+    setProjectionMatrix(zNear, zFar, frustumScale);
 }
 
-void Camera::set(std::string name, ShaderProgram& program)
+void Camera::set(std::string name, ShaderProgram* program)
 {
-    program.getUniformAttribute(name);
-    program.use();
-    program.setUniformAttribute(name, 1, GL_FALSE, glm::value_ptr(m_perspectiveMatrix));
+    program->getUniformAttribute(name);
+    program->use();
+    program->setUniformAttribute(name, 1, GL_FALSE, glm::value_ptr(m_projectionMatrix));
     ShaderProgram::release();
 }
 
-void Camera::setPerspectiveMatrix(float zNear, float zFar, float frustumScale)
+const float* Camera::getProjectionMatrix() const
 {
-    m_perspectiveMatrix[0].x = frustumScale;
-    m_perspectiveMatrix[1].y = frustumScale;
-    m_perspectiveMatrix[2].z = (zNear + zFar) / (zNear - zFar);
-    m_perspectiveMatrix[2].w = -1.f;
-    m_perspectiveMatrix[3].z = (2 * zNear * zFar) / (zNear - zFar);
+    return glm::value_ptr(m_projectionMatrix);
 }
 
-void Camera::adjustViewport(int width, int height, ShaderProgram& program)
+void Camera::adjustViewport(int width, int height, ShaderProgram* program)
 {
-    m_perspectiveMatrix[0].x = m_frustumScale * (height / static_cast<float>(width));
-    m_perspectiveMatrix[1].y = m_frustumScale;
+    m_projectionMatrix[0].x = m_frustumScale * (height / static_cast<float>(width));
+    m_projectionMatrix[1].y = m_frustumScale;
 
-    program.use();
-    program.setUniformAttribute("cameraToClipMatrix", 1, GL_FALSE, glm::value_ptr(m_perspectiveMatrix));
+    program->use();
+    program->setUniformAttribute("cameraToClipMatrix", 1, GL_FALSE, glm::value_ptr(m_projectionMatrix));
     ShaderProgram::release();
 
     glViewport(0, 0, static_cast<GLsizei>(width), static_cast<GLsizei>(height));
+}
+
+void Camera::adjustViewport(int width, int height)
+{
+    m_projectionMatrix[0].x = m_frustumScale * (height / static_cast<float>(width));
+    m_projectionMatrix[1].y = m_frustumScale;
+}
+
+void Camera::setProjectionMatrix(float zNear, float zFar, float frustumScale)
+{
+    m_projectionMatrix[0].x = frustumScale;
+    m_projectionMatrix[1].y = frustumScale;
+    m_projectionMatrix[2].z = (zNear + zFar) / (zNear - zFar);
+    m_projectionMatrix[2].w = -1.f;
+    m_projectionMatrix[3].z = (2 * zNear * zFar) / (zNear - zFar);
 }
