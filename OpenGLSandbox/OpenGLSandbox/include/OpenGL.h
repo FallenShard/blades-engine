@@ -1,7 +1,8 @@
 #pragma once
 
-#include "GL/glew.h"
-#include "GL/wglew.h"
+#include "GL/gl3w.h"
+#include "GL/glcorearb.h"
+#include "GL/wglext.h"
 
 #include "glm.hpp"
 #include "ext.hpp"

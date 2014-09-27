@@ -93,6 +93,7 @@
     <ClCompile Include="src\Models\RobotArm.cpp" />
     <ClCompile Include="src\Renderer\AbstractCamera.cpp" />
     <ClCompile Include="src\Renderer\FreeCamera.cpp" />
+    <ClCompile Include="src\gl3w.c" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="include\Window\GLContext.h">
@@ -158,6 +159,9 @@
     <ClInclude Include="include\Renderer\AbstractCamera.h" />
     <ClInclude Include="include\Renderer\FreeCamera.h" />
     <ClInclude Include="include\Renderer\TargetCamera.h" />
+    <ClInclude Include="include\GL\gl3w.h" />
+    <ClInclude Include="include\GL\glcorearb.h" />
+    <ClInclude Include="include\GL\wglext.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include="include\Utils\Vector2D.inl">

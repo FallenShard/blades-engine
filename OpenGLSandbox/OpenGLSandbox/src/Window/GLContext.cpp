@@ -39,11 +39,11 @@ void GLContext::initialize()
     // Enable this context on the current thread and handle
     wglMakeCurrent(m_deviceContextHandle, dummyContextHandle);
 
-    // Initialize GLEW
-    glewExperimental = GL_TRUE;
-    glewInit();
+    // Initialize GL3W
+    gl3wInit();
 
     // Get the current version on the device
+    
     const GLubyte* version = glGetString(GL_VERSION);
 
     m_majorVersion = version[0] - '0';
@@ -55,15 +55,17 @@ void GLContext::initialize()
     {
          WGL_CONTEXT_MAJOR_VERSION_ARB, m_majorVersion,
          WGL_CONTEXT_MINOR_VERSION_ARB, m_minorVersion,
-         //WGL_CONTEXT_FLAGS_ARB, WGL_CONTEXT_FORWARD_COMPATIBLE_BIT_ARB,
          WGL_CONTEXT_PROFILE_MASK_ARB, WGL_CONTEXT_CORE_PROFILE_BIT_ARB,
          0
     };
 
+    // GL3W loads only core profile, so obtain this wgl extension manually
+    auto wglCreateContextAttribsARB = (PFNWGLCREATECONTEXTATTRIBSARBPROC)wglGetProcAddress("wglCreateContextAttribsARB");
+
     // Disable and delete dummy context on the curent thread and window
     wglMakeCurrent(NULL, NULL);
     wglDeleteContext(dummyContextHandle);
-
+    
     // Open a new resource context with specified attributes
     m_resourceContextHandle = wglCreateContextAttribsARB(m_deviceContextHandle, 0, attributes);
 

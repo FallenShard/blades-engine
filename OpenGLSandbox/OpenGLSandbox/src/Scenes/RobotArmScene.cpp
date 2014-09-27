@@ -211,7 +211,7 @@ void RobotArmScene::prepare()
         gridBuffer->push(1.f);
     }
 
-    /*// XY plane
+    // XY plane
     for (int x = -halfSquareSize; x <= halfSquareSize; x += 10)
     {
         gridBuffer->push(1.f * x);
@@ -287,7 +287,7 @@ void RobotArmScene::prepare()
         gridBuffer->push(0.f);
         gridBuffer->push(0.6f);
         gridBuffer->push(1.f);
-    }*/
+    }
 
     gridBuffer->setDataCountPerVertex(7);
     gridBuffer->uploadData();
@@ -299,8 +299,10 @@ void RobotArmScene::prepare()
     gridArray->attachAttribute(VertexAttribute("vColor", 4, 7 * sizeof(GLfloat), 3 * sizeof(GLfloat)));
     gridArray->enableAttributes(program->getProgramId());
 
-    m_vertexArrays["CameraTarget"] = std::make_unique<VertexArray>(GL_POINTS);
-    VertexArray* targetArray = m_vertexArrays["CameraTarget"].get();
+    VertexArray* targetArray = new VertexArray(GL_POINTS);
+    //m_vertexArrays["CameraTarget"] = std::make_unique<VertexArray>(GL_POINTS);
+    m_vertexArrays["CameraTarget"] = std::unique_ptr<VertexArray>(targetArray);
+    //VertexArray* targetArray = m_vertexArrays["CameraTarget"].get();
     targetArray->bind();
 
     m_vertexBuffers["CameraTarget"] = std::make_unique<VertexBuffer>(GL_STATIC_DRAW);
@@ -316,13 +318,11 @@ void RobotArmScene::prepare()
     targetBuffer->push(1.f);
     targetBuffer->setDataCountPerVertex(7);
     targetBuffer->uploadData();
-    targetArray->setVertexCount(targetBuffer->getVertexCount());
 
+    targetArray->setVertexCount(targetBuffer->getVertexCount());
     targetArray->attachAttribute(VertexAttribute("vPosition", 3, 7 * sizeof(GLfloat), 0));
     targetArray->attachAttribute(VertexAttribute("vColor", 4, 7 * sizeof(GLfloat), 3 * sizeof(GLfloat)));
     targetArray->enableAttributes(program->getProgramId());
-
-    VertexArray::release();
 }
 
 namespace
@@ -381,128 +381,6 @@ void RobotArmScene::handleEvents(const Event& event)
         }
 
         break;
-
-    case Event::KeyPressed:
-        switch (event.key.code)
-        {
-        case Keyboard::Up:
-            camUp = true;
-            break;
-
-        case Keyboard::Down:
-            camDown = true;
-            break;
-
-        case Keyboard::A:
-            aPressed = true;
-            break;
-
-        case Keyboard::D:
-            dPressed = true;
-            break;
-
-        case Keyboard::W:
-            wPressed = true;
-            break;
-
-        case Keyboard::S:
-            sPressed = true;
-            break;
-
-        case Keyboard::R:
-            rPressed = true;
-            break;
-
-        case Keyboard::F:
-            fPressed = true;
-            break;
-
-        case Keyboard::T:
-            tPressed = true;
-            break;
-
-        case Keyboard::G:
-            gPressed = true;
-            break;
-
-        case Keyboard::Z:
-            zPressed = true;
-            break;
-
-        case Keyboard::C:
-            cPressed = true;
-            break;
-
-        case Keyboard::Q:
-            qPressed = true;
-            break;
-
-        case Keyboard::E:
-            ePressed = true;
-            break;
-        };
-        break;
-
-    case Event::KeyReleased:
-        switch (event.key.code)
-        {
-        case Keyboard::Up:
-            camUp = false;
-            break;
-
-        case Keyboard::Down:
-            camDown = false;
-            break;
-
-        case Keyboard::A:
-            aPressed = false;
-            break;
-
-        case Keyboard::D:
-            dPressed = false;
-            break;
-
-        case Keyboard::W:
-            wPressed = false;
-            break;
-
-        case Keyboard::S:
-            sPressed = false;
-            break;
-
-        case Keyboard::R:
-            rPressed = false;
-            break;
-
-        case Keyboard::F:
-            fPressed = false;
-            break;
-
-        case Keyboard::T:
-            tPressed = false;
-            break;
-
-        case Keyboard::G:
-            gPressed = false;
-            break;
-
-        case Keyboard::Z:
-            zPressed = false;
-            break;
-
-        case Keyboard::C:
-            cPressed = false;
-            break;
-
-        case Keyboard::Q:
-            qPressed = false;
-            break;
-
-        case Keyboard::E:
-            ePressed = false;
-            break;
-        };
-        break;
     };
 
 }
@@ -558,29 +436,29 @@ void RobotArmScene::update(float timeDelta)
         CameraMatrix[3].y -= 0.1f;
     }
 
-    if (aPressed)
+    if (Keyboard::isKeyPressed(Keyboard::A))
         m_robotArm.moveBase(true);
-    if (dPressed)
+    if (Keyboard::isKeyPressed(Keyboard::D))
         m_robotArm.moveBase(false);
-    if (wPressed)
+    if (Keyboard::isKeyPressed(Keyboard::W))
         m_robotArm.moveUpperArm(false);
-    if (sPressed)
+    if (Keyboard::isKeyPressed(Keyboard::S))
         m_robotArm.moveUpperArm(true);
-    if (rPressed)
+    if (Keyboard::isKeyPressed(Keyboard::R))
         m_robotArm.moveLowerArm(false);
-    if (fPressed)
+    if (Keyboard::isKeyPressed(Keyboard::F))
         m_robotArm.moveLowerArm(true);
-    if (tPressed)
+    if (Keyboard::isKeyPressed(Keyboard::T))
         m_robotArm.moveWristPitch(false);
-    if (gPressed)
+    if (Keyboard::isKeyPressed(Keyboard::G))
         m_robotArm.moveWristPitch(true);
-    if (zPressed)
+    if (Keyboard::isKeyPressed(Keyboard::Z))
         m_robotArm.moveWristRoll(true);
-    if (cPressed)
+    if (Keyboard::isKeyPressed(Keyboard::C))
         m_robotArm.moveWristRoll(false);
-    if (qPressed)
+    if (Keyboard::isKeyPressed(Keyboard::Q))
         m_robotArm.moveFingerOpen(true);
-    if (ePressed)
+    if (Keyboard::isKeyPressed(Keyboard::E))
         m_robotArm.moveFingerOpen(false);
 }
 
@@ -616,6 +494,7 @@ void RobotArmScene::render()
 
 bool RobotArmScene::reshape(int width, int height)
 {
+    m_camera.adjustViewport(width, height);
     m_shaderPrograms["RobotArm"]->use();
     m_shaderPrograms["RobotArm"]->setUniformAttribute("cameraToClipMatrix", 1, GL_FALSE, m_camera.getProjectionMatrix());
     ShaderProgram::release();
