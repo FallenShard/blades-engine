@@ -43,6 +43,9 @@ public:
     // Uploads buffer data to the GPU
     void uploadData();
 
+    // Clears the buffer
+    void clear();
+
     // Sets the number in bytes that each vertex uses
     void setDataCountPerVertex(GLsizei dataCountPerVertex);
 

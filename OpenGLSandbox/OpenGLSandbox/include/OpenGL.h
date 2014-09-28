@@ -4,6 +4,7 @@
 #include "GL/glcorearb.h"
 #include "GL/wglext.h"
 
+#define GLM_FORCE_RADIANS
 #include "glm.hpp"
 #include "ext.hpp"
 

@@ -12,6 +12,7 @@
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\gl3w.c" />
+    <ClCompile Include="src\Models\PlaneGrid.cpp" />
     <ClCompile Include="src\Models\RobotArm.cpp" />
     <ClCompile Include="src\Renderer\AbstractCamera.cpp" />
     <ClCompile Include="src\Renderer\FreeCamera.cpp" />
@@ -50,6 +51,7 @@
     <ClInclude Include="include\GL\wglext.h" />
     <ClInclude Include="include\Models\RobotArm.h" />
     <ClInclude Include="include\OpenGL.h" />
+    <ClInclude Include="include\Models\PlaneGrid.h" />
     <ClInclude Include="include\Renderer\AbstractCamera.h" />
     <ClInclude Include="include\Renderer\Camera.h" />
     <ClInclude Include="include\Renderer\FreeCamera.h" />
@@ -97,6 +99,7 @@
     <Text Include="error.log" />
     <Text Include="res\PrismData.txt" />
     <Text Include="res\OverlapData.txt" />
+    <Text Include="res\RobotArmFaces.txt" />
     <Text Include="res\RobotArmMesh.txt" />
     <Text Include="res\TranslationData.txt" />
     <Text Include="res\TrianglePosData.txt" />

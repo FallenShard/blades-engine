@@ -3,6 +3,7 @@
 #include "Scene.h"
 
 #include "Models/RobotArm.h"
+#include "Models/PlaneGrid.h"
 #include "Renderer/Camera.h"
 #include "Renderer/FreeCamera.h"
 
@@ -24,4 +25,6 @@ private:
     Camera m_camera;
     FreeCamera m_freeCamera;
     RobotArm m_robotArm;
+
+    PlaneGrid m_planeGrid;
 };

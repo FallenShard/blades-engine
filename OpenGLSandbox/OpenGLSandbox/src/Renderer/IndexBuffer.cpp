@@ -89,6 +89,8 @@ void IndexBuffer::loadFromFile(std::string fileName)
         m_indices.push_back(indexData);
     }
 
+    inputFile.close();
+
     glBufferData(m_targetType, sizeof(GLfloat) * m_indices.size(), m_indices.data(), m_usageType);
 }
 

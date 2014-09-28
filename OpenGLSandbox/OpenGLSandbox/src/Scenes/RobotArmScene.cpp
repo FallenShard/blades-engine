@@ -6,42 +6,8 @@
 namespace
 {
     const float PI = 3.141592f;
-    GLshort indexData[] =
-    {
-        0, 1, 2,
-        2, 3, 0,
-
-        4, 5, 6,
-        6, 7, 4,
-
-        8, 9, 10,
-        10, 11, 8,
-
-        12, 13, 14,
-        14, 15, 12,
-
-        16, 17, 18,
-        18, 19, 16,
-
-        20, 21, 22,
-        22, 23, 20,
-    };
-
-    bool aPressed = false;
-    bool dPressed = false;
-    bool wPressed = false;
-    bool sPressed = false;
-    bool rPressed = false;
-    bool fPressed = false;
-    bool tPressed = false;
-    bool gPressed = false;
-    bool zPressed = false;
-    bool cPressed = false;
-    bool qPressed = false;
-    bool ePressed = false;
 
     GLenum error;
-    glm::mat4 cameraToClipMatrix(0.0f);
 
     int state = 0, oldX = 0, oldY = 0;
     float rX = 0, rY = 0, fov = 45;
@@ -107,6 +73,7 @@ namespace
 RobotArmScene::RobotArmScene()
     : m_timePassed(0.f)
     , m_camera(45.f)
+    , m_planeGrid(1000.f, 10.f, PlaneGrid::XZ)
 {
 }
 
@@ -136,10 +103,13 @@ void RobotArmScene::prepare()
     m_freeCamera.rotate(rX, rY, 0);
     /*******************/
 
-   // m_camera.set("cameraToClipMatrix", program);
     program->use();
-    program->setUniformAttribute("cameraToClipMatrix", 1, GL_FALSE, m_camera.getProjectionMatrix());
+    //program->setUniformAttribute("cameraToClipMatrix", 1, GL_FALSE, m_camera.getProjectionMatrix());
+    program->setUniformAttribute("cameraToClipMatrix", 1, GL_FALSE, glm::value_ptr(m_freeCamera.getProjectionMatrix()));
+
     ShaderProgram::release();
+
+    m_planeGrid.setProgram(program);
 
     m_vertexArrays["RobotArm"] = std::make_unique<VertexArray>();
     VertexArray* vArray = m_vertexArrays["RobotArm"].get();
@@ -155,149 +125,12 @@ void RobotArmScene::prepare()
     m_indexBuffers["RobotArm"] = std::make_unique<IndexBuffer>();
     IndexBuffer* indexBuffer = m_indexBuffers["RobotArm"].get();
     indexBuffer->bind();
-    indexBuffer->create(indexData, sizeof(indexData) / sizeof(GLshort));
+    indexBuffer->loadFromFile("res/RobotArmFaces.txt");
     vArray->attachIndexBuffer(indexBuffer);
 
     vArray->attachAttribute(VertexAttribute("vPosition", 3, 0, 0));
     vArray->attachAttribute(VertexAttribute("vColor", 4, 0, 3 * sizeof(GLfloat) * buffer->getVertexCount()));
     vArray->enableAttributes(program->getProgramId());
-
-    m_vertexArrays["Grid"] = std::make_unique<VertexArray>(GL_LINES);
-    VertexArray* gridArray = m_vertexArrays["Grid"].get();
-    gridArray->bind();
-
-    m_vertexBuffers["Grid"] = std::make_unique<VertexBuffer>(GL_STATIC_DRAW);
-    VertexBuffer* gridBuffer = m_vertexBuffers["Grid"].get();
-    gridBuffer->bind();
-
-    const int halfSquareSize = 500;
-    // XZ plane
-    for (int z = -halfSquareSize; z <= halfSquareSize; z+=10)
-    {
-        gridBuffer->push(-1 * halfSquareSize);
-        gridBuffer->push(0.f);
-        gridBuffer->push(1.f * z);
-        gridBuffer->push(0.6f);
-        gridBuffer->push(0.f);
-        gridBuffer->push(0.f);
-        gridBuffer->push(1.f);
-
-        gridBuffer->push(1.f * halfSquareSize);
-        gridBuffer->push(0.f);
-        gridBuffer->push(1.f * z);
-        gridBuffer->push(0.6f);
-        gridBuffer->push(0.f);
-        gridBuffer->push(0.f);
-        gridBuffer->push(1.f);
-    }
-
-    
-    for (int x = -halfSquareSize; x <= halfSquareSize; x+=10)
-    {
-        gridBuffer->push(1.f * x);
-        gridBuffer->push(0.f);
-        gridBuffer->push(-1.f * halfSquareSize);
-        gridBuffer->push(0.6f);
-        gridBuffer->push(0.f);
-        gridBuffer->push(0.f);
-        gridBuffer->push(1.f);
-
-        gridBuffer->push(1.f * x);
-        gridBuffer->push(0.f);
-        gridBuffer->push(1.f * halfSquareSize);
-        gridBuffer->push(0.6f);
-        gridBuffer->push(0.f);
-        gridBuffer->push(0.f);
-        gridBuffer->push(1.f);
-    }
-
-    // XY plane
-    for (int x = -halfSquareSize; x <= halfSquareSize; x += 10)
-    {
-        gridBuffer->push(1.f * x);
-        gridBuffer->push(-1.f * halfSquareSize);
-        gridBuffer->push(0.f);
-        gridBuffer->push(0.f);
-        gridBuffer->push(0.6f);
-        gridBuffer->push(0.f);
-        gridBuffer->push(1.f);
-
-        gridBuffer->push(1.f * x);
-        gridBuffer->push(1.f * halfSquareSize);
-        gridBuffer->push(0.f);
-        gridBuffer->push(0.f);
-        gridBuffer->push(0.6f);
-        gridBuffer->push(0.f);
-        gridBuffer->push(1.f);
-    }
-
-    for (int y = -halfSquareSize; y <= halfSquareSize; y += 10)
-    {
-        gridBuffer->push(-1.f * halfSquareSize);
-        gridBuffer->push(1.f * y);
-        gridBuffer->push(0.f);
-        gridBuffer->push(0.f);
-        gridBuffer->push(0.6f);
-        gridBuffer->push(0.f);
-        gridBuffer->push(1.f);
-
-        gridBuffer->push(1.f * halfSquareSize);
-        gridBuffer->push(1.f * y);
-        gridBuffer->push(0.f);
-        gridBuffer->push(0.f);
-        gridBuffer->push(0.6f);
-        gridBuffer->push(0.f);
-        gridBuffer->push(1.f);
-    }
-
-    // YZ plane
-    for (int z = -halfSquareSize; z <= halfSquareSize; z += 10)
-    {
-        gridBuffer->push(0.f);
-        gridBuffer->push(-1 * halfSquareSize);
-        gridBuffer->push(1.f * z);
-        gridBuffer->push(0.f);
-        gridBuffer->push(0.f);
-        gridBuffer->push(0.6f);
-        gridBuffer->push(1.f);
-
-        gridBuffer->push(0.f);
-        gridBuffer->push(1.f * halfSquareSize);
-        gridBuffer->push(1.f * z);
-        gridBuffer->push(0.f);
-        gridBuffer->push(0.f);
-        gridBuffer->push(0.6f);
-        gridBuffer->push(1.f);
-    }
-
-    for (int y = -halfSquareSize; y <= halfSquareSize; y += 10)
-    {
-        gridBuffer->push(0.f);
-        gridBuffer->push(1.f * y);
-        gridBuffer->push(-1.f * halfSquareSize);
-        gridBuffer->push(0.f);
-        gridBuffer->push(0.f);
-        gridBuffer->push(0.6f);
-        gridBuffer->push(1.f);
-
-        gridBuffer->push(0.f);
-        gridBuffer->push(1.f * y);
-        gridBuffer->push(1.f * halfSquareSize);
-        gridBuffer->push(0.f);
-        gridBuffer->push(0.f);
-        gridBuffer->push(0.6f);
-        gridBuffer->push(1.f);
-    }
-
-    gridBuffer->setDataCountPerVertex(7);
-    gridBuffer->uploadData();
-    gridArray->setVertexCount(gridBuffer->getVertexCount());
-
-    glPointSize(2.f);
-
-    gridArray->attachAttribute(VertexAttribute("vPosition", 3, 7 * sizeof(GLfloat), 0));
-    gridArray->attachAttribute(VertexAttribute("vColor", 4, 7 * sizeof(GLfloat), 3 * sizeof(GLfloat)));
-    gridArray->enableAttributes(program->getProgramId());
 
     VertexArray* targetArray = new VertexArray(GL_POINTS);
     //m_vertexArrays["CameraTarget"] = std::make_unique<VertexArray>(GL_POINTS);
@@ -340,7 +173,7 @@ namespace
 
     bool panning = false;
 
-    glm::vec3 target(0.f, 0.f, -10.f);
+    glm::vec3 target(0.f, 0.f, -5.f);
 }
 
 
@@ -382,7 +215,6 @@ void RobotArmScene::handleEvents(const Event& event)
 
         break;
     };
-
 }
 
 void RobotArmScene::update(float timeDelta)
@@ -400,8 +232,6 @@ void RobotArmScene::update(float timeDelta)
     if (xDir < 0 && panning)
     {
         target.x -= 0.1f;
-        target.y = 0.f;
-        target.z = -10.f;
         (*camTarget)[0] = target.x;
         (*camTarget)[1] = target.y;
         (*camTarget)[2] = target.z;
@@ -413,8 +243,6 @@ void RobotArmScene::update(float timeDelta)
     if (xDir > 0 && panning)
     {
         target.x += 0.1f;
-        target.y = 0.f;
-        target.z = -10.f;
         (*camTarget)[0] = target.x;
         (*camTarget)[1] = target.y;
         (*camTarget)[2] = target.z;
@@ -482,8 +310,9 @@ void RobotArmScene::render()
     program->setUniformAttribute("worldToCameraMatrix", 1, GL_FALSE, glm::value_ptr(mat));
 
     program->setUniformAttribute("modelToWorldMatrix", 1, GL_FALSE, glm::value_ptr(glm::mat4(1.f)));
-    gridArray->bind();
-    gridArray->render();
+    //gridArray->bind();
+    //gridArray->render();
+    m_planeGrid.render();
 
     m_vertexArrays["CameraTarget"]->bind();
     m_vertexArrays["CameraTarget"]->render();
@@ -494,12 +323,12 @@ void RobotArmScene::render()
 
 bool RobotArmScene::reshape(int width, int height)
 {
+    m_freeCamera.setupProjection(45, (GLfloat)width / height);
     m_camera.adjustViewport(width, height);
     m_shaderPrograms["RobotArm"]->use();
-    m_shaderPrograms["RobotArm"]->setUniformAttribute("cameraToClipMatrix", 1, GL_FALSE, m_camera.getProjectionMatrix());
+    m_shaderPrograms["RobotArm"]->setUniformAttribute("cameraToClipMatrix", 1, GL_FALSE, glm::value_ptr(m_freeCamera.getProjectionMatrix()));
     ShaderProgram::release();
-    m_freeCamera.setupProjection(45, (GLfloat)width / height);
-
+    
     glViewport(0, 0, static_cast<GLsizei>(width), static_cast<GLsizei>(height));
     return true;
 }

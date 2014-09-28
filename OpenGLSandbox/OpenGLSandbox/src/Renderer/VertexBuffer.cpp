@@ -5,7 +5,6 @@
 
 namespace
 {
-
     GLuint boundVBO = 0;
 }
 
@@ -102,6 +101,11 @@ void VertexBuffer::push(GLfloat value)
 void VertexBuffer::uploadData()
 {
     glBufferData(m_targetType, sizeof(GLfloat) * m_vertexData.size(), m_vertexData.data(), m_usageType);
+}
+
+void VertexBuffer::clear()
+{
+    m_vertexData.clear();
 }
 
 void VertexBuffer::setDataCountPerVertex(GLsizei dataCountPerVertex)

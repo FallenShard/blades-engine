@@ -94,6 +94,7 @@
     <ClCompile Include="src\Renderer\AbstractCamera.cpp" />
     <ClCompile Include="src\Renderer\FreeCamera.cpp" />
     <ClCompile Include="src\gl3w.c" />
+    <ClCompile Include="src\Models\PlaneGrid.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="include\Window\GLContext.h">
@@ -162,6 +163,7 @@
     <ClInclude Include="include\GL\gl3w.h" />
     <ClInclude Include="include\GL\glcorearb.h" />
     <ClInclude Include="include\GL\wglext.h" />
+    <ClInclude Include="include\Models\PlaneGrid.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include="include\Utils\Vector2D.inl">
@@ -187,5 +189,6 @@
     <Text Include="res\TrianglePosData.txt" />
     <Text Include="res\RobotArmMesh.txt" />
     <Text Include="error.log" />
+    <Text Include="res\RobotArmFaces.txt" />
   </ItemGroup>
 </Project>

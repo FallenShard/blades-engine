@@ -13,11 +13,11 @@ AbstractCamera::~AbstractCamera()
 
 void AbstractCamera::setupProjection(const float fovY, const float aspectRatio, const float zNear, const float zFar)
 {
-    m_projectionMatrix = glm::perspective(fovY, aspectRatio, zNear, zFar);
-    m_fov = fovY;
+    m_fov = glm::radians(fovY);
     m_aspectRatio = aspectRatio;
     m_zNear = zNear;
     m_zFar = zFar;
+    m_projectionMatrix = glm::perspective(m_fov, aspectRatio, zNear, zFar);
 }
 
 void AbstractCamera::rotate(const float yaw, const float pitch, const float roll)
