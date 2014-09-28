@@ -15,7 +15,7 @@ public:
         YZ = 1 << 2
     };
 
-    PlaneGrid(float size, float lineStep, Planes planes = XZ);
+    PlaneGrid(float size, float lineStep, int planes = XZ);
     ~PlaneGrid();
 
     void setProgram(ShaderProgram* program);

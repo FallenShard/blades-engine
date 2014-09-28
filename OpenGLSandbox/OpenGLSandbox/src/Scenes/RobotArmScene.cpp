@@ -73,7 +73,7 @@ namespace
 RobotArmScene::RobotArmScene()
     : m_timePassed(0.f)
     , m_camera(45.f)
-    , m_planeGrid(1000.f, 10.f, PlaneGrid::XZ)
+    , m_planeGrid(1000.f, 10.f, PlaneGrid::XZ | PlaneGrid::XY | PlaneGrid::YZ)
 {
 }
 
@@ -101,10 +101,10 @@ void RobotArmScene::prepare()
     rX = yaw;
     rY = pitch;
     m_freeCamera.rotate(rX, rY, 0);
+    m_freeCamera.setSpeed(100.f);
     /*******************/
 
     program->use();
-    //program->setUniformAttribute("cameraToClipMatrix", 1, GL_FALSE, m_camera.getProjectionMatrix());
     program->setUniformAttribute("cameraToClipMatrix", 1, GL_FALSE, glm::value_ptr(m_freeCamera.getProjectionMatrix()));
 
     ShaderProgram::release();
@@ -184,7 +184,7 @@ void RobotArmScene::handleEvents(const Event& event)
     case Event::MouseButtonPressed:
         switch (event.mouseButton.button)
         {
-        case Mouse::Left:
+        case Mouse::Right:
             mousePosPrev = mousePos;
             mousePos = Vector2Di(event.mouseButton.x, event.mouseButton.y);
             panning = true;
@@ -201,13 +201,17 @@ void RobotArmScene::handleEvents(const Event& event)
 
             yDir = mousePos.getY() - mousePosPrev.getY();
             xDir = mousePos.getX() - mousePosPrev.getX();
+
+            rY += (mousePos.getY() - mousePosPrev.getY()) / 20.0f;
+            rX += (mousePosPrev.getX() - mousePos.getX()) / 20.0f;
+            m_freeCamera.rotate(rX, rY, 0);
         }
         break;
 
     case Event::MouseButtonReleased:
         switch (event.mouseButton.button)
         {
-        case Mouse::Left:
+        case Mouse::Right:
             mousePosPrev = mousePos = Vector2Di();
             panning = false;
             break;
@@ -288,6 +292,15 @@ void RobotArmScene::update(float timeDelta)
         m_robotArm.moveFingerOpen(true);
     if (Keyboard::isKeyPressed(Keyboard::E))
         m_robotArm.moveFingerOpen(false);
+
+    if (Keyboard::isKeyPressed(Keyboard::Up))
+        m_freeCamera.walk(timeDelta);
+    if (Keyboard::isKeyPressed(Keyboard::Down))
+        m_freeCamera.walk(-timeDelta);
+    if (Keyboard::isKeyPressed(Keyboard::Right))
+        m_freeCamera.strafe(timeDelta);
+    if (Keyboard::isKeyPressed(Keyboard::Left))
+        m_freeCamera.strafe(-timeDelta);
 }
 
 void RobotArmScene::render()
@@ -306,12 +319,12 @@ void RobotArmScene::render()
     //program->setUniformAttribute("worldToCameraMatrix", 1, GL_FALSE, glm::value_ptr(cameraMatrix.top()));
     //program->setUniformAttribute("worldToCameraMatrix", 1, GL_FALSE, glm::value_ptr(CameraMatrix));
 
-    glm::mat4 mat = glm::lookAt(glm::vec3(0.f, 1.f, 0.f), target, glm::vec3(0, 1, 0));
-    program->setUniformAttribute("worldToCameraMatrix", 1, GL_FALSE, glm::value_ptr(mat));
+    //glm::mat4 mat = glm::lookAt(glm::vec3(0.f, 1.f, 0.f), target, glm::vec3(0, 1, 0));
+    //program->setUniformAttribute("worldToCameraMatrix", 1, GL_FALSE, glm::value_ptr(mat));
+    program->setUniformAttribute("worldToCameraMatrix", 1, GL_FALSE, glm::value_ptr(m_freeCamera.getViewMatrix()));
 
     program->setUniformAttribute("modelToWorldMatrix", 1, GL_FALSE, glm::value_ptr(glm::mat4(1.f)));
-    //gridArray->bind();
-    //gridArray->render();
+
     m_planeGrid.render();
 
     m_vertexArrays["CameraTarget"]->bind();

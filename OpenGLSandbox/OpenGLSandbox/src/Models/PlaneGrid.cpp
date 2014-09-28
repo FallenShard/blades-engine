@@ -1,6 +1,6 @@
 #include "Models/PlaneGrid.h"
 
-PlaneGrid::PlaneGrid(float size, float lineStep, Planes planes)
+PlaneGrid::PlaneGrid(float size, float lineStep, int planes)
     : m_size(size)
     , m_lineStep(lineStep)
     , m_visiblePlanes(planes)
