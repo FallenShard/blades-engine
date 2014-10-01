@@ -84,7 +84,6 @@
     <ClCompile Include="src\Scenes\OverlapScene.cpp" />
     <ClCompile Include="src\Scenes\PrismScene.cpp" />
     <ClCompile Include="src\Scenes\GraphScene.cpp" />
-    <ClCompile Include="src\Renderer\Camera.cpp" />
     <ClCompile Include="src\Renderer\SceneGraph.cpp" />
     <ClCompile Include="src\Utils\VertexLoader.cpp" />
     <ClCompile Include="src\Scenes\TranslationScene.cpp" />
@@ -95,6 +94,9 @@
     <ClCompile Include="src\Renderer\FreeCamera.cpp" />
     <ClCompile Include="src\gl3w.c" />
     <ClCompile Include="src\Models\PlaneGrid.cpp" />
+    <ClCompile Include="src\Models\Prism.cpp" />
+    <ClCompile Include="src\Models\RenderNode.cpp" />
+    <ClCompile Include="src\Models\RoboticArm.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="include\Window\GLContext.h">
@@ -150,7 +152,6 @@
     <ClInclude Include="include\Scenes\PrismScene.h" />
     <ClInclude Include="include\Scenes\OverlapScene.h" />
     <ClInclude Include="include\Scenes\GraphScene.h" />
-    <ClInclude Include="include\Renderer\Camera.h" />
     <ClInclude Include="include\Renderer\SceneGraph.h" />
     <ClInclude Include="include\Utils\VertexLoader.h" />
     <ClInclude Include="include\Scenes\TranslationScene.h" />
@@ -164,6 +165,10 @@
     <ClInclude Include="include\GL\glcorearb.h" />
     <ClInclude Include="include\GL\wglext.h" />
     <ClInclude Include="include\Models\PlaneGrid.h" />
+    <ClInclude Include="include\Models\IRenderable.h" />
+    <ClInclude Include="include\Models\RenderNode.h" />
+    <ClInclude Include="include\Models\Prism.h" />
+    <ClInclude Include="include\Models\RoboticArm.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include="include\Utils\Vector2D.inl">

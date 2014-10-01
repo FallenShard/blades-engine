@@ -13,7 +13,10 @@
   <ItemGroup>
     <ClCompile Include="src\gl3w.c" />
     <ClCompile Include="src\Models\PlaneGrid.cpp" />
+    <ClCompile Include="src\Models\Prism.cpp" />
+    <ClCompile Include="src\Models\RenderNode.cpp" />
     <ClCompile Include="src\Models\RobotArm.cpp" />
+    <ClCompile Include="src\Models\RoboticArm.cpp" />
     <ClCompile Include="src\Renderer\AbstractCamera.cpp" />
     <ClCompile Include="src\Renderer\FreeCamera.cpp" />
     <ClCompile Include="src\Scenes\RobotArmScene.cpp" />
@@ -22,7 +25,6 @@
     <ClCompile Include="src\Core\Application.cpp" />
     <ClCompile Include="src\Core\Timer.cpp" />
     <ClCompile Include="src\main.cpp" />
-    <ClCompile Include="src\Renderer\Camera.cpp" />
     <ClCompile Include="src\Renderer\GLRenderer.cpp" />
     <ClCompile Include="src\Renderer\IndexBuffer.cpp" />
     <ClCompile Include="src\Renderer\SceneGraph.cpp" />
@@ -49,11 +51,14 @@
     <ClInclude Include="include\GL\gl3w.h" />
     <ClInclude Include="include\GL\glcorearb.h" />
     <ClInclude Include="include\GL\wglext.h" />
+    <ClInclude Include="include\Models\IRenderable.h" />
+    <ClInclude Include="include\Models\Prism.h" />
+    <ClInclude Include="include\Models\RenderNode.h" />
     <ClInclude Include="include\Models\RobotArm.h" />
+    <ClInclude Include="include\Models\RoboticArm.h" />
     <ClInclude Include="include\OpenGL.h" />
     <ClInclude Include="include\Models\PlaneGrid.h" />
     <ClInclude Include="include\Renderer\AbstractCamera.h" />
-    <ClInclude Include="include\Renderer\Camera.h" />
     <ClInclude Include="include\Renderer\FreeCamera.h" />
     <ClInclude Include="include\Renderer\GLRenderer.h" />
     <ClInclude Include="include\Renderer\IndexBuffer.h" />

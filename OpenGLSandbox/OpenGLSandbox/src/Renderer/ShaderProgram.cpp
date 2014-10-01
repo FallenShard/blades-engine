@@ -9,7 +9,7 @@ ShaderProgram::ShaderProgram()
 
 ShaderProgram::~ShaderProgram()
 {
-    //m_shaders.clear();
+    m_shaders.clear();
 }
 
 void ShaderProgram::attachShader(Shader& shader)

@@ -16,14 +16,14 @@ public:
     // Deletes a vertex buffer
     ~VertexBuffer();
 
-    // Binds the vertex buffer its target type
+    // Binds the vertex buffer to its target type
     void bind() const;
     
     // Unbinds any buffer currently bound to GL_ARRAY_BUFFER type
     static void release();
 
     // Releases any buffer bound to provided target type
-    static void release(GLenum targetType);
+    static void release(GLenum targetType); 
 
     // Releases provided vertex buffer bound to its target type
     static void release(const VertexBuffer& vertexBuffer);
