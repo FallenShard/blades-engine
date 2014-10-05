@@ -34,10 +34,16 @@ Vector2Di Mouse::getPosition(const Window& window)
 
 void Mouse::setPosition(const Vector2Di& position)
 {
-
+    SetCursorPos(position.getX(), position.getY());
 }
 
-void Mouse::setPosition(const Vector2Di& position, const Window& relativeTo)
+void Mouse::setPosition(const Vector2Di& position, const Window& window)
 {
-
+    HWND handle = window.getWindowHandle();
+    if (handle)
+    {
+        POINT point = { position.getX(), position.getY()};
+        ClientToScreen(handle, &point);
+        SetCursorPos(point.x, point.y);
+    }
 }
