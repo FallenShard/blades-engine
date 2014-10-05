@@ -14,6 +14,10 @@ PlaneGrid::PlaneGrid(float size, float lineStep, int planes)
     m_vertexArray.attachAttribute(VertexAttribute("vColor", 4, 7 * sizeof(GLfloat), 3 * sizeof(GLfloat)));
 }
 
+PlaneGrid::~PlaneGrid()
+{
+}
+
 void PlaneGrid::setProgram(ShaderProgram* program)
 {
     m_program = program;
