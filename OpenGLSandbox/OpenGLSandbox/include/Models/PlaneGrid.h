@@ -4,7 +4,6 @@
 #include "Renderer/VertexBuffer.h"
 #include "Renderer/ShaderProgram.h"
 
-
 class PlaneGrid
 {
 public:
