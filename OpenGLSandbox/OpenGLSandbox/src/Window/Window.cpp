@@ -624,6 +624,10 @@ bool Window::waitEvent(Event& event)
     return popEvent(event, true);
 }
 
+void Window::showMouseCursor(bool showCursor)
+{
+    ShowCursor(showCursor);
+}
 
 Vector2Du Window::getSize() const
 {

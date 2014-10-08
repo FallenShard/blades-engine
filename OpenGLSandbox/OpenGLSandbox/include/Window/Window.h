@@ -42,6 +42,7 @@ public:
 
     void close();
 
+    void showMouseCursor(bool showCursor);
     Vector2Du getSize() const;
     HWND getWindowHandle() const;
 
