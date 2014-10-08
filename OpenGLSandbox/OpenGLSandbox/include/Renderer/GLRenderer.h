@@ -11,13 +11,14 @@
 #include "Renderer/IndexBuffer.h"
 #include "Renderer/VertexAttribute.h"
 #include "Scenes/Scene.h"
+#include "Window/Window.h"
 
 struct Event;
 
 class GLRenderer
 {
 public:
-    GLRenderer();
+    GLRenderer(Window* window);
     GLRenderer(int width, int height);
     ~GLRenderer();
 
@@ -32,6 +33,8 @@ private:
 
     float m_aspectRatio;
     float m_timePassed;
+
+    Window* m_window;
 
     std::vector<Scene*> m_scenes;
 };

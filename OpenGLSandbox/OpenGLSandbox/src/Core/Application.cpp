@@ -18,7 +18,7 @@ namespace
 Application::Application()
 {
     m_window = new Window(VideoMode(windowWidth, windowHeight, 32), "OpenGL Test");
-    m_renderer = new GLRenderer(windowWidth, windowHeight);
+    m_renderer = new GLRenderer(m_window);
     backColor = 0.f;
 }
 
@@ -63,9 +63,6 @@ void Application::processInput()
     {
         if (event.type == Event::KeyPressed && event.key.code == Keyboard::Escape)
             m_window->close();
-
-        if (event.type == Event::Resized)
-            m_renderer->resize(event.size.width, event.size.height);
 
         m_renderer->handleEvents(event);
     }

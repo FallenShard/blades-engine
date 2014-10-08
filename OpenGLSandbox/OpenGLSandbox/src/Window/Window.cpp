@@ -123,8 +123,8 @@ void Window::processMessage(UINT message, WPARAM wParam, LPARAM lParam)
             // Push a resize event
             Event event;
             event.type = Event::Resized;
-            event.size.width = m_prevSize.getX();
-            event.size.height = m_prevSize.getY();
+            event.size.width = m_prevSize.x;
+            event.size.height = m_prevSize.y;
             pushEvent(event);
         }
         break;
@@ -152,8 +152,8 @@ void Window::processMessage(UINT message, WPARAM wParam, LPARAM lParam)
             // Push a resize event
             Event event;
             event.type = Event::Resized;
-            event.size.width = m_prevSize.getX();
-            event.size.height = m_prevSize.getY();
+            event.size.width = m_prevSize.x;
+            event.size.height = m_prevSize.y;
             pushEvent(event);
         }
         break;
@@ -629,12 +629,20 @@ void Window::showMouseCursor(bool showCursor)
     ShowCursor(showCursor);
 }
 
-Vector2Du Window::getSize() const
+glm::ivec2 Window::getSize() const
 {
     RECT rect;
     GetClientRect(m_windowHandle, &rect);
 
-    return Vector2Du(rect.right - rect.left, rect.bottom - rect.top);
+    return glm::ivec2(rect.right - rect.left, rect.bottom - rect.top);
+}
+
+glm::ivec2 Window::getPosition() const
+{
+    RECT rect;
+    GetClientRect(m_windowHandle, &rect);
+
+    return glm::ivec2(rect.left, rect.top);
 }
 
 HWND Window::getWindowHandle() const

@@ -5,6 +5,7 @@
 #include <string>
 #include <queue>
 
+#include "vec2.hpp"
 #include "Utils/Vector2D.h"
 #include "VideoMode.h"
 #include "GLContext.h"
@@ -43,7 +44,8 @@ public:
     void close();
 
     void showMouseCursor(bool showCursor);
-    Vector2Du getSize() const;
+    glm::ivec2 getSize() const;
+    glm::ivec2 getPosition() const;
     HWND getWindowHandle() const;
 
 private:
@@ -63,8 +65,8 @@ private:
 
     std::queue<Event> m_eventQueue;
 
-    Vector2Du m_size;
-    Vector2Du m_prevSize; // Used for resizing
+    glm::ivec2 m_size;
+    glm::ivec2 m_prevSize;
     HWND m_windowHandle;
     HDC m_deviceContextHandle;
     GLContext* m_GLContext;

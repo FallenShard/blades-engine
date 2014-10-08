@@ -8,11 +8,10 @@
 #include "Scenes/GraphScene.h"
 #include "Scenes/RobotArmScene.h"
 
-
-
-GLRenderer::GLRenderer()
-    : m_aspectRatio(4.f / 3)
+GLRenderer::GLRenderer(Window* window)
+    : m_aspectRatio(-1.f)
     , m_timePassed(0.f)
+    , m_window(window)
 {
     init();
 }
@@ -33,12 +32,17 @@ GLRenderer::~GLRenderer()
 
 void GLRenderer::init()
 {
+    if (m_window)
+    {
+        glm::ivec2 windowSize = m_window->getSize();
+        m_aspectRatio = static_cast<float>(windowSize.x) / windowSize.y;
+    }
     //Scene* scene = new TriangleScene();
     //Scene* scene = new PrismScene();
     //Scene* scene = new OverlapScene();
     //Scene* scene = new GraphScene();
     //Scene* scene = new TranslationScene();
-    Scene* scene = new RobotArmScene();
+    Scene* scene = new RobotArmScene(m_window);
     m_scenes.push_back(scene);
 
     for (auto& scene : m_scenes)

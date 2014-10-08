@@ -5,11 +5,14 @@
 #include "Models/RobotArm.h"
 #include "Models/PlaneGrid.h"
 #include "Renderer/FreeCamera.h"
+#include "Renderer/CameraController.h"
+#include "Window/Window.h"
 
 class RobotArmScene : public Scene
 {
 public:
     RobotArmScene();
+    RobotArmScene(Window* window);
 
     virtual void prepare();
     virtual void handleEvents(const Event& event);
@@ -21,6 +24,7 @@ public:
 private:
     float m_timePassed;
 
+    CameraController m_cameraController;
     FreeCamera m_freeCamera;
     RobotArm m_robotArm;
 
