@@ -1,13 +1,7 @@
 #include "Core/Application.h"
 
-int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine, int iCmdShow)
-{
-    Application application;
-    application.run();
 
-    return 0;
-}
-
+#if defined(_DEBUG)
 #include <tchar.h>
 
 int _tmain(int argc, _TCHAR* argv[])
@@ -16,3 +10,15 @@ int _tmain(int argc, _TCHAR* argv[])
     application.run();
     return 0;
 }
+
+#else
+
+int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine, int iCmdShow)
+{
+    Application application;
+    application.run();
+
+    return 0;
+}
+
+#endif
