@@ -641,8 +641,10 @@ glm::ivec2 Window::getPosition() const
 {
     RECT rect;
     GetClientRect(m_windowHandle, &rect);
+    POINT topLeft = { rect.left, rect.top };
+    ClientToScreen(m_windowHandle, &topLeft);
 
-    return glm::ivec2(rect.left, rect.top);
+    return glm::ivec2(topLeft.x, topLeft.y);
 }
 
 HWND Window::getWindowHandle() const

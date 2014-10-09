@@ -20,7 +20,6 @@ CameraController::CameraController(ShaderProgram* program, Window* window)
     , m_window(window)
 {
     m_freeCamera.setPosition(glm::vec3(0.f, 1.f, 1.f));
-
     m_freeCamera.rotate(m_yaw, m_pitch, 0.f);
     m_freeCamera.setSpeed(m_transSpeed);
 }
@@ -57,7 +56,7 @@ bool CameraController::handleEvents(const Event& event)
     case Event::MouseMoved:
     {
         if (m_freeLook == true)
-            rotateCamera(event.mouseMove.x, event.mouseMove.y);
+            adjustYawPitch(event.mouseMove.x, event.mouseMove.y);
 
         break;
     }
@@ -125,11 +124,9 @@ void CameraController::setFreeLook(bool freeLook)
     m_window->showMouseCursor(!freeLook);
 }
 
-void CameraController::rotateCamera(int mouseX, int mouseY)
+void CameraController::adjustYawPitch(int mouseX, int mouseY)
 {
-    glm::ivec2 windowPos = m_window->getPosition();
-    glm::ivec2 windowSize = m_window->getSize();
-    glm::ivec2 windowCenter = windowPos + windowSize / 2;
+    glm::ivec2 windowCenter = m_window->getSize() / 2;
     glm::ivec2 mousePos(mouseX, mouseY);
 
     m_pitch += (mousePos.y - windowCenter.y) / m_lookSpeed;

@@ -22,7 +22,7 @@ public:
 
 private:
     void setFreeLook(bool freeLook);
-    void rotateCamera(int mouseX, int mouseY);
+    void adjustYawPitch(int mouseX, int mouseY);
 
     AbstractCamera* m_activeCamera;
     FreeCamera      m_freeCamera;
