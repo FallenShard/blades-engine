@@ -1,6 +1,6 @@
 #include "Scenes/TranslationScene.h"
 #include "Utils/VertexLoader.h"
-#include "Renderer/Camera.h"
+//#include "Renderer/Camera.h"
 
 namespace
 {
@@ -71,9 +71,9 @@ void TranslationScene::prepare()
     program->getUniformAttribute("modelToCameraMatrix");
     program->getUniformAttribute("cameraToClipMatrix");
 
-    Camera camera(45.f);
-    program->use();
-    program->setUniformAttribute("cameraToClipMatrix", 1, GL_FALSE, camera.getProjectionMatrix());
+    //Camera camera(45.f);
+    //program->use();
+    //program->setUniformAttribute("cameraToClipMatrix", 1, GL_FALSE, camera.getProjectionMatrix());
 
     GLshort indexData[] =
     {

@@ -94,9 +94,7 @@
     <ClCompile Include="src\Renderer\FreeCamera.cpp" />
     <ClCompile Include="src\gl3w.c" />
     <ClCompile Include="src\Models\PlaneGrid.cpp" />
-    <ClCompile Include="src\Models\Prism.cpp" />
-    <ClCompile Include="src\Models\RenderNode.cpp" />
-    <ClCompile Include="src\Models\RoboticArm.cpp" />
+    <ClCompile Include="src\Renderer\CameraController.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="include\Window\GLContext.h">
@@ -165,10 +163,7 @@
     <ClInclude Include="include\GL\glcorearb.h" />
     <ClInclude Include="include\GL\wglext.h" />
     <ClInclude Include="include\Models\PlaneGrid.h" />
-    <ClInclude Include="include\Models\IRenderable.h" />
-    <ClInclude Include="include\Models\RenderNode.h" />
-    <ClInclude Include="include\Models\Prism.h" />
-    <ClInclude Include="include\Models\RoboticArm.h" />
+    <ClInclude Include="include\Renderer\CameraController.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include="include\Utils\Vector2D.inl">
