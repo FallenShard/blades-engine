@@ -97,6 +97,7 @@
     <ClCompile Include="src\Models\Prism.cpp" />
     <ClCompile Include="src\Models\RenderNode.cpp" />
     <ClCompile Include="src\Models\RoboticArm.cpp" />
+    <ClCompile Include="src\Renderer\CameraController.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="include\Window\GLContext.h">
@@ -169,6 +170,7 @@
     <ClInclude Include="include\Models\RenderNode.h" />
     <ClInclude Include="include\Models\Prism.h" />
     <ClInclude Include="include\Models\RoboticArm.h" />
+    <ClInclude Include="include\Renderer\CameraController.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include="include\Utils\Vector2D.inl">
@@ -193,7 +195,6 @@
     <Text Include="res\PrismData.txt" />
     <Text Include="res\TrianglePosData.txt" />
     <Text Include="res\RobotArmMesh.txt" />
-    <Text Include="error.log" />
     <Text Include="res\RobotArmFaces.txt" />
   </ItemGroup>
 </Project>

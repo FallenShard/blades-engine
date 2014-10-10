@@ -18,6 +18,7 @@
     <ClCompile Include="src\Models\RobotArm.cpp" />
     <ClCompile Include="src\Models\RoboticArm.cpp" />
     <ClCompile Include="src\Renderer\AbstractCamera.cpp" />
+    <ClCompile Include="src\Renderer\CameraController.cpp" />
     <ClCompile Include="src\Renderer\FreeCamera.cpp" />
     <ClCompile Include="src\Scenes\RobotArmScene.cpp" />
     <ClCompile Include="src\Transformations\MatrixStack.cpp" />
@@ -59,6 +60,7 @@
     <ClInclude Include="include\OpenGL.h" />
     <ClInclude Include="include\Models\PlaneGrid.h" />
     <ClInclude Include="include\Renderer\AbstractCamera.h" />
+    <ClInclude Include="include\Renderer\CameraController.h" />
     <ClInclude Include="include\Renderer\FreeCamera.h" />
     <ClInclude Include="include\Renderer\GLRenderer.h" />
     <ClInclude Include="include\Renderer\IndexBuffer.h" />
@@ -101,7 +103,6 @@
     <None Include="res\motionVert.vert" />
   </ItemGroup>
   <ItemGroup>
-    <Text Include="error.log" />
     <Text Include="res\PrismData.txt" />
     <Text Include="res\OverlapData.txt" />
     <Text Include="res\RobotArmFaces.txt" />
@@ -164,7 +165,7 @@
       <AdditionalIncludeDirectories>$(ProjectDir)include;$(SolutionDir)External Libraries\glm;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
-      <SubSystem>Windows</SubSystem>
+      <SubSystem>Console</SubSystem>
       <GenerateDebugInformation>true</GenerateDebugInformation>
       <AdditionalDependencies>opengl32.lib;%(AdditionalDependencies)</AdditionalDependencies>
       <AdditionalLibraryDirectories>%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>

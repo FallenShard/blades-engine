@@ -1,10 +1,16 @@
 #include "Scenes/RobotArmScene.h"
 
+#include "Models/SceneNode.h"
+#include "Models/Prism.h"
+#include "Models/RoboticArm.h"
+
 #include <algorithm>
 
 namespace
 {
     GLenum error = false;
+
+    SceneNode* g_root = nullptr;
 }
 
 RobotArmScene::RobotArmScene()
@@ -84,6 +90,8 @@ void RobotArmScene::prepare()
     cArray->attachAttribute(VertexAttribute("vPosition", 3, 0, 0));
     cArray->attachAttribute(VertexAttribute("vColor", 4, 0, 3 * sizeof(GLfloat) * vBuffer->getVertexCount()));
     cArray->enableAttributes(program->getProgramId());
+
+    g_root = new RoboticArm();
 }
 
 void RobotArmScene::handleEvents(const Event& event)
