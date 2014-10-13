@@ -42,140 +42,89 @@
     </Filter>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="src\Window\GLContext.cpp">
-      <Filter>Source\Window</Filter>
-    </ClCompile>
-    <ClCompile Include="src\Window\VideoMode.cpp">
-      <Filter>Source\Window</Filter>
-    </ClCompile>
-    <ClCompile Include="src\Window\Window.cpp">
-      <Filter>Source\Window</Filter>
-    </ClCompile>
-    <ClCompile Include="src\main.cpp">
-      <Filter>Source</Filter>
-    </ClCompile>
-    <ClCompile Include="src\Window\Keyboard.cpp">
-      <Filter>Source\Window</Filter>
-    </ClCompile>
-    <ClCompile Include="src\Window\Mouse.cpp">
-      <Filter>Source\Window</Filter>
-    </ClCompile>
-    <ClCompile Include="src\Core\Application.cpp">
-      <Filter>Source\Core</Filter>
-    </ClCompile>
-    <ClCompile Include="src\Renderer\Shader.cpp">
-      <Filter>Source\Renderer</Filter>
-    </ClCompile>
-    <ClCompile Include="src\Utils\Logger.cpp">
-      <Filter>Source\Utils</Filter>
-    </ClCompile>
-    <ClCompile Include="src\Renderer\ShaderProgram.cpp">
-      <Filter>Source\Renderer</Filter>
-    </ClCompile>
-    <ClCompile Include="src\Renderer\GLRenderer.cpp">
-      <Filter>Source\Renderer</Filter>
-    </ClCompile>
+    <ClCompile Include="src\Core\Application.cpp" />
     <ClCompile Include="src\Core\Timer.cpp" />
-    <ClCompile Include="src\Renderer\VertexArray.cpp" />
-    <ClCompile Include="src\Renderer\VertexBuffer.cpp" />
-    <ClCompile Include="src\Renderer\Vertex.cpp" />
-    <ClCompile Include="src\Renderer\IndexBuffer.cpp" />
-    <ClCompile Include="src\Scenes\TriangleScene.cpp" />
-    <ClCompile Include="src\Scenes\OverlapScene.cpp" />
-    <ClCompile Include="src\Scenes\PrismScene.cpp" />
-    <ClCompile Include="src\Scenes\GraphScene.cpp" />
-    <ClCompile Include="src\Renderer\SceneGraph.cpp" />
-    <ClCompile Include="src\Utils\VertexLoader.cpp" />
-    <ClCompile Include="src\Scenes\TranslationScene.cpp" />
-    <ClCompile Include="src\Scenes\RobotArmScene.cpp" />
-    <ClCompile Include="src\Transformations\MatrixStack.cpp" />
-    <ClCompile Include="src\Models\RobotArm.cpp" />
-    <ClCompile Include="src\Renderer\AbstractCamera.cpp" />
-    <ClCompile Include="src\Renderer\FreeCamera.cpp" />
-    <ClCompile Include="src\gl3w.c" />
     <ClCompile Include="src\Models\PlaneGrid.cpp" />
     <ClCompile Include="src\Models\Prism.cpp" />
-    <ClCompile Include="src\Models\RenderNode.cpp" />
+    <ClCompile Include="src\Models\RobotArm.cpp" />
     <ClCompile Include="src\Models\RoboticArm.cpp" />
+    <ClCompile Include="src\Models\SceneNode.cpp" />
+    <ClCompile Include="src\Renderer\AbstractCamera.cpp" />
     <ClCompile Include="src\Renderer\CameraController.cpp" />
+    <ClCompile Include="src\Renderer\FreeCamera.cpp" />
+    <ClCompile Include="src\Renderer\GLRenderer.cpp" />
+    <ClCompile Include="src\Renderer\IndexBuffer.cpp" />
+    <ClCompile Include="src\Renderer\SceneGraph.cpp" />
+    <ClCompile Include="src\Renderer\Shader.cpp" />
+    <ClCompile Include="src\Renderer\ShaderProgram.cpp" />
+    <ClCompile Include="src\Renderer\Vertex.cpp" />
+    <ClCompile Include="src\Renderer\VertexArray.cpp" />
+    <ClCompile Include="src\Renderer\VertexBuffer.cpp" />
+    <ClCompile Include="src\Scenes\GraphScene.cpp" />
+    <ClCompile Include="src\Scenes\OverlapScene.cpp" />
+    <ClCompile Include="src\Scenes\PrismScene.cpp" />
+    <ClCompile Include="src\Scenes\RobotArmScene.cpp" />
+    <ClCompile Include="src\Scenes\TranslationScene.cpp" />
+    <ClCompile Include="src\Scenes\TriangleScene.cpp" />
+    <ClCompile Include="src\Transformations\MatrixStack.cpp" />
+    <ClCompile Include="src\Utils\Logger.cpp" />
+    <ClCompile Include="src\Utils\VertexLoader.cpp" />
+    <ClCompile Include="src\Window\GLContext.cpp" />
+    <ClCompile Include="src\Window\Keyboard.cpp" />
+    <ClCompile Include="src\Window\Mouse.cpp" />
+    <ClCompile Include="src\Window\VideoMode.cpp" />
+    <ClCompile Include="src\Window\Window.cpp" />
+    <ClCompile Include="src\gl3w.c" />
+    <ClCompile Include="src\main.cpp" />
+    <ClCompile Include="src\Models\TransformNode.cpp" />
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="include\Window\GLContext.h">
-      <Filter>Headers\Window</Filter>
-    </ClInclude>
-    <ClInclude Include="include\Utils\GraphicsUtils.h">
-      <Filter>Headers\Utils</Filter>
-    </ClInclude>
-    <ClInclude Include="include\Window\VideoMode.h">
-      <Filter>Headers\Window</Filter>
-    </ClInclude>
-    <ClInclude Include="include\Window\Window.h">
-      <Filter>Headers\Window</Filter>
-    </ClInclude>
-    <ClInclude Include="include\Utils\Vector2D.h">
-      <Filter>Headers\Utils</Filter>
-    </ClInclude>
-    <ClInclude Include="include\Window\Keyboard.h">
-      <Filter>Headers\Window</Filter>
-    </ClInclude>
-    <ClInclude Include="include\Window\Mouse.h">
-      <Filter>Headers\Window</Filter>
-    </ClInclude>
-    <ClInclude Include="include\Core\Application.h">
-      <Filter>Headers\Core</Filter>
-    </ClInclude>
-    <ClInclude Include="include\Window\Event.h">
-      <Filter>Headers\Window</Filter>
-    </ClInclude>
-    <ClInclude Include="include\Renderer\Shader.h">
-      <Filter>Headers\Renderer</Filter>
-    </ClInclude>
-    <ClInclude Include="include\Utils\Logger.h">
-      <Filter>Headers\Utils</Filter>
-    </ClInclude>
-    <ClInclude Include="include\Renderer\ShaderProgram.h">
-      <Filter>Headers\Renderer</Filter>
-    </ClInclude>
-    <ClInclude Include="include\Renderer\GLRenderer.h">
-      <Filter>Headers\Renderer</Filter>
-    </ClInclude>
-    <ClInclude Include="include\OpenGL.h">
-      <Filter>Headers\Core</Filter>
-    </ClInclude>
+    <ClInclude Include="include\Core\Application.h" />
     <ClInclude Include="include\Core\Timer.h" />
-    <ClInclude Include="include\Renderer\VertexArray.h" />
-    <ClInclude Include="include\Renderer\VertexBuffer.h" />
-    <ClInclude Include="include\Renderer\Vertex.h" />
-    <ClInclude Include="include\Renderer\VertexAttribute.h" />
-    <ClInclude Include="include\Renderer\IndexBuffer.h" />
-    <ClInclude Include="include\Scenes\Scene.h" />
-    <ClInclude Include="include\Scenes\TriangleScene.h" />
-    <ClInclude Include="include\Scenes\PrismScene.h" />
-    <ClInclude Include="include\Scenes\OverlapScene.h" />
-    <ClInclude Include="include\Scenes\GraphScene.h" />
-    <ClInclude Include="include\Renderer\SceneGraph.h" />
-    <ClInclude Include="include\Utils\VertexLoader.h" />
-    <ClInclude Include="include\Scenes\TranslationScene.h" />
-    <ClInclude Include="include\Scenes\RobotArmScene.h" />
-    <ClInclude Include="include\Transformations\MatrixStack.h" />
-    <ClInclude Include="include\Models\RobotArm.h" />
-    <ClInclude Include="include\Renderer\AbstractCamera.h" />
-    <ClInclude Include="include\Renderer\FreeCamera.h" />
-    <ClInclude Include="include\Renderer\TargetCamera.h" />
     <ClInclude Include="include\GL\gl3w.h" />
     <ClInclude Include="include\GL\glcorearb.h" />
     <ClInclude Include="include\GL\wglext.h" />
-    <ClInclude Include="include\Models\PlaneGrid.h" />
     <ClInclude Include="include\Models\IRenderable.h" />
-    <ClInclude Include="include\Models\RenderNode.h" />
+    <ClInclude Include="include\Models\PlaneGrid.h" />
     <ClInclude Include="include\Models\Prism.h" />
+    <ClInclude Include="include\Models\RobotArm.h" />
     <ClInclude Include="include\Models\RoboticArm.h" />
+    <ClInclude Include="include\Models\SceneNode.h" />
+    <ClInclude Include="include\Renderer\AbstractCamera.h" />
     <ClInclude Include="include\Renderer\CameraController.h" />
+    <ClInclude Include="include\Renderer\FreeCamera.h" />
+    <ClInclude Include="include\Renderer\GLRenderer.h" />
+    <ClInclude Include="include\Renderer\IndexBuffer.h" />
+    <ClInclude Include="include\Renderer\SceneGraph.h" />
+    <ClInclude Include="include\Renderer\Shader.h" />
+    <ClInclude Include="include\Renderer\ShaderProgram.h" />
+    <ClInclude Include="include\Renderer\TargetCamera.h" />
+    <ClInclude Include="include\Renderer\Vertex.h" />
+    <ClInclude Include="include\Renderer\VertexArray.h" />
+    <ClInclude Include="include\Renderer\VertexAttribute.h" />
+    <ClInclude Include="include\Renderer\VertexBuffer.h" />
+    <ClInclude Include="include\Scenes\GraphScene.h" />
+    <ClInclude Include="include\Scenes\OverlapScene.h" />
+    <ClInclude Include="include\Scenes\PrismScene.h" />
+    <ClInclude Include="include\Scenes\RobotArmScene.h" />
+    <ClInclude Include="include\Scenes\Scene.h" />
+    <ClInclude Include="include\Scenes\TranslationScene.h" />
+    <ClInclude Include="include\Scenes\TriangleScene.h" />
+    <ClInclude Include="include\Transformations\MatrixStack.h" />
+    <ClInclude Include="include\Utils\GraphicsUtils.h" />
+    <ClInclude Include="include\Utils\Logger.h" />
+    <ClInclude Include="include\Utils\Vector2D.h" />
+    <ClInclude Include="include\Utils\VertexLoader.h" />
+    <ClInclude Include="include\Window\Event.h" />
+    <ClInclude Include="include\Window\GLContext.h" />
+    <ClInclude Include="include\Window\Keyboard.h" />
+    <ClInclude Include="include\Window\Mouse.h" />
+    <ClInclude Include="include\Window\VideoMode.h" />
+    <ClInclude Include="include\Window\Window.h" />
+    <ClInclude Include="include\OpenGL.h" />
+    <ClInclude Include="include\Models\TransformNode.h" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="include\Utils\Vector2D.inl">
-      <Filter>Headers\Utils</Filter>
-    </None>
     <None Include="res\default.vert">
       <Filter>Resources</Filter>
     </None>
@@ -188,6 +137,7 @@
     <None Include="res\manualOverlap.vert" />
     <None Include="res\motionVert.vert" />
     <None Include="res\defProj.vert" />
+    <None Include="include\Utils\Vector2D.inl" />
   </ItemGroup>
   <ItemGroup>
     <Text Include="res\OverlapData.txt" />

@@ -1,6 +1,11 @@
 #include "Renderer/ShaderProgram.h"
 #include "Utils/Logger.h"
 
+namespace
+{
+    GLuint prevBoundProgram = 0;
+}
+
 ShaderProgram::ShaderProgram()
 {
     // Create an identifier to recognize this program among others
@@ -67,12 +72,20 @@ void ShaderProgram::link()
 
 void ShaderProgram::use()
 {
-    glUseProgram(m_id);
+    if (prevBoundProgram != m_id)
+    {
+        prevBoundProgram = m_id;
+        glUseProgram(m_id);
+    }
 }
 
 void ShaderProgram::release()
 {
-    glUseProgram(0);
+    if (prevBoundProgram != 0)
+    {
+        prevBoundProgram = 0;
+        glUseProgram(0);
+    }
 }
 
 bool ShaderProgram::checkLinkStatus()

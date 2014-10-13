@@ -43,37 +43,6 @@ RobotArm::RobotArm()
 {
 }
 
-void RobotArm::draw(VertexArray& vArray, ShaderProgram& program)
-{
-    MatrixStack modelToWorldStack;
-
-    program.use();
-    vArray.bind();
-
-    modelToWorldStack.translate(m_posBase);
-    modelToWorldStack.rotateY(m_angBase);
-
-    //Draw left base
-    modelToWorldStack.push();
-    modelToWorldStack.translate(m_posBaseLeft);
-    modelToWorldStack.scale(glm::vec3(1.0f, 1.0f, m_scaleBaseZ));
-    program.setUniformAttribute("modelToWorldMatrix", 1, GL_FALSE, glm::value_ptr(modelToWorldStack.top()));
-    vArray.renderIndexed();
-    modelToWorldStack.pop();
-    
-
-    //Draw right base
-    modelToWorldStack.push();
-    modelToWorldStack.translate(m_posBaseRight);
-    modelToWorldStack.scale(glm::vec3(1.0f, 1.0f, m_scaleBaseZ));
-    program.setUniformAttribute("modelToWorldMatrix", 1, GL_FALSE, glm::value_ptr(modelToWorldStack.top()));
-    vArray.renderIndexed();
-    modelToWorldStack.pop();
-
-    //Draw main arm.
-    drawUpperArm(modelToWorldStack, vArray, program);
-}
-
 void RobotArm::moveBase(bool increment)
 {
     m_angBase += increment ? StandardAngleIncrement : -StandardAngleIncrement;
@@ -108,6 +77,37 @@ void RobotArm::moveFingerOpen(bool increment)
 {
     m_angFingerOpen += increment ? SmallAngleIncrement : -SmallAngleIncrement;
     m_angFingerOpen = clamp(m_angFingerOpen, 9.0f, 180.0f);
+}
+
+void RobotArm::draw(VertexArray& vArray, ShaderProgram& program)
+{
+    MatrixStack modelToWorldStack;
+
+    program.use();
+    vArray.bind();
+
+    modelToWorldStack.translate(m_posBase);
+    modelToWorldStack.rotateY(m_angBase);
+
+    //Draw left base
+    modelToWorldStack.push();
+    modelToWorldStack.translate(m_posBaseLeft);
+    modelToWorldStack.scale(glm::vec3(1.0f, 1.0f, m_scaleBaseZ));
+    program.setUniformAttribute("modelToWorldMatrix", 1, GL_FALSE, glm::value_ptr(modelToWorldStack.top()));
+    vArray.renderIndexed();
+    modelToWorldStack.pop();
+
+
+    //Draw right base
+    modelToWorldStack.push();
+    modelToWorldStack.translate(m_posBaseRight);
+    modelToWorldStack.scale(glm::vec3(1.0f, 1.0f, m_scaleBaseZ));
+    program.setUniformAttribute("modelToWorldMatrix", 1, GL_FALSE, glm::value_ptr(modelToWorldStack.top()));
+    vArray.renderIndexed();
+    modelToWorldStack.pop();
+
+    //Draw main arm.
+    drawUpperArm(modelToWorldStack, vArray, program);
 }
 
 void RobotArm::drawUpperArm(MatrixStack& modelToWorldStack, VertexArray& vArray, ShaderProgram& program)

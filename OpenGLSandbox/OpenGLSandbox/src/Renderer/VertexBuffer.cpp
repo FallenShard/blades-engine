@@ -40,8 +40,11 @@ void VertexBuffer::bind() const
 
 void VertexBuffer::release()
 {
-    glBindBuffer(GL_ARRAY_BUFFER, 0);
-    boundVBO = 0;
+    if (boundVBO != 0)
+    {
+        glBindBuffer(GL_ARRAY_BUFFER, 0);
+        boundVBO = 0;
+    }
 }
 
 void VertexBuffer::release(GLenum targetType)
