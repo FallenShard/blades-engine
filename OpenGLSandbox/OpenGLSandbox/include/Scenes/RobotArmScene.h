@@ -13,6 +13,7 @@ class RobotArmScene : public Scene
 public:
     RobotArmScene();
     RobotArmScene(Window* window);
+    ~RobotArmScene();
 
     virtual void prepare();
     virtual void handleEvents(const Event& event);

@@ -1,10 +1,16 @@
 #include "Scenes/RobotArmScene.h"
 
+#include "Models/SceneNode.h"
+#include "Models/Prism.h"
+#include "Models/RoboticArm.h"
+
 #include <algorithm>
 
 namespace
 {
     GLenum error = false;
+
+    SceneNode* g_root = nullptr;
 }
 
 RobotArmScene::RobotArmScene()
@@ -19,6 +25,11 @@ RobotArmScene::RobotArmScene(Window* window)
     , m_planeGrid(1000.f, 10.f, PlaneGrid::XZ)
     , m_cameraController(nullptr, window)
 {
+}
+
+RobotArmScene::~RobotArmScene()
+{
+    delete g_root;
 }
 
 void RobotArmScene::prepare()
@@ -72,6 +83,7 @@ void RobotArmScene::prepare()
 
     m_vertexBuffers["Cube"] = std::make_unique<VertexBuffer>(GL_STATIC_DRAW);
     VertexBuffer* vBuffer = m_vertexBuffers["Cube"].get();
+    vBuffer->bind();
     vLoader.loadFromFile("res/RobotArmMesh.txt", *vBuffer);
     cArray->setVertexCount(vBuffer->getVertexCount());
 
@@ -84,11 +96,75 @@ void RobotArmScene::prepare()
     cArray->attachAttribute(VertexAttribute("vPosition", 3, 0, 0));
     cArray->attachAttribute(VertexAttribute("vColor", 4, 0, 3 * sizeof(GLfloat) * vBuffer->getVertexCount()));
     cArray->enableAttributes(program->getProgramId());
+
+    g_root = new RoboticArm(program);
+}
+
+namespace
+{
+    float pitch = 0.f;
+    float yaw = 0.f;
+    float roll = 0.f;
+    float inc = 10.f;
 }
 
 void RobotArmScene::handleEvents(const Event& event)
 {
     m_cameraController.handleEvents(event);
+
+    switch (event.type)
+    {
+    case Event::KeyPressed:
+    {
+        switch (event.key.code)
+        {
+        case Keyboard::NumPad4:
+        {
+            yaw += 10.f;
+            g_root->rotateY(inc);
+            //g_root->applyTransformation();
+            break;
+        }
+        case Keyboard::NumPad6:
+        {
+            yaw -= 10.f;
+            g_root->rotateY(-inc);
+            //g_root->applyTransformation();
+            break;
+        }
+        case Keyboard::NumPad5:
+        {
+            pitch += 10.f;
+            g_root->rotateX(-inc);
+            //g_root->applyTransformation();
+            break;
+        }
+        case Keyboard::NumPad8:
+        {
+            pitch -= 10.f;
+            g_root->rotateX(inc);
+            //g_root->applyTransformation();
+            break;
+        }
+        case Keyboard::NumPad7:
+        {
+            roll += 10.f;
+            g_root->rotateZ(inc);
+            //g_root->applyTransformation();
+            break;
+        }
+        case Keyboard::NumPad9:
+        {
+            roll -= 10.f;
+            g_root->rotateZ(-inc);
+            //g_root->applyTransformation();
+            break;
+        }
+        };
+
+    }
+
+    };
 }
 
 void RobotArmScene::update(float timeDelta)
@@ -136,6 +212,8 @@ void RobotArmScene::render()
 
     m_vertexArrays["Cube"]->bind();
     m_vertexArrays["Cube"]->renderIndexed();
+
+    g_root->render();
 
     vArray->bind();
     m_robotArm.draw(*vArray, *program);
