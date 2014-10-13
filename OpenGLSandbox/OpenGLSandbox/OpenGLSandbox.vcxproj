@@ -53,8 +53,6 @@
     <ClInclude Include="include\GL\gl3w.h" />
     <ClInclude Include="include\GL\glcorearb.h" />
     <ClInclude Include="include\GL\wglext.h" />
-    <ClInclude Include="include\Models\IRenderable.h" />
-    <ClInclude Include="include\Models\Prism.h" />
     <ClInclude Include="include\Models\TransformNode.h" />
     <ClInclude Include="include\Models\IRenderable.h" />
     <ClInclude Include="include\Models\PlaneGrid.h" />
