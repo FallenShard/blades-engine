@@ -28,6 +28,7 @@
     <ClCompile Include="src\Renderer\IndexBuffer.cpp" />
     <ClCompile Include="src\Renderer\SceneGraph.cpp" />
     <ClCompile Include="src\Renderer\Shader.cpp" />
+    <ClCompile Include="src\Renderer\ShaderManager.cpp" />
     <ClCompile Include="src\Renderer\ShaderProgram.cpp" />
     <ClCompile Include="src\Renderer\Vertex.cpp" />
     <ClCompile Include="src\Renderer\VertexArray.cpp" />
@@ -68,6 +69,7 @@
     <ClInclude Include="include\Renderer\IndexBuffer.h" />
     <ClInclude Include="include\Renderer\SceneGraph.h" />
     <ClInclude Include="include\Renderer\Shader.h" />
+    <ClInclude Include="include\Renderer\ShaderManager.h" />
     <ClInclude Include="include\Renderer\ShaderProgram.h" />
     <ClInclude Include="include\Renderer\TargetCamera.h" />
     <ClInclude Include="include\Renderer\Vertex.h" />
@@ -109,6 +111,7 @@
     <Text Include="res\OverlapData.txt" />
     <Text Include="res\RobotArmFaces.txt" />
     <Text Include="res\RobotArmMesh.txt" />
+    <Text Include="res\ShaderList.txt" />
     <Text Include="res\TranslationData.txt" />
     <Text Include="res\TrianglePosData.txt" />
   </ItemGroup>

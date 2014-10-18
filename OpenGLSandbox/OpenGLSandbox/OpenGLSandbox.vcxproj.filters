@@ -81,6 +81,7 @@
     <ClCompile Include="src\Models\RoboticArm.cpp" />
     <ClCompile Include="src\main.cpp" />
     <ClCompile Include="src\Models\TransformNode.cpp" />
+    <ClCompile Include="src\Renderer\ShaderManager.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="include\Core\Application.h" />
@@ -132,6 +133,7 @@
     <ClInclude Include="include\Window\Window.h" />
     <ClInclude Include="include\OpenGL.h" />
     <ClInclude Include="include\Models\TransformNode.h" />
+    <ClInclude Include="include\Renderer\ShaderManager.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include="res\default.vert">
@@ -155,5 +157,6 @@
     <Text Include="res\TrianglePosData.txt" />
     <Text Include="res\RobotArmMesh.txt" />
     <Text Include="res\RobotArmFaces.txt" />
+    <Text Include="res\ShaderList.txt" />
   </ItemGroup>
 </Project>

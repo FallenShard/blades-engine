@@ -4,6 +4,8 @@
 #include "Models/Prism.h"
 #include "Models/RoboticArm.h"
 
+#include "Renderer/ShaderManager.h"
+
 #include <algorithm>
 
 namespace
@@ -11,6 +13,10 @@ namespace
     GLenum error = false;
 
     SceneNode* g_root = nullptr;
+    Prism* g_prism = nullptr;
+
+    ShaderManager* manager = nullptr;
+    ShaderProgram* prog = nullptr;
 }
 
 RobotArmScene::RobotArmScene()
@@ -30,31 +36,24 @@ RobotArmScene::RobotArmScene(Window* window)
 RobotArmScene::~RobotArmScene()
 {
     delete g_root;
+    delete manager;
 }
 
 void RobotArmScene::prepare()
 {
-    m_shaderPrograms["RobotArm"] = std::make_unique<ShaderProgram>();
-    ShaderProgram* program = m_shaderPrograms["RobotArm"].get();
-    program->attachShader(Shader::Vert, "motionVert.vert");
-    program->attachShader(Shader::Frag, "default.frag");
-    program->link();
-    program->checkLinkStatus();
+    manager = new ShaderManager();
+
+    prog = manager->getProgram("perspective");
 
     error = glGetError();
+    
+    prog->getUniformAttribute("modelToWorldMatrix");
+    prog->getUniformAttribute("worldToCameraMatrix");
+    prog->getUniformAttribute("cameraToClipMatrix");
 
-    program->getUniformAttribute("modelToWorldMatrix");
-    program->getUniformAttribute("worldToCameraMatrix");
-    program->getUniformAttribute("cameraToClipMatrix");
+    m_cameraController.setShaderProgram(prog);
 
-    m_cameraController.setShaderProgram(program);
-
-    program->use();
-    program->setUniformAttribute("cameraToClipMatrix", 1, GL_FALSE, glm::value_ptr(m_freeCamera.getProjectionMatrix()));
-
-    ShaderProgram::release();
-
-    m_planeGrid.setProgram(program);
+    m_planeGrid.setProgram(prog);
 
     m_vertexArrays["RobotArm"] = std::make_unique<VertexArray>();
     VertexArray* vArray = m_vertexArrays["RobotArm"].get();
@@ -75,7 +74,7 @@ void RobotArmScene::prepare()
 
     vArray->attachAttribute(VertexAttribute("vPosition", 3, 0, 0));
     vArray->attachAttribute(VertexAttribute("vColor", 4, 0, 3 * sizeof(GLfloat) * buffer->getVertexCount()));
-    vArray->enableAttributes(program->getProgramId());
+    vArray->enableAttributes(prog->getProgramId());
 
     m_vertexArrays["Cube"] = std::make_unique<VertexArray>(GL_LINE_LOOP);
     VertexArray* cArray = m_vertexArrays["Cube"].get();
@@ -95,9 +94,12 @@ void RobotArmScene::prepare()
 
     cArray->attachAttribute(VertexAttribute("vPosition", 3, 0, 0));
     cArray->attachAttribute(VertexAttribute("vColor", 4, 0, 3 * sizeof(GLfloat) * vBuffer->getVertexCount()));
-    cArray->enableAttributes(program->getProgramId());
+    cArray->enableAttributes(prog->getProgramId());
 
-    g_root = new RoboticArm(program);
+    m_robotArm.attachVertexArray(vArray);
+    m_robotArm.attachShaderProgram(prog);
+    g_root = new RoboticArm(prog);
+    g_prism = new Prism(cArray, prog);
 }
 
 namespace
@@ -161,9 +163,7 @@ void RobotArmScene::handleEvents(const Event& event)
             break;
         }
         };
-
     }
-
     };
 }
 
@@ -174,39 +174,75 @@ void RobotArmScene::update(float timeDelta)
     m_cameraController.update(timeDelta);
 
     if (Keyboard::isKeyPressed(Keyboard::A))
+    {
         m_robotArm.moveBase(true);
+        g_prism->rotateY(2.f);
+        
+    }
+        
     if (Keyboard::isKeyPressed(Keyboard::D))
+    {
         m_robotArm.moveBase(false);
+        g_prism->rotateY(-2.f);
+    }
+        
     if (Keyboard::isKeyPressed(Keyboard::W))
+    {
         m_robotArm.moveUpperArm(false);
+        g_prism->translate(glm::vec3(0.f, 0.f, -0.5f));
+    }
+        
     if (Keyboard::isKeyPressed(Keyboard::S))
+    {
         m_robotArm.moveUpperArm(true);
+        g_prism->translate(glm::vec3(0.f, 0.f, 0.5f));
+    }
+        
     if (Keyboard::isKeyPressed(Keyboard::R))
+    {
         m_robotArm.moveLowerArm(false);
+    }
+        
     if (Keyboard::isKeyPressed(Keyboard::F))
+    {
         m_robotArm.moveLowerArm(true);
+    }
+        
     if (Keyboard::isKeyPressed(Keyboard::T))
+    {
         m_robotArm.moveWristPitch(false);
+    }
+        
     if (Keyboard::isKeyPressed(Keyboard::G))
+    {
         m_robotArm.moveWristPitch(true);
+    }
+        
     if (Keyboard::isKeyPressed(Keyboard::Z))
+    {
         m_robotArm.moveWristRoll(true);
+    }
+        
     if (Keyboard::isKeyPressed(Keyboard::C))
+    {
         m_robotArm.moveWristRoll(false);
+    }
+        
     if (Keyboard::isKeyPressed(Keyboard::Q))
+    {
         m_robotArm.moveFingerOpen(true);
+    }
+        
     if (Keyboard::isKeyPressed(Keyboard::E))
+    {
         m_robotArm.moveFingerOpen(false);
+    }
 }
 
 void RobotArmScene::render()
 {
-    ShaderProgram* program = m_shaderPrograms["RobotArm"].get();
-    VertexArray* vArray = m_vertexArrays["RobotArm"].get();
-    VertexArray* gridArray = m_vertexArrays["Grid"].get();
-
-    program->use();
-    program->setUniformAttribute("modelToWorldMatrix", 1, GL_FALSE, glm::value_ptr(glm::mat4(1.f)));
+    prog->use();
+    prog->setUniformAttribute("modelToWorldMatrix", 1, GL_FALSE, glm::value_ptr(glm::mat4(1.f)));
     
     m_planeGrid.render();
 
@@ -214,9 +250,8 @@ void RobotArmScene::render()
     m_vertexArrays["Cube"]->renderIndexed();
 
     g_root->render();
-
-    vArray->bind();
-    m_robotArm.draw(*vArray, *program);
+    g_prism->render();
+    m_robotArm.render();
 }
 
 bool RobotArmScene::reshape(int width, int height)
