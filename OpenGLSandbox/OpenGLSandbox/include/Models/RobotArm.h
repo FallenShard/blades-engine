@@ -8,8 +8,12 @@ class RobotArm
 {
 public:
     RobotArm();
+    RobotArm(VertexArray* vArray, ShaderProgram* program);
 
-    void draw(VertexArray& vArray, ShaderProgram& program);
+    void attachVertexArray(VertexArray* vArray);
+    void attachShaderProgram(ShaderProgram* program);
+
+    void render();
 
     void moveBase(bool increment);
     void moveUpperArm(bool increment);
@@ -19,10 +23,10 @@ public:
     void moveFingerOpen(bool increment);
 
 private:
-    void drawFingers(MatrixStack& modelToCameraStack, VertexArray& vArray, ShaderProgram& program);
-    void drawWrist(MatrixStack& modelToCameraStack, VertexArray& vArray, ShaderProgram& program);
-    void drawLowerArm(MatrixStack& modelToCameraStack, VertexArray& vArray, ShaderProgram& program);
-    void drawUpperArm(MatrixStack& modelToCameraStack, VertexArray& vArray, ShaderProgram& program);
+    void drawFingers(MatrixStack& modelToCameraStack);
+    void drawWrist(MatrixStack& modelToCameraStack);
+    void drawLowerArm(MatrixStack& modelToCameraStack);
+    void drawUpperArm(MatrixStack& modelToCameraStack);
 
     glm::vec3 m_posBase;
     float     m_angBase;
@@ -51,4 +55,7 @@ private:
     float     m_lenFinger;
     float     m_widthFinger;
     float     m_angLowerFinger;
+
+    VertexArray*   m_vArray;
+    ShaderProgram* m_program;
 };
