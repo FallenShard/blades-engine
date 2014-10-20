@@ -87,6 +87,11 @@ void VertexArray::enableAttributes(GLuint programId)
         attribute.second.enable(programId);
 }
 
+void VertexArray::setPrimitiveType(GLenum primitiveType)
+{
+    m_primitiveType = primitiveType;
+}
+
 void VertexArray::render()
 {
     glDrawArrays(m_primitiveType, 0, m_vertexCount);

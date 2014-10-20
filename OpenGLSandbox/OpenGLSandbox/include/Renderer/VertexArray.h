@@ -49,6 +49,9 @@ public:
     // Enables all the attached attributes on a given shader program ID
     void enableAttributes(GLuint programId);
 
+    // Sets the primitive type to be rendered by this array
+    void setPrimitiveType(GLenum primitive);
+
     // Renders the array with set vertex count and no offset
     void render();
 
