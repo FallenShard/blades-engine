@@ -40,6 +40,15 @@ public:
     // Pushes a single float value into the vertex buffer
     void push(GLfloat value);
 
+    // Pushes two values into the buffer
+    void push(GLfloat x, GLfloat y);
+
+    // Pushes three values into the buffer
+    void push(GLfloat x, GLfloat y, GLfloat z);
+
+    // Pushes four values into the buffer
+    void push(GLfloat x, GLfloat y, GLfloat z, GLfloat w);
+
     // Uploads buffer data to the GPU
     void uploadData();
 

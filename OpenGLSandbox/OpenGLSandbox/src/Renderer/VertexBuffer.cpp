@@ -101,6 +101,27 @@ void VertexBuffer::push(GLfloat value)
     m_vertexData.push_back(value);
 }
 
+void VertexBuffer::push(GLfloat x, GLfloat y)
+{
+    m_vertexData.push_back(x);
+    m_vertexData.push_back(y);
+}
+
+void VertexBuffer::push(GLfloat x, GLfloat y, GLfloat z)
+{
+    m_vertexData.push_back(x);
+    m_vertexData.push_back(y);
+    m_vertexData.push_back(z);
+}
+
+void VertexBuffer::push(GLfloat x, GLfloat y, GLfloat z, GLfloat w)
+{
+    m_vertexData.push_back(x);
+    m_vertexData.push_back(y);
+    m_vertexData.push_back(z);
+    m_vertexData.push_back(w);
+}
+
 void VertexBuffer::uploadData()
 {
     glBufferData(m_targetType, sizeof(GLfloat) * m_vertexData.size(), m_vertexData.data(), m_usageType);
