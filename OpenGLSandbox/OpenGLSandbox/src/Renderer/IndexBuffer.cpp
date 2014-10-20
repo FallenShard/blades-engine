@@ -94,6 +94,18 @@ void IndexBuffer::loadFromFile(std::string fileName)
     glBufferData(m_targetType, sizeof(GLfloat) * m_indices.size(), m_indices.data(), m_usageType);
 }
 
+void IndexBuffer::push(GLshort p1, GLshort p2, GLshort p3)
+{
+    m_indices.push_back(p1);
+    m_indices.push_back(p2);
+    m_indices.push_back(p3);
+}
+
+void IndexBuffer::uploadData()
+{
+    glBufferData(m_targetType, sizeof(GLfloat) * m_indices.size(), m_indices.data(), m_usageType);
+}
+
 GLsizei IndexBuffer::getSize() const
 {
     return m_indices.size();

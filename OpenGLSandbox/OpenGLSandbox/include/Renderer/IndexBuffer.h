@@ -39,6 +39,12 @@ public:
     // Loads index buffer data from specified file
     void loadFromFile(std::string fileName);
 
+    // Pushes a triangle face into the buffer
+    void push(GLshort p1, GLshort p2, GLshort p3);
+
+    // Uploads the index data onto the GPU
+    void uploadData();
+
     // Returns number of total indices from index buffer
     GLsizei getSize() const;
 
