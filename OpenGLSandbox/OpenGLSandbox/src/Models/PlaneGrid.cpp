@@ -48,40 +48,20 @@ void PlaneGrid::buildVertices()
     {
         for (float z = -halfSize; z <= halfSize; z += m_lineStep)
         {
-            m_vertexBuffer.push(-1.f * halfSize);
-            m_vertexBuffer.push(0.f);
-            m_vertexBuffer.push(1.f * z);
-            m_vertexBuffer.push(0.6f); 
-            m_vertexBuffer.push(0.f);
-            m_vertexBuffer.push(0.f);
-            m_vertexBuffer.push(1.f);
+            m_vertexBuffer.push(-1.f * halfSize, 0.f, 1.f * z);
+            m_vertexBuffer.push(0.6f, 0.f, 0.f, 1.f);
 
-            m_vertexBuffer.push(1.f * halfSize);
-            m_vertexBuffer.push(0.f);
-            m_vertexBuffer.push(1.f * z);
-            m_vertexBuffer.push(0.6f);
-            m_vertexBuffer.push(0.f);
-            m_vertexBuffer.push(0.f);
-            m_vertexBuffer.push(1.f);
+            m_vertexBuffer.push( 1.f * halfSize, 0.f, 1.f * z);
+            m_vertexBuffer.push(0.6f, 0.f, 0.f, 1.f);
         }
 
         for (float x = -halfSize; x <= halfSize; x += m_lineStep)
         {
-            m_vertexBuffer.push(1.f * x);
-            m_vertexBuffer.push(0.f);
-            m_vertexBuffer.push(-1.f * halfSize);
-            m_vertexBuffer.push(0.6f);
-            m_vertexBuffer.push(0.f);
-            m_vertexBuffer.push(0.f);
-            m_vertexBuffer.push(1.f);
+            m_vertexBuffer.push(1.f * x, 0.f, -1.f * halfSize);
+            m_vertexBuffer.push(0.6f, 0.f, 0.f, 1.f);
 
-            m_vertexBuffer.push(1.f * x);
-            m_vertexBuffer.push(0.f);
-            m_vertexBuffer.push(1.f * halfSize);
-            m_vertexBuffer.push(0.6f);
-            m_vertexBuffer.push(0.f);
-            m_vertexBuffer.push(0.f);
-            m_vertexBuffer.push(1.f);
+            m_vertexBuffer.push(1.f * x, 0.f,  1.f * halfSize);
+            m_vertexBuffer.push(0.6f, 0.f, 0.f, 1.f);
         }
     }
 
@@ -89,40 +69,20 @@ void PlaneGrid::buildVertices()
     {
         for (float x = -halfSize; x <= halfSize; x += m_lineStep)
         {
-            m_vertexBuffer.push(1.f * x);
-            m_vertexBuffer.push(-1.f * halfSize);
-            m_vertexBuffer.push(0.f);
-            m_vertexBuffer.push(0.f);
-            m_vertexBuffer.push(0.6f);
-            m_vertexBuffer.push(0.f);
-            m_vertexBuffer.push(1.f);
+            m_vertexBuffer.push(1.f * x, -1.f * halfSize, 0.f);
+            m_vertexBuffer.push(0.f, 0.6f, 0.f, 1.f);
 
-            m_vertexBuffer.push(1.f * x);
-            m_vertexBuffer.push(1.f * halfSize);
-            m_vertexBuffer.push(0.f);
-            m_vertexBuffer.push(0.f);
-            m_vertexBuffer.push(0.6f);
-            m_vertexBuffer.push(0.f);
-            m_vertexBuffer.push(1.f);
+            m_vertexBuffer.push(1.f * x,  1.f * halfSize, 0.f);
+            m_vertexBuffer.push(0.f, 0.6f, 0.f, 1.f);
         }
 
         for (float y = -halfSize; y <= halfSize; y += m_lineStep)
         {
-            m_vertexBuffer.push(-1.f * halfSize);
-            m_vertexBuffer.push(1.f * y);
-            m_vertexBuffer.push(0.f);
-            m_vertexBuffer.push(0.f);
-            m_vertexBuffer.push(0.6f);
-            m_vertexBuffer.push(0.f);
-            m_vertexBuffer.push(1.f);
+            m_vertexBuffer.push(-1.f * halfSize, 1.f * y, 0.f);
+            m_vertexBuffer.push(0.f, 0.6f, 0.f, 1.f);
 
-            m_vertexBuffer.push(1.f * halfSize);
-            m_vertexBuffer.push(1.f * y);
-            m_vertexBuffer.push(0.f);
-            m_vertexBuffer.push(0.f);
-            m_vertexBuffer.push(0.6f);
-            m_vertexBuffer.push(0.f);
-            m_vertexBuffer.push(1.f);
+            m_vertexBuffer.push( 1.f * halfSize, 1.f * y, 0.f);
+            m_vertexBuffer.push(0.f, 0.6f, 0.f, 1.f);
         }
     }
 
@@ -130,40 +90,20 @@ void PlaneGrid::buildVertices()
     {
         for (float z = -halfSize; z <= halfSize; z += m_lineStep)
         {
-            m_vertexBuffer.push(0.f);
-            m_vertexBuffer.push(-1 * halfSize);
-            m_vertexBuffer.push(1.f * z);
-            m_vertexBuffer.push(0.f);
-            m_vertexBuffer.push(0.f);
-            m_vertexBuffer.push(0.6f);
-            m_vertexBuffer.push(1.f);
+            m_vertexBuffer.push(0.f, -1 * halfSize, 1.f * z);
+            m_vertexBuffer.push(0.f, 0.f, 0.6f, 1.f);
 
-            m_vertexBuffer.push(0.f);
-            m_vertexBuffer.push(1.f * halfSize);
-            m_vertexBuffer.push(1.f * z);
-            m_vertexBuffer.push(0.f);
-            m_vertexBuffer.push(0.f);
-            m_vertexBuffer.push(0.6f);
-            m_vertexBuffer.push(1.f);
+            m_vertexBuffer.push(0.f,  1 * halfSize, 1.f * z);
+            m_vertexBuffer.push(0.f, 0.f, 0.6f, 1.f);
         }
 
         for (float y = -halfSize; y <= halfSize; y += m_lineStep)
         {
-            m_vertexBuffer.push(0.f);
-            m_vertexBuffer.push(1.f * y);
-            m_vertexBuffer.push(-1.f * halfSize);
-            m_vertexBuffer.push(0.f);
-            m_vertexBuffer.push(0.f);
-            m_vertexBuffer.push(0.6f);
-            m_vertexBuffer.push(1.f);
+            m_vertexBuffer.push(0.f, 1.f * y, -1.f * halfSize);
+            m_vertexBuffer.push(0.f, 0.f, 0.6f, 1.f);
 
-            m_vertexBuffer.push(0.f);
-            m_vertexBuffer.push(1.f * y);
-            m_vertexBuffer.push(1.f * halfSize);
-            m_vertexBuffer.push(0.f);
-            m_vertexBuffer.push(0.f);
-            m_vertexBuffer.push(0.6f);
-            m_vertexBuffer.push(1.f);
+            m_vertexBuffer.push(0.f, 1.f * y,  1.f * halfSize);
+            m_vertexBuffer.push(0.f, 0.f, 0.6f, 1.f);
         }
     }
 
