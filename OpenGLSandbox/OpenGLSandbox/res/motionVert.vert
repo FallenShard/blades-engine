@@ -11,8 +11,7 @@ uniform mat4 cameraToClipMatrix;
 
 void main()
 {
-	vec4 cameraPos = modelToWorldMatrix * vPosition;
-	cameraPos = worldToCameraMatrix * cameraPos;
-	gl_Position = cameraToClipMatrix * cameraPos;
+    mat4 MV = worldToCameraMatrix * modelToWorldMatrix;
+	gl_Position = cameraToClipMatrix * MV * vPosition;
 	outColor = vColor;
 }
