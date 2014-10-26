@@ -2,18 +2,20 @@
 #include <iostream>
 
 SceneNode::SceneNode()
-    : m_modelMatrix(1.f)
+    : m_absoluteTrans(1.f)
+    , m_relativeTrans(1.f)
     , m_position(0.f)
     , m_scale(1.f)
-    , m_rotation(0.f)
+    , m_rotation()
 {
 }
 
 SceneNode::SceneNode(VertexArray* vArray, ShaderProgram* program)
-    : m_modelMatrix(1.f)
+    : m_absoluteTrans(1.f)
+    , m_relativeTrans(1.f)
     , m_position(0.f)
     , m_scale(1.f)
-    , m_rotation(0.f)
+    , m_rotation()
     , m_vertexArray(vArray)
     , m_shaderProgram(program)
 {
@@ -25,12 +27,6 @@ SceneNode::~SceneNode()
         delete child;
     m_children.clear();
 }
-
-//void SceneNode::attachChild(SceneNode::NodePtr nodePointer)
-//{
-//    nodePointer->attachParent(this);
-//    m_children.push_back(nodePointer);
-//}
 
 void SceneNode::attachChild(SceneNode* child)
 {
@@ -58,47 +54,68 @@ void SceneNode::setShaderProgram(ShaderProgram* program)
 void SceneNode::translate(const glm::vec3& position)
 {
     m_position += position;
-    m_modelMatrix = glm::translate(m_modelMatrix, position);
+    updateRelativeTrans();
+    updateAbsoluteTrans();
+}
+
+void SceneNode::rotate(const float angle, const glm::vec3& axis)
+{
+    m_rotation = glm::rotate(m_rotation, glm::radians(angle), axis);
+    updateRelativeTrans();
+    updateAbsoluteTrans();
 }
 
 void SceneNode::rotateX(const float angle)
 {
-    m_rotation.x += angle;
-    m_modelMatrix = glm::rotate(m_modelMatrix, glm::radians(angle), glm::vec3(1.f, 0.f, 0.f));
-    std::cout << "rotX: " << m_rotation.x << " rotY: " << m_rotation.y << " rotZ: " << m_rotation.z << std::endl;
+    m_rotation.x = glm::radians(angle);
+    updateRelativeTrans();
+    updateAbsoluteTrans();
 }
 
 void SceneNode::rotateY(const float angle)
 {
-    m_rotation.y += angle;
-    m_modelMatrix = glm::rotate(m_modelMatrix, glm::radians(angle), glm::vec3(0.f, 1.f, 0.f));
-    std::cout << "rotX: " << m_rotation.x << " rotY: " << m_rotation.y << " rotZ: " << m_rotation.z << std::endl;
+    m_rotation.y = glm::radians(angle);
+    updateRelativeTrans();
+    updateAbsoluteTrans();
 }
 
 void SceneNode::rotateZ(const float angle)
 {
-    m_rotation.z += angle;
-    m_modelMatrix = glm::rotate(m_modelMatrix, glm::radians(angle), glm::vec3(0.f, 0.f, 1.f));
-    std::cout << "rotX: " << m_rotation.x << " rotY: " << m_rotation.y << " rotZ: " << m_rotation.z << std::endl;
+    m_rotation.z = glm::radians(angle);
+    updateRelativeTrans();
+    updateAbsoluteTrans();
 }
 
 void SceneNode::scale(const glm::vec3& scale)
 {
-    m_scale += scale;
-    m_modelMatrix = glm::scale(m_modelMatrix, scale);
-}
-
-void SceneNode::applyTransformation()
-{
-    applyTransformation(glm::mat4(1.f));
+    m_scale = scale;
+    updateRelativeTrans();
+    updateAbsoluteTrans();
 }
 
 void SceneNode::applyTransformation(const glm::mat4& transformation)
 {
-    m_modelMatrix = transformation * m_modelMatrix;
+    m_absoluteTrans = transformation * m_relativeTrans;
 
     for (auto& child : m_children)
-        child->applyTransformation(m_modelMatrix);
+        child->applyTransformation(m_absoluteTrans);
+}
+
+void SceneNode::updateRelativeTrans()
+{
+    m_relativeTrans = glm::scale(m_scale);
+    m_relativeTrans = glm::rotate(m_rotation.x, glm::vec3(1.f, 0.f, 0.f)) * m_relativeTrans;
+    m_relativeTrans = glm::rotate(m_rotation.y, glm::vec3(0.f, 1.f, 0.f)) * m_relativeTrans;
+    m_relativeTrans = glm::rotate(m_rotation.z, glm::vec3(0.f, 0.f, 1.f)) * m_relativeTrans;
+    m_relativeTrans = glm::translate(m_position) * m_relativeTrans;
+}
+
+void SceneNode::updateAbsoluteTrans()
+{
+    if (m_parent)
+        applyTransformation(m_parent->m_absoluteTrans);
+    else
+        applyTransformation();
 }
 
 void SceneNode::renderSelf()

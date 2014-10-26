@@ -10,9 +10,6 @@
 class SceneNode
 {
 public:
-    //typedef std::shared_ptr<SceneNode> NodePtr;
-    //typedef std::list<NodePtr>          NodeList;
-
     SceneNode();
     SceneNode(VertexArray* vArray, ShaderProgram* program);
     ~SceneNode();
@@ -24,25 +21,26 @@ public:
     void setShaderProgram(ShaderProgram* program);
     
     void translate(const glm::vec3& position);
+    void rotate(const float angle, const glm::vec3& axis);
     void rotateX(const float angle);
     void rotateY(const float angle);
     void rotateZ(const float angle);
     void scale(const glm::vec3& m_scale);
-    void applyTransformation();
+    void applyTransformation(const glm::mat4& transformation = glm::mat4(1.f));
 
     virtual void render() = 0;
 
 protected:
-    void applyTransformation(const glm::mat4& transformation);
-
-    void renderChildren();
+    void updateRelativeTrans();
+    void updateAbsoluteTrans();
     void renderSelf();
+    void renderChildren();
 
-    //NodeList  m_children;
     std::list<SceneNode*> m_children;
     SceneNode* m_parent;
 
-    glm::mat4 m_modelMatrix;
+    glm::mat4 m_absoluteTrans;
+    glm::mat4 m_relativeTrans;
 
     glm::vec3 m_position;
     glm::vec3 m_rotation;
