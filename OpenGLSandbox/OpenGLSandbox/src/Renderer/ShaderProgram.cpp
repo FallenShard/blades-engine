@@ -150,6 +150,11 @@ void ShaderProgram::setUniformAttribute(std::string name, GLsizei count, GLboole
     glUniformMatrix4fv(m_uniformAttributes[name], count, transpose, values);
 }
 
+void ShaderProgram::setUniformAttribute(std::string name, const glm::mat4& mat)
+{
+    glUniformMatrix4fv(m_uniformAttributes[name], 1, GL_FALSE, glm::value_ptr(mat));
+}
+
 
 GLuint ShaderProgram::getProgramId() const
 {

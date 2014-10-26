@@ -27,6 +27,7 @@ public:
     void setUniformAttribute(std::string name, GLfloat x, GLfloat y);
     void setUniformAttribute(std::string name, GLfloat x, GLfloat y, GLfloat z);
     void setUniformAttribute(std::string name, GLsizei count, GLboolean transpose, const GLfloat* values);
+    void setUniformAttribute(std::string name, const glm::mat4& mat);
 
     GLuint getProgramId() const;
 
