@@ -11,8 +11,8 @@ namespace
     __int64 microTimePerFrame = 1000000 / frameLimit;
     float timePerFrame = 1.f / frameLimit;
 
-    const int windowWidth = 600;
-    const int windowHeight = 600;
+    const int windowWidth = 1366;
+    const int windowHeight = 768;
 }
 
 Application::Application()
