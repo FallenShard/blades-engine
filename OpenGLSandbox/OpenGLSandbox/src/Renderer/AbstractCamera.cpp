@@ -42,6 +42,8 @@ const glm::mat4 AbstractCamera::getProjectionMatrix() const
 void AbstractCamera::setPosition(const glm::vec3& position)
 {
     m_position = position;
+
+    update();
 }
 
 const glm::vec3 AbstractCamera::getPosition() const
@@ -54,10 +56,10 @@ const float AbstractCamera::getFov() const
     return m_fov;
 }
 
-void AbstractCamera::setFov(const float fovYinDegrees)
+void AbstractCamera::setFov(const float yDegrees)
 {
-    m_fov = fovYinDegrees;
-    m_projectionMatrix = glm::perspective(fovYinDegrees, m_aspectRatio, m_zNear, m_zFar);
+    m_fov = glm::radians(yDegrees);
+    m_projectionMatrix = glm::perspective(m_fov, m_aspectRatio, m_zNear, m_zFar);
 }
 
 const float AbstractCamera::getAspectRatio() const
