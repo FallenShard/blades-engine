@@ -10,10 +10,24 @@ public:
 
     ~RoboticArm();
 
+    void update(float timeDelta);
     virtual void render();
 
 private:
+    void moveBase(bool increment);
+    void moveUpperArm(bool increment);
+    void moveLowerArm(bool increment);
+    void moveWristPitch(bool increment);
+    void moveWristRoll(bool increment);
+    void moveFingerOpen(bool increment);
+
     void buildHierarchy();
+
+    SceneNode* m_upperArmHolder;
+    SceneNode* m_lowerArmHolder;
+    SceneNode* m_wristHolder;
+    SceneNode* m_leftFingerHolder;
+    SceneNode* m_rightFingerHolder;
 
     VertexBuffer* m_vertexBuffer;
     IndexBuffer*  m_indexBuffer;
