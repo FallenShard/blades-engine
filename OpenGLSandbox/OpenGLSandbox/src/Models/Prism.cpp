@@ -16,7 +16,7 @@ Prism::~Prism()
 void Prism::render()
 {
     m_shaderProgram->use();
-    m_shaderProgram->setUniformAttribute("modelToWorldMatrix", 1, GL_FALSE, glm::value_ptr(m_modelMatrix));
+    m_shaderProgram->setUniformAttribute("modelToWorldMatrix", m_absoluteTrans);
 
     m_vertexArray->bind();
     m_vertexArray->renderIndexed();
