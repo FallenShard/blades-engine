@@ -12,7 +12,7 @@ CameraController::CameraController(ShaderProgram* program, Window* window)
     : m_activeCamera(&m_freeCamera)
     , m_program(program)
     , m_yaw(180.f)
-    , m_pitch(0.f)
+    , m_pitch(35.f)
     , m_roll(0.f)
     , m_transSpeed(50.f)
     , m_lookSpeed(20.f)
@@ -26,6 +26,11 @@ CameraController::CameraController(ShaderProgram* program, Window* window)
 
 CameraController::~CameraController()
 {
+}
+
+void CameraController::setPosition(glm::vec3& position)
+{
+    m_activeCamera->setPosition(position);
 }
 
 void CameraController::setSpeed(float translationSpeed, float lookSpeed)

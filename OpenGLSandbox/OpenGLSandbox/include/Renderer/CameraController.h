@@ -13,6 +13,7 @@ public:
     CameraController(ShaderProgram* program, Window* window);
     ~CameraController();
 
+    void setPosition(glm::vec3& position);
     void setSpeed(float translationSpeed, float lookSpeed);
     void setShaderProgram(ShaderProgram* program);
 
