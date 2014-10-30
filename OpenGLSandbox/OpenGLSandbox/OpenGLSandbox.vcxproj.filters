@@ -83,6 +83,7 @@
     <ClCompile Include="src\Models\TransformNode.cpp" />
     <ClCompile Include="src\Renderer\ShaderManager.cpp" />
     <ClCompile Include="src\Models\Sphere.cpp" />
+    <ClCompile Include="src\Meshes\SphereMesh.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="include\Core\Application.h" />
@@ -136,6 +137,7 @@
     <ClInclude Include="include\Models\TransformNode.h" />
     <ClInclude Include="include\Renderer\ShaderManager.h" />
     <ClInclude Include="include\Models\Sphere.h" />
+    <ClInclude Include="include\Meshes\SphereMesh.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include="res\default.vert">

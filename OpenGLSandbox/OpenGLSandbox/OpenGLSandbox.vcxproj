@@ -16,6 +16,7 @@
     <ClCompile Include="src\gl3w.c" />
     <ClCompile Include="src\main.cpp" />
     <ClCompile Include="src\Models\Sphere.cpp" />
+    <ClCompile Include="src\Meshes\SphereMesh.cpp" />
     <ClCompile Include="src\Models\TransformNode.cpp" />
     <ClCompile Include="src\Models\PlaneGrid.cpp" />
     <ClCompile Include="src\Models\Prism.cpp" />
@@ -55,6 +56,7 @@
     <ClInclude Include="include\GL\gl3w.h" />
     <ClInclude Include="include\GL\glcorearb.h" />
     <ClInclude Include="include\GL\wglext.h" />
+    <ClInclude Include="include\Meshes\SphereMesh.h" />
     <ClInclude Include="include\Models\Sphere.h" />
     <ClInclude Include="include\Models\TransformNode.h" />
     <ClInclude Include="include\Models\IRenderable.h" />
