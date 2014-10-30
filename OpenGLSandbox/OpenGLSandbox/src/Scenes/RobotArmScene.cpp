@@ -17,6 +17,8 @@ namespace
     Prism* g_prism = nullptr;
     Sphere* g_sphere = nullptr;
 
+    SphereMesh* g_sphMesh = nullptr;
+
     ShaderManager* manager = nullptr;
     ShaderProgram* prog = nullptr;
 }
@@ -40,6 +42,7 @@ RobotArmScene::~RobotArmScene()
     delete g_prism;
     delete g_root;
     delete g_sphere;
+    delete g_sphMesh;
     delete manager;
 }
 
@@ -107,7 +110,9 @@ void RobotArmScene::prepare()
     g_prism = new Prism(cArray, prog);
     g_prism->scale(glm::vec3(1.5f, 1.5f, 1.5f));
 
-    g_sphere = new Sphere(2.f, 20, 20, prog);
+    g_sphMesh = new SphereMesh(2.f, 55, 55);
+
+    g_sphere = new Sphere(g_sphMesh, prog);
     
     g_sphere->translate(glm::vec3(10.f, 0.f, -10.f));
     //g_prism->translate(glm::vec3(0.f, 0.f, -5.f));
@@ -131,7 +136,7 @@ void RobotArmScene::handleEvents(const Event& event)
     {
         switch (event.key.code)
         {
-        case Keyboard::NumPad4:
+        case Keyboard::NumPad1:
         {
             //yaw += 10.f;
             //g_root->rotateY(inc);
@@ -142,7 +147,7 @@ void RobotArmScene::handleEvents(const Event& event)
             
             break;
         }
-        case Keyboard::NumPad6:
+        case Keyboard::NumPad2:
         {
             //g_prism->translate(glm::vec3(5.f, 0.f, 0.f));
             //yaw -= 10.f;
@@ -151,7 +156,7 @@ void RobotArmScene::handleEvents(const Event& event)
             g_sphere->setPrimitiveType(GL_LINE_LOOP);
             break;
         }
-        case Keyboard::NumPad5:
+        case Keyboard::NumPad3:
         {
             //pitch += 10.f;
             //g_root->rotateX(-inc);
