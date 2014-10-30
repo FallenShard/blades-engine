@@ -12,17 +12,14 @@ uniform float useLight;
 
 void main()
 {
+    mat4 MV = worldToCameraMatrix * modelToWorldMatrix;
     if (useLight > 0.f)
     {
-        mat4 MV = worldToCameraMatrix * modelToWorldMatrix;
-
         // In world coordinates
         vec3 lightPos = vec3(0.f, 0.f, -5.f);
 
         // Diffuse lighting
-        //vec4 diffuse = vec4(0.f, 0.f, 0.f, 0.f);
 
-        
         vec3 normal = normalize(vPosition.xyz);
 
         vec3 modelViewNormal = vec3(MV * vec4(normal, 0.0));
@@ -41,13 +38,11 @@ void main()
         diffuse = diffuse * (1.0 / (1.0 + (0.05 * dist * dist)));
 
         outColor = vColor * diffuse * 0.9;
-
-        gl_Position = cameraToClipMatrix * MV * vPosition;
     }
     else
     {
-        mat4 MV = worldToCameraMatrix * modelToWorldMatrix;
-	    gl_Position = cameraToClipMatrix * MV * vPosition;
-	    outColor = vColor;
+        outColor = vColor;
     }
+
+    gl_Position = cameraToClipMatrix * MV * vPosition;
 }
