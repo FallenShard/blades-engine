@@ -153,7 +153,6 @@
     <None Include="res\motionVert.vert" />
     <None Include="res\defProj.vert" />
     <None Include="include\Utils\Vector2D.inl" />
-    <None Include="res\perVertexLighting.vert" />
   </ItemGroup>
   <ItemGroup>
     <Text Include="res\OverlapData.txt" />

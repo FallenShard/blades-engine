@@ -109,7 +109,6 @@
     <None Include="res\manualOverlap.vert" />
     <None Include="res\manualPerspective.vert" />
     <None Include="res\motionVert.vert" />
-    <None Include="res\perVertexLighting.vert" />
   </ItemGroup>
   <ItemGroup>
     <Text Include="res\PrismData.txt" />
