@@ -5,11 +5,13 @@
 #include "Renderer/VertexBuffer.h"
 #include "Renderer/IndexBuffer.h"
 
+#include "Meshes/SphereMesh.h"
+
 class Sphere : public SceneNode
 {
 public:
     Sphere();
-    Sphere(float radius, int rings, int slices, ShaderProgram* program);
+    Sphere(SphereMesh* mesh, ShaderProgram* program);
 
     ~Sphere();
 
@@ -19,11 +21,5 @@ public:
 private:
     void init();
 
-    glm::vec3 m_center;
-    float m_radius;
-    int m_rings;
-    int m_slices;
-
-    VertexBuffer m_buffer;
-    IndexBuffer m_indexBuffer;
+    SphereMesh* m_mesh;
 };
