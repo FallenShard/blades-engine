@@ -51,9 +51,16 @@ void SceneNode::setShaderProgram(ShaderProgram* program)
     m_shaderProgram = program;
 }
 
-void SceneNode::translate(const glm::vec3& position)
+void SceneNode::setPosition(const glm::vec3& position)
 {
-    m_position += position;
+    m_position = position;
+    updateRelativeTrans();
+    updateAbsoluteTrans();
+}
+
+void SceneNode::translate(const glm::vec3& translation)
+{
+    m_position += translation;
     updateRelativeTrans();
     updateAbsoluteTrans();
 }
@@ -116,12 +123,6 @@ void SceneNode::updateAbsoluteTrans()
         applyTransformation(m_parent->m_absoluteTrans);
     else
         applyTransformation();
-}
-
-void SceneNode::renderSelf()
-{
-    m_vertexArray->bind();
-    m_vertexArray->renderIndexed();
 }
 
 void SceneNode::renderChildren()
