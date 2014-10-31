@@ -1,8 +1,10 @@
-circularMotion.frag
 circularMotion.vert
-default.frag
 default.vert
 defProj.vert
 manualOverlap.vert
 manualPerspective.vert
 motionVert.vert
+passThrough.vert
+circularMotion.frag
+default.frag
+fxaa.frag
