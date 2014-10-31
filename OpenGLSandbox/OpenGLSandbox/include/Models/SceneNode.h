@@ -20,6 +20,7 @@ public:
     void setVertexArray(VertexArray* vArray);
     void setShaderProgram(ShaderProgram* program);
     
+    void setPosition(const glm::vec3& position);
     void translate(const glm::vec3& position);
     void rotate(const float angle, const glm::vec3& axis);
     void rotateX(const float angle);
@@ -33,7 +34,6 @@ public:
 protected:
     void updateRelativeTrans();
     void updateAbsoluteTrans();
-    void renderSelf();
     void renderChildren();
 
     std::list<SceneNode*> m_children;
