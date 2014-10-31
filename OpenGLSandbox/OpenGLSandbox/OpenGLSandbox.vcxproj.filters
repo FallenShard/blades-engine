@@ -54,7 +54,6 @@
     <ClCompile Include="src\Renderer\FreeCamera.cpp" />
     <ClCompile Include="src\Renderer\GLRenderer.cpp" />
     <ClCompile Include="src\Renderer\IndexBuffer.cpp" />
-    <ClCompile Include="src\Renderer\SceneGraph.cpp" />
     <ClCompile Include="src\Renderer\Shader.cpp" />
     <ClCompile Include="src\Renderer\ShaderProgram.cpp" />
     <ClCompile Include="src\Renderer\Vertex.cpp" />
@@ -84,6 +83,9 @@
     <ClCompile Include="src\Renderer\ShaderManager.cpp" />
     <ClCompile Include="src\Models\Sphere.cpp" />
     <ClCompile Include="src\Meshes\SphereMesh.cpp" />
+    <ClCompile Include="src\Renderer\FrameBuffer.cpp" />
+    <ClCompile Include="src\Renderer\Texture.cpp" />
+    <ClCompile Include="src\Renderer\RenderPass.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="include\Core\Application.h" />
@@ -107,7 +109,6 @@
     <ClInclude Include="include\Renderer\FreeCamera.h" />
     <ClInclude Include="include\Renderer\GLRenderer.h" />
     <ClInclude Include="include\Renderer\IndexBuffer.h" />
-    <ClInclude Include="include\Renderer\SceneGraph.h" />
     <ClInclude Include="include\Renderer\Shader.h" />
     <ClInclude Include="include\Renderer\ShaderProgram.h" />
     <ClInclude Include="include\Renderer\TargetCamera.h" />
@@ -138,6 +139,9 @@
     <ClInclude Include="include\Renderer\ShaderManager.h" />
     <ClInclude Include="include\Models\Sphere.h" />
     <ClInclude Include="include\Meshes\SphereMesh.h" />
+    <ClInclude Include="include\Renderer\FrameBuffer.h" />
+    <ClInclude Include="include\Renderer\Texture.h" />
+    <ClInclude Include="include\Renderer\RenderPass.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include="res\default.vert">
@@ -153,6 +157,8 @@
     <None Include="res\motionVert.vert" />
     <None Include="res\defProj.vert" />
     <None Include="include\Utils\Vector2D.inl" />
+    <None Include="res\passThrough.vert" />
+    <None Include="res\fxaa.frag" />
   </ItemGroup>
   <ItemGroup>
     <Text Include="res\OverlapData.txt" />

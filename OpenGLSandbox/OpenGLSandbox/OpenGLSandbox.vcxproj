@@ -25,13 +25,15 @@
     <ClCompile Include="src\Models\SceneNode.cpp" />
     <ClCompile Include="src\Renderer\AbstractCamera.cpp" />
     <ClCompile Include="src\Renderer\CameraController.cpp" />
+    <ClCompile Include="src\Renderer\FrameBuffer.cpp" />
     <ClCompile Include="src\Renderer\FreeCamera.cpp" />
     <ClCompile Include="src\Renderer\GLRenderer.cpp" />
     <ClCompile Include="src\Renderer\IndexBuffer.cpp" />
-    <ClCompile Include="src\Renderer\SceneGraph.cpp" />
+    <ClCompile Include="src\Renderer\RenderPass.cpp" />
     <ClCompile Include="src\Renderer\Shader.cpp" />
     <ClCompile Include="src\Renderer\ShaderManager.cpp" />
     <ClCompile Include="src\Renderer\ShaderProgram.cpp" />
+    <ClCompile Include="src\Renderer\Texture.cpp" />
     <ClCompile Include="src\Renderer\Vertex.cpp" />
     <ClCompile Include="src\Renderer\VertexArray.cpp" />
     <ClCompile Include="src\Renderer\VertexBuffer.cpp" />
@@ -68,14 +70,16 @@
     <ClInclude Include="include\OpenGL.h" />
     <ClInclude Include="include\Renderer\AbstractCamera.h" />
     <ClInclude Include="include\Renderer\CameraController.h" />
+    <ClInclude Include="include\Renderer\FrameBuffer.h" />
     <ClInclude Include="include\Renderer\FreeCamera.h" />
     <ClInclude Include="include\Renderer\GLRenderer.h" />
     <ClInclude Include="include\Renderer\IndexBuffer.h" />
-    <ClInclude Include="include\Renderer\SceneGraph.h" />
+    <ClInclude Include="include\Renderer\RenderPass.h" />
     <ClInclude Include="include\Renderer\Shader.h" />
     <ClInclude Include="include\Renderer\ShaderManager.h" />
     <ClInclude Include="include\Renderer\ShaderProgram.h" />
     <ClInclude Include="include\Renderer\TargetCamera.h" />
+    <ClInclude Include="include\Renderer\Texture.h" />
     <ClInclude Include="include\Renderer\Vertex.h" />
     <ClInclude Include="include\Renderer\VertexArray.h" />
     <ClInclude Include="include\Renderer\VertexAttribute.h" />
@@ -109,6 +113,8 @@
     <None Include="res\manualOverlap.vert" />
     <None Include="res\manualPerspective.vert" />
     <None Include="res\motionVert.vert" />
+    <None Include="res\passThrough.vert" />
+    <None Include="res\fxaa.frag" />
   </ItemGroup>
   <ItemGroup>
     <Text Include="res\PrismData.txt" />
