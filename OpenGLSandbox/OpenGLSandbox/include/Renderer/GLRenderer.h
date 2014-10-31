@@ -4,14 +4,18 @@
 #include <map>
 
 #include "OpenGL.h"
-#include "Renderer/ShaderProgram.h"
 #include "Renderer/Shader.h"
+#include "Renderer/ShaderProgram.h"
+#include "Renderer/ShaderManager.h"
 #include "Renderer/VertexArray.h"
 #include "Renderer/VertexBuffer.h"
 #include "Renderer/IndexBuffer.h"
 #include "Renderer/VertexAttribute.h"
+#include "Renderer/RenderPass.h"
 #include "Scenes/Scene.h"
 #include "Window/Window.h"
+
+
 
 struct Event;
 
@@ -35,6 +39,9 @@ private:
     float m_timePassed;
 
     Window* m_window;
+    ShaderManager* m_shaderManager;
+
+    RenderPass* m_aaPass;
 
     std::vector<Scene*> m_scenes;
 };

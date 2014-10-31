@@ -8,10 +8,20 @@
 #include "Scenes/GraphScene.h"
 #include "Scenes/RobotArmScene.h"
 
+#include "Renderer/FrameBuffer.h"
+#include "Renderer/Texture.h"
+
+namespace
+{
+    bool useFXAA = true;
+}
+
 GLRenderer::GLRenderer(Window* window)
     : m_aspectRatio(-1.f)
     , m_timePassed(0.f)
     , m_window(window)
+    , m_shaderManager(nullptr)
+    , m_aaPass(nullptr)
 {
     init();
 }
@@ -28,6 +38,8 @@ GLRenderer::~GLRenderer()
     for (auto& scene : m_scenes)
         delete scene;
     m_scenes.clear();
+
+    delete m_aaPass;
 }
 
 void GLRenderer::init()
@@ -37,12 +49,10 @@ void GLRenderer::init()
         glm::ivec2 windowSize = m_window->getSize();
         m_aspectRatio = static_cast<float>(windowSize.x) / windowSize.y;
     }
-    //Scene* scene = new TriangleScene();
-    //Scene* scene = new PrismScene();
-    //Scene* scene = new OverlapScene();
-    //Scene* scene = new GraphScene();
-    //Scene* scene = new TranslationScene();
-    Scene* scene = new RobotArmScene(m_window);
+
+    m_shaderManager = new ShaderManager();
+
+    Scene* scene = new RobotArmScene(m_window, m_shaderManager);
     m_scenes.push_back(scene);
 
     for (auto& scene : m_scenes)
@@ -59,22 +69,43 @@ void GLRenderer::init()
 
     glClearColor(0.1f, 0.1f, 0.1f, 1.f);
     glClearDepth(1.0f);
+
+    glm::ivec2 windowSize = m_window->getSize();
+
+    m_aaPass = new RenderPass();
+    m_aaPass->attachProgram(m_shaderManager->getProgram("FXAAPass"));
+    m_aaPass->init(windowSize.x, windowSize.y);
 }
 
 void GLRenderer::draw()
 {
-    glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+    if (useFXAA)
+    {
+        m_aaPass->activate();
 
-    for (auto& scene : m_scenes)
-        scene->render();
+        for (auto& scene : m_scenes)
+            scene->render();
 
-    VertexBuffer::release();
-    VertexArray::release();
-    ShaderProgram::release();
+        FrameBuffer::bindScreen();
+        FrameBuffer::clear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+
+        m_aaPass->render();
+    }
+    else
+    {
+        FrameBuffer::bindScreen();
+        FrameBuffer::clear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+
+        for (auto& scene : m_scenes)
+            scene->render();
+    }
 }
 
 void GLRenderer::handleEvents(const Event& event)
 {
+    if (event.type == Event::KeyPressed && event.key.code == Keyboard::Space)
+        useFXAA = !useFXAA;
+
     for (auto& scene : m_scenes)
         scene->handleEvents(event);
 }
