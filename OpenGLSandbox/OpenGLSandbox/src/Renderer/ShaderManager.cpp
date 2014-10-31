@@ -8,6 +8,7 @@ ShaderManager::ShaderManager()
 
     getProgram("default", "default.vert", "default.frag");
     getProgram("perspective", "motionVert.vert", "default.frag");
+    getProgram("FXAAPass", "passThrough.vert", "fxaa.frag");
 }
 
 ShaderManager::~ShaderManager()
