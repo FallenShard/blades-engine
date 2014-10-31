@@ -7,12 +7,13 @@
 #include "Renderer/FreeCamera.h"
 #include "Renderer/CameraController.h"
 #include "Window/Window.h"
+#include "Renderer/ShaderManager.h"
 
 class RobotArmScene : public Scene
 {
 public:
     RobotArmScene();
-    RobotArmScene(Window* window);
+    RobotArmScene(Window* window, ShaderManager* shaderManager);
     ~RobotArmScene();
 
     virtual void prepare();
@@ -30,4 +31,6 @@ private:
     RobotArm m_robotArm;
 
     PlaneGrid m_planeGrid;
+
+    ShaderManager* m_shaderManager;
 };

@@ -19,7 +19,6 @@ namespace
 
     SphereMesh* g_sphMesh = nullptr;
 
-    ShaderManager* manager = nullptr;
     ShaderProgram* prog = nullptr;
 }
 
@@ -30,10 +29,11 @@ RobotArmScene::RobotArmScene()
 {
 }
 
-RobotArmScene::RobotArmScene(Window* window)
+RobotArmScene::RobotArmScene(Window* window, ShaderManager* shaderManager)
     : m_timePassed(0.f)
     , m_planeGrid(1000.f, 10.f, PlaneGrid::XZ)
     , m_cameraController(nullptr, window)
+    , m_shaderManager(shaderManager)
 {
 }
 
@@ -43,14 +43,11 @@ RobotArmScene::~RobotArmScene()
     delete g_root;
     delete g_sphere;
     delete g_sphMesh;
-    delete manager;
 }
 
 void RobotArmScene::prepare()
 {
-    manager = new ShaderManager();
-
-    prog = manager->getProgram("perspective");
+    prog = m_shaderManager->getProgram("perspective");
 
     error = glGetError();
     
