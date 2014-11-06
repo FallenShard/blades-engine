@@ -2,10 +2,9 @@
 
 #include <map>
 #include "OpenGL.h"
-#include "VertexAttribute.h"
-#include "IndexBuffer.h"
-
-class VertexBuffer;
+#include "OglWrapper/VertexAttribute.h"
+#include "OglWrapper/VertexBuffer.h"
+#include "OglWrapper/IndexBuffer.h"
 
 class VertexArray
 {

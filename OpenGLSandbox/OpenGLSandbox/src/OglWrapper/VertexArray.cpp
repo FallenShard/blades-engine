@@ -1,4 +1,4 @@
-#include "Renderer/VertexArray.h"
+#include "OglWrapper/VertexArray.h"
 
 namespace
 {

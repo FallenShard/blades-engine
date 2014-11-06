@@ -1,6 +1,6 @@
 #include <fstream>
 #include <cassert>
-#include "Renderer/IndexBuffer.h"
+#include "OglWrapper/IndexBuffer.h"
 
 namespace
 {

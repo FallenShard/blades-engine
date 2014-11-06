@@ -2,7 +2,7 @@
 
 #include "OpenGL.h"
 
-#include "Renderer/ShaderProgram.h"
+#include "OglWrapper/ShaderProgram.h"
 
 class Texture
 {

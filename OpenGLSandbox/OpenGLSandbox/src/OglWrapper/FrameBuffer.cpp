@@ -1,4 +1,4 @@
-#include "Renderer/FrameBuffer.h"
+#include "OglWrapper/FrameBuffer.h"
 
 namespace
 {

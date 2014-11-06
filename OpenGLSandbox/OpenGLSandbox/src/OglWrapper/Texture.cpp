@@ -1,4 +1,4 @@
-#include "Renderer/Texture.h"
+#include "OglWrapper/Texture.h"
 
 Texture::Texture()
 {

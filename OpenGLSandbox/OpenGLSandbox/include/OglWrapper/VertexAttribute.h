@@ -53,7 +53,6 @@ struct VertexAttribute
         location = glGetAttribLocation(programId, name.c_str());
         glVertexAttribPointer(location, size, type, normalized, stride, offset);
         glEnableVertexAttribArray(location);
-
     }
 
     void disable()

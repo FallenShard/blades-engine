@@ -1,6 +1,6 @@
 #include <fstream>
 #include <iostream>
-#include "Renderer/Shader.h"
+#include "OglWrapper/Shader.h"
 #include "Utils/Logger.h"
 
 Shader::Shader()

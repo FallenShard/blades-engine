@@ -1,7 +1,7 @@
 #include <fstream>
 #include <sstream>
 #include <cassert>
-#include "Renderer/VertexBuffer.h"
+#include "OglWrapper/VertexBuffer.h"
 
 namespace
 {
