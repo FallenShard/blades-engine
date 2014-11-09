@@ -147,6 +147,11 @@ void SceneNode::applyTransformation(const glm::mat4& transformation)
         child->applyTransformation(m_absoluteTrans);
 }
 
+const glm::mat4& SceneNode::getModelMatrix() const
+{
+    return m_absoluteTrans;
+}
+
 void SceneNode::updateRelativeTrans()
 {
     m_relativeTrans = glm::scale(m_scale);
@@ -164,8 +169,8 @@ void SceneNode::updateAbsoluteTrans()
         applyTransformation();
 }
 
-void SceneNode::renderChildren()
+void SceneNode::renderChildren(const glm::mat4& projection, const glm::mat4& view)
 {
     for (auto& child : m_children)
-        child->render();
+        child->render(projection, view);
 }

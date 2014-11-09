@@ -2,7 +2,6 @@
 
 #include "Scene.h"
 
-#include "Models/RobotArm.h"
 #include "Models/PlaneGrid.h"
 #include "Models/SceneNode.h"
 #include "Models/TransformNode.h"

@@ -8,7 +8,7 @@ TransformNode::~TransformNode()
 {
 }
 
-void TransformNode::render()
+void TransformNode::render(const glm::mat4& projection, const glm::mat4& view)
 {
-    renderChildren();
+    renderChildren(projection, view);
 }

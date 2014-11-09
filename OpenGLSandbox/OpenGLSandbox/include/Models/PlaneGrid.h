@@ -22,7 +22,7 @@ public:
     void setProgram(ShaderProgram* program);
     void displayPlanes(int planes);
 
-    virtual void render();
+    virtual void render(const glm::mat4& projection, const glm::mat4& view);
 
 private:
     void buildVertices();

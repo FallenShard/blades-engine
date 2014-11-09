@@ -45,9 +45,8 @@ void Scene::prepare()
 {
     prog = m_shaderManager->getProgram("perspective");
 
-    prog->getUniformAttribute("modelToWorldMatrix");
-    prog->getUniformAttribute("worldToCameraMatrix");
-    prog->getUniformAttribute("cameraToClipMatrix");
+    prog->getUniformAttribute("MVP");
+    prog->getUniformAttribute("MV");
     prog->getUniformAttribute("color");
 
     m_cameraController.setShaderProgram(prog);
@@ -128,9 +127,9 @@ void Scene::update(float timeDelta)
 void Scene::render()
 {
     prog->use();
-    prog->setUniformAttribute("modelToWorldMatrix", glm::mat4(1.f));
+    //prog->setUniformAttribute("modelToWorldMatrix", glm::mat4(1.f));
 
-    m_sceneGraph->render();
+    m_sceneGraph->render(m_cameraController.getProjectionMatrix(), m_cameraController.getViewMatrix());
 }
 
 bool Scene::reshape(int width, int height)

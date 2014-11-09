@@ -14,7 +14,7 @@ public:
     ~RoboticArm();
 
     void update(float timeDelta);
-    virtual void render();
+    virtual void render(const glm::mat4& projection, const glm::mat4& view);
 
 private:
     void moveBase(bool increment);

@@ -15,7 +15,7 @@ public:
 
     ~Sphere();
 
-    virtual void render();
+    virtual void render(const glm::mat4& projection, const glm::mat4& view);
     void setPrimitiveType(GLenum type);
 
 private:

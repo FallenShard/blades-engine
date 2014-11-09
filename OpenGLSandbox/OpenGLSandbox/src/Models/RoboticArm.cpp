@@ -121,12 +121,13 @@ void RoboticArm::update(float timeDelta)
     }
 }
 
-void RoboticArm::render()
+void RoboticArm::render(const glm::mat4& projection, const glm::mat4& view)
 {
     m_shaderProgram->use();
-    m_shaderProgram->setUniformAttribute("modelToWorldMatrix", m_absoluteTrans);
+    m_shaderProgram->setUniformAttribute("MVP", projection * view * m_absoluteTrans);
+    m_shaderProgram->setUniformAttribute("MV", view * m_absoluteTrans);
 
-    renderChildren();
+    renderChildren(projection, view);
 }
 
 void RoboticArm::buildHierarchy()

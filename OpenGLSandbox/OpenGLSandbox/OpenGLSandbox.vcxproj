@@ -22,7 +22,6 @@
     <ClCompile Include="src\Models\TransformNode.cpp" />
     <ClCompile Include="src\Models\PlaneGrid.cpp" />
     <ClCompile Include="src\Models\Prism.cpp" />
-    <ClCompile Include="src\Models\RobotArm.cpp" />
     <ClCompile Include="src\Models\RoboticArm.cpp" />
     <ClCompile Include="src\Models\SceneNode.cpp" />
     <ClCompile Include="src\Renderer\AbstractCamera.cpp" />
@@ -62,7 +61,6 @@
     <ClInclude Include="include\Models\IRenderable.h" />
     <ClInclude Include="include\Models\PlaneGrid.h" />
     <ClInclude Include="include\Models\Prism.h" />
-    <ClInclude Include="include\Models\RobotArm.h" />
     <ClInclude Include="include\Models\RoboticArm.h" />
     <ClInclude Include="include\Models\SceneNode.h" />
     <ClInclude Include="include\OpenGL.h" />

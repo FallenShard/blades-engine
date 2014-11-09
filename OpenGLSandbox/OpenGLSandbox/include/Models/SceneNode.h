@@ -34,13 +34,14 @@ public:
     void scale(const glm::vec3& scale);
     void setTransformationMatrix(glm::mat4& matrix);
     void applyTransformation(const glm::mat4& transformation = glm::mat4(1.f));
+    const glm::mat4& getModelMatrix() const;
 
-    virtual void render() = 0;
+    virtual void render(const glm::mat4& projection, const glm::mat4& view) = 0;
 
 protected:
     void updateRelativeTrans();
     void updateAbsoluteTrans();
-    void renderChildren();
+    void renderChildren(const glm::mat4& projection, const glm::mat4& view);
 
     std::list<SceneNode*> m_children;
     SceneNode* m_parent;

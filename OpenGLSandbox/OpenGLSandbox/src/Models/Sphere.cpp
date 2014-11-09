@@ -16,10 +16,11 @@ Sphere::~Sphere()
 {
 }
 
-void Sphere::render()
+void Sphere::render(const glm::mat4& projection, const glm::mat4& view)
 {
     m_shaderProgram->use();
-    m_shaderProgram->setUniformAttribute("modelToWorldMatrix", m_absoluteTrans);
+    m_shaderProgram->setUniformAttribute("MVP", projection * view * m_absoluteTrans);
+    m_shaderProgram->setUniformAttribute("MV",  view * m_absoluteTrans);
     m_shaderProgram->setUniformAttribute("color", glm::vec4(1.f, 0.5f, 0.f, 1.f));
     
     m_vertexArray->bind();
