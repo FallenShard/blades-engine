@@ -21,6 +21,9 @@ public:
     void update(float timeDelta);
     void resize(int width, int height);
 
+    glm::mat4 getViewMatrix() const;
+    glm::mat4 getProjectionMatrix() const;
+
 private:
     void setFreeLook(bool freeLook);
     void adjustYawPitch(int mouseX, int mouseY);

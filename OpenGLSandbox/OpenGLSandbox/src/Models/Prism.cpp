@@ -9,6 +9,13 @@ Prism::Prism(VertexArray* vArray, ShaderProgram* program)
 {
 }
 
+Prism::Prism(PrismMesh* mesh, ShaderProgram* program)
+    : SceneNode(nullptr, program)
+    , m_mesh(mesh)
+{
+    init();
+}
+
 Prism::~Prism()
 {
 }
@@ -21,3 +28,12 @@ void Prism::render()
     m_vertexArray->bind();
     m_vertexArray->renderIndexed();
 }
+
+void Prism::init()
+{
+    m_vertexArray = m_mesh->getVertexArray();
+    m_vertexArray->bind();
+    m_vertexArray->enableAttributes(m_shaderProgram->getProgramId());
+    VertexArray::release();
+}
+

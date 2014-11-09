@@ -28,10 +28,10 @@ void SphereMesh::computeVertices()
     float ringIncr = 180.f / (m_rings + 1);
 
     // Fill the buffer with vertices and faces
-    m_vertexBuffer.setDataCountPerVertex(7);
+    m_vertexBuffer.setDataCountPerVertex(3);
 
     m_vertexBuffer.push(0.f, m_radius, 0.f);
-    m_vertexBuffer.push(0.f, 1.f, 0.f, 1.f);
+    //m_vertexBuffer.push(0.f, 1.f, 0.f, 1.f);
 
     // Faces for initial sphere fan cap
     short int v = 1;
@@ -53,7 +53,7 @@ void SphereMesh::computeVertices()
         {
             float rads = glm::radians(slice * sliceIncr);
             m_vertexBuffer.push(m_radius * ySin * cos(rads), m_radius * yCos, m_radius * ySin * sin(rads));
-            m_vertexBuffer.push(0.f, 1.f, 0.f, 1.f);
+            //m_vertexBuffer.push(0.f, 1.f, 0.f, 1.f);
         }
 
         if (ring == m_rings)
@@ -75,16 +75,16 @@ void SphereMesh::computeVertices()
     }
 
     m_vertexBuffer.push(0.f, -m_radius, 0.f);
-    m_vertexBuffer.push(0.f, 1.f, 0.f, 1.f);
+    //m_vertexBuffer.push(0.f, 1.f, 0.f, 1.f);
 
-    int vertexCount = m_vertexBuffer.getVertexCount();
+    int vertexcount = m_vertexBuffer.getVertexCount();
 
-    // Faces for lower sphere fan cap
-    for (v = vertexCount - m_slices; v < vertexCount - 1; v++)
+    // faces for lower sphere fan cap
+    for (v = vertexcount - m_slices; v < vertexcount - 1; v++)
     {
-        m_indexBuffer.push(v - 1, v, vertexCount - 1);
+        m_indexBuffer.push(v - 1, v, vertexcount - 1);
     }
-    m_indexBuffer.push(vertexCount - 1 - m_slices, vertexCount - 1, vertexCount - 2);
+    m_indexBuffer.push(vertexcount - 1 - m_slices, vertexcount - 1, vertexcount - 2);
 
     // Bind this VAO
     m_vertexArray.bind();
@@ -100,12 +100,11 @@ void SphereMesh::computeVertices()
     m_vertexArray.attachIndexBuffer(&m_indexBuffer);
 
     m_vertexArray.attachAttribute(VertexAttribute("vPosition", 3, 7 * sizeof(GLfloat), 0));
-    m_vertexArray.attachAttribute(VertexAttribute("vColor", 4, 7 * sizeof(GLfloat), 3 * sizeof(GLfloat)));
     
     VertexArray::release();
 }
 
 VertexArray* SphereMesh::getVertexArray()
-{ 
-    return &m_vertexArray; 
+{
+    return &m_vertexArray;
 }

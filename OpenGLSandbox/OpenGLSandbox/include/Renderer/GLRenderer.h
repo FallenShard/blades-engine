@@ -4,15 +4,15 @@
 #include <map>
 
 #include "OpenGL.h"
-#include "Renderer/Shader.h"
-#include "Renderer/ShaderProgram.h"
+#include "OglWrapper/Shader.h"
+#include "OglWrapper/ShaderProgram.h"
 #include "Renderer/ShaderManager.h"
-#include "Renderer/VertexArray.h"
-#include "Renderer/VertexBuffer.h"
-#include "Renderer/IndexBuffer.h"
-#include "Renderer/VertexAttribute.h"
+#include "OglWrapper/VertexArray.h"
+#include "OglWrapper/VertexBuffer.h"
+#include "OglWrapper/IndexBuffer.h"
+#include "OglWrapper/VertexAttribute.h"
 #include "Renderer/RenderPass.h"
-#include "Scenes/Scene.h"
+#include "Renderer/Scene.h"
 #include "Window/Window.h"
 
 
@@ -43,5 +43,5 @@ private:
 
     RenderPass* m_aaPass;
 
-    std::vector<Scene*> m_scenes;
+    Scene* m_scene;
 };

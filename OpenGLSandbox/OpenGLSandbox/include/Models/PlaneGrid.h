@@ -1,10 +1,12 @@
 #pragma once
 
-#include "Renderer/VertexArray.h"
-#include "Renderer/VertexBuffer.h"
-#include "Renderer/ShaderProgram.h"
+#include "OglWrapper/VertexArray.h"
+#include "OglWrapper/VertexBuffer.h"
+#include "OglWrapper/ShaderProgram.h"
 
-class PlaneGrid
+#include "Models/SceneNode.h"
+
+class PlaneGrid : public SceneNode
 {
 public:
     enum Planes
@@ -20,7 +22,7 @@ public:
     void setProgram(ShaderProgram* program);
     void displayPlanes(int planes);
 
-    void render();
+    virtual void render();
 
 private:
     void buildVertices();
@@ -30,6 +32,4 @@ private:
     int          m_visiblePlanes;
 
     VertexBuffer m_vertexBuffer;
-    VertexArray  m_vertexArray;
-    ShaderProgram* m_program;
 };

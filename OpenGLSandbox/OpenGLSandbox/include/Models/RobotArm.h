@@ -1,8 +1,8 @@
 #pragma once
 
 #include "Transformations/MatrixStack.h"
-#include "Renderer/VertexArray.h"
-#include "Renderer/ShaderProgram.h"
+#include "OglWrapper/VertexArray.h"
+#include "OglWrapper/ShaderProgram.h"
 
 class RobotArm
 {

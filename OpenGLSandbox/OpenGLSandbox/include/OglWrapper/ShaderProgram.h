@@ -28,6 +28,7 @@ public:
     void setUniformAttribute(std::string name, GLfloat x, GLfloat y, GLfloat z);
     void setUniformAttribute(std::string name, GLsizei count, GLboolean transpose, const GLfloat* values);
     void setUniformAttribute(std::string name, const glm::mat4& mat);
+    void setUniformAttribute(std::string name, const glm::vec4& vec);
     void setUniformSampler(std::string name, GLint textureUnit);
     void setUniformSampler(GLint location, GLint textureUnit);
 

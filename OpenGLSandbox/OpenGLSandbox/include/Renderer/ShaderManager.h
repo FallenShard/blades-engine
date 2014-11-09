@@ -1,7 +1,7 @@
 #pragma once
 
-#include "Renderer/Shader.h"
-#include "Renderer/ShaderProgram.h"
+#include "OglWrapper/Shader.h"
+#include "OglWrapper/ShaderProgram.h"
 
 class ShaderManager
 {

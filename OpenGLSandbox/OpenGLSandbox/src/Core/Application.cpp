@@ -1,7 +1,6 @@
 #include "Core/Application.h"
 #include "Core/Timer.h"
 #include <fstream>
-#include "Renderer/Shader.h"
 
 #include "Utils/Logger.h"
 

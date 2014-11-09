@@ -1,7 +1,7 @@
 #include <algorithm>
 #include <iostream>
 
-#include "Renderer/ShaderProgram.h"
+#include "OglWrapper/ShaderProgram.h"
 #include "Renderer/AbstractCamera.h"
 #include "Window/Event.h"
 #include "Window/Window.h"
@@ -149,4 +149,15 @@ void CameraController::resize(int width, int height)
     ShaderProgram::release();
 
     glViewport(0, 0, static_cast<GLsizei>(width), static_cast<GLsizei>(height));
+}
+
+glm::mat4 CameraController::getViewMatrix() const
+{
+    return m_activeCamera->getViewMatrix();
+
+}
+
+glm::mat4 CameraController::getProjectionMatrix() const
+{
+    return m_activeCamera->getProjectionMatrix();
 }

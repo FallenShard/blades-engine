@@ -1,7 +1,7 @@
 #include "Models/RoboticArm.h"
 #include "Models/Prism.h"
 #include "Models/TransformNode.h"
-#include "Renderer/VertexBuffer.h"
+#include "OglWrapper/VertexBuffer.h"
 #include "Utils/VertexLoader.h"
 
 #include "Window/Keyboard.h"
@@ -23,8 +23,9 @@ namespace
     }
 }
 
-RoboticArm::RoboticArm(ShaderProgram* program)
+RoboticArm::RoboticArm(PrismMesh* mesh, ShaderProgram* program)
     : SceneNode(nullptr, program)
+    , m_mesh(mesh)
     , m_posBase(glm::vec3(-10.0f, 1.0f, -10.0f))
     , m_angBase(-45.0f)
     , m_posBaseLeft(glm::vec3(2.0f, 0.0f, 0.0f))
@@ -130,24 +131,9 @@ void RoboticArm::render()
 
 void RoboticArm::buildHierarchy()
 {
-    m_vertexArray = new VertexArray(GL_TRIANGLES);
+    m_vertexArray = m_mesh->getVertexArray();
     m_vertexArray->bind();
-
-    m_vertexBuffer = new VertexBuffer(GL_STATIC_DRAW);
-    m_vertexBuffer->bind();
-    VertexLoader vLoader;
-    vLoader.loadFromFile("res/RobotArmMesh.txt", *m_vertexBuffer);
-    m_vertexArray->setVertexCount(m_vertexBuffer->getVertexCount());
-
-    m_indexBuffer = new IndexBuffer();
-    m_indexBuffer->bind();
-    m_indexBuffer->loadFromFile("res/RobotArmFaces.txt");
-    m_vertexArray->attachIndexBuffer(m_indexBuffer);
-
-    m_vertexArray->attachAttribute(VertexAttribute("vPosition", 3, 0, 0));
-    m_vertexArray->attachAttribute(VertexAttribute("vColor", 4, 0, 3 * sizeof(GLfloat) * m_vertexBuffer->getVertexCount()));
     m_vertexArray->enableAttributes(m_shaderProgram->getProgramId());
-
     VertexArray::release();
 
     // Base transforms
@@ -155,86 +141,88 @@ void RoboticArm::buildHierarchy()
     rotateY(m_angBase);
     
     // Base
-    SceneNode* baseLeft = new Prism();
-    baseLeft->scale(glm::vec3(1.f, 1.f, m_scaleBaseZ));
-    baseLeft->translate(m_posBaseLeft);
+    SceneNode* baseLeft = new Prism(m_mesh, m_shaderProgram);
+    baseLeft->setScale(glm::vec3(1.f, 1.f, m_scaleBaseZ));
+    baseLeft->setPosition(m_posBaseLeft);
     attachChild(baseLeft);
 
-    SceneNode* baseRight = new Prism();
-    baseRight->scale(glm::vec3(1.f, 1.f, m_scaleBaseZ));
-    baseRight->translate(m_posBaseRight);
+    SceneNode* baseRight = new Prism(m_mesh, m_shaderProgram);
+    baseRight->setScale(glm::vec3(1.f, 1.f, m_scaleBaseZ));
+    baseRight->setPosition(m_posBaseRight);
     attachChild(baseRight);
     
     // Upper arm parent for rotation
     m_upperArmHolder = new TransformNode();
-    m_upperArmHolder->rotateX(m_angUpperArm);
+    m_upperArmHolder->setRotationX(m_angUpperArm);
     attachChild(m_upperArmHolder);
     
-    SceneNode* upperArm = new Prism();
-    upperArm->scale(glm::vec3(1.0f, 1.0f, m_sizeUpperArm / 2.0f));
-    upperArm->translate(glm::vec3(0.0f, 0.0f, (m_sizeUpperArm / 2.0f) - 1.0f));
+    SceneNode* upperArm = new Prism(m_mesh, m_shaderProgram);
+    upperArm->setScale(glm::vec3(1.0f, 1.0f, m_sizeUpperArm / 2.0f));
+    upperArm->setPosition(glm::vec3(0.0f, 0.0f, (m_sizeUpperArm / 2.0f) - 1.0f));
     m_upperArmHolder->attachChild(upperArm);
 
     // Lower arm parent for rotation
     m_lowerArmHolder = new TransformNode();
-    m_lowerArmHolder->rotateX(m_angLowerArm);
-    m_lowerArmHolder->translate(m_posLowerArm);
+    m_lowerArmHolder->setRotationX(m_angLowerArm);
+    m_lowerArmHolder->setPosition(m_posLowerArm);
     m_upperArmHolder->attachChild(m_lowerArmHolder);
 
-    SceneNode* lowerArm = new Prism();
-    lowerArm->scale(glm::vec3(m_widthLowerArm / 2.0f, m_widthLowerArm / 2.0f, m_lenLowerArm / 2.0f));
-    lowerArm->translate(glm::vec3(0.0f, 0.0f, m_lenLowerArm / 2.0f));
+    SceneNode* lowerArm = new Prism(m_mesh, m_shaderProgram);
+    lowerArm->setScale(glm::vec3(m_widthLowerArm / 2.0f, m_widthLowerArm / 2.0f, m_lenLowerArm / 2.0f));
+    lowerArm->setPosition(glm::vec3(0.0f, 0.0f, m_lenLowerArm / 2.0f));
     m_lowerArmHolder->attachChild(lowerArm);
 
     // Wrist parent for rotation
     m_wristHolder = new TransformNode();
-    m_wristHolder->rotateZ(m_angWristRoll);
-    m_wristHolder->rotateX(m_angWristPitch);
-    m_wristHolder->translate(m_posWrist);
+    m_wristHolder->setRotationZ(m_angWristRoll);
+    m_wristHolder->setRotationX(m_angWristPitch);
+    m_wristHolder->setPosition(m_posWrist);
     m_lowerArmHolder->attachChild(m_wristHolder);
 
-    SceneNode* wrist = new Prism();
-    wrist->scale(glm::vec3(m_widthWrist / 2.0f, m_widthWrist / 2.0f, m_lenWrist / 2.0f));
+    SceneNode* wrist = new Prism(m_mesh, m_shaderProgram);
+    wrist->setScale(glm::vec3(m_widthWrist / 2.0f, m_widthWrist / 2.0f, m_lenWrist / 2.0f));
     m_wristHolder->attachChild(wrist);
 
+    // Left finger
     m_leftFingerHolder = new TransformNode();
-    m_leftFingerHolder->rotateY(m_angFingerOpen);
-    m_leftFingerHolder->translate(m_posLeftFinger);
+    m_leftFingerHolder->setRotationY(m_angFingerOpen);
+    m_leftFingerHolder->setPosition(m_posLeftFinger);
     m_wristHolder->attachChild(m_leftFingerHolder);
 
-    SceneNode* leftFingerUpper = new Prism();
-    leftFingerUpper->scale(glm::vec3(m_widthFinger / 2.0f, m_widthFinger / 2.0f, m_lenFinger / 2.0f));
-    leftFingerUpper->translate(glm::vec3(0.0f, 0.0f, m_lenFinger / 2.0f));
+    SceneNode* leftFingerUpper = new Prism(m_mesh, m_shaderProgram);
+    leftFingerUpper->setScale(glm::vec3(m_widthFinger / 2.0f, m_widthFinger / 2.0f, m_lenFinger / 2.0f));
+    leftFingerUpper->setPosition(glm::vec3(0.0f, 0.0f, m_lenFinger / 2.0f));
     m_leftFingerHolder->attachChild(leftFingerUpper);
 
     SceneNode* posLeftFingerLower = new TransformNode();
-    posLeftFingerLower->rotateY(-m_angLowerFinger);
-    posLeftFingerLower->translate(glm::vec3(0.0f, 0.0f, m_lenFinger));
+    posLeftFingerLower->setRotationY(-m_angLowerFinger);
+    posLeftFingerLower->setPosition(glm::vec3(0.0f, 0.0f, m_lenFinger));
     m_leftFingerHolder->attachChild(posLeftFingerLower);
 
-    SceneNode* leftFingerLower = new Prism();
-    leftFingerLower->scale(glm::vec3(m_widthFinger / 2.0f, m_widthFinger / 2.0f, m_lenFinger / 2.0f));
-    leftFingerLower->translate(glm::vec3(0.0f, 0.0f, m_lenFinger / 2.0f));
+    SceneNode* leftFingerLower = new Prism(m_mesh, m_shaderProgram);
+    leftFingerLower->setScale(glm::vec3(m_widthFinger / 2.0f, m_widthFinger / 2.0f, m_lenFinger / 2.0f));
+    leftFingerLower->setPosition(glm::vec3(0.0f, 0.0f, m_lenFinger / 2.0f));
     posLeftFingerLower->attachChild(leftFingerLower);
 
+    // Right finger
     m_rightFingerHolder = new TransformNode();
-    m_rightFingerHolder->rotateY(-m_angFingerOpen);
-    m_rightFingerHolder->translate(m_posRightFinger);
+    m_rightFingerHolder->setRotationY(-m_angFingerOpen);
+    m_rightFingerHolder->setPosition(m_posRightFinger);
     m_wristHolder->attachChild(m_rightFingerHolder);
 
-    SceneNode* rightFingerUpper = new Prism();
-    rightFingerUpper->scale(glm::vec3(m_widthFinger / 2.0f, m_widthFinger / 2.0f, m_lenFinger / 2.0f));
-    rightFingerUpper->translate(glm::vec3(0.0f, 0.0f, m_lenFinger / 2.0f));
+    SceneNode* rightFingerUpper = new Prism(m_mesh, m_shaderProgram);
+    rightFingerUpper->setScale(glm::vec3(m_widthFinger / 2.0f, m_widthFinger / 2.0f, m_lenFinger / 2.0f));
+    rightFingerUpper->setPosition(glm::vec3(0.0f, 0.0f, m_lenFinger / 2.0f));
     m_rightFingerHolder->attachChild(rightFingerUpper);
 
     SceneNode* posRightFingerLower = new TransformNode();
-    posRightFingerLower->rotateY(m_angLowerFinger);
-    posRightFingerLower->translate(glm::vec3(0.0f, 0.0f, m_lenFinger));
+    posRightFingerLower->setRotationY(m_angLowerFinger);
+    posRightFingerLower->setPosition(glm::vec3(0.0f, 0.0f, m_lenFinger));
     m_rightFingerHolder->attachChild(posRightFingerLower);
 
-    SceneNode* rightFingerLower = new Prism();
-    rightFingerLower->scale(glm::vec3(m_widthFinger / 2.0f, m_widthFinger / 2.0f, m_lenFinger / 2.0f));
-    rightFingerLower->translate(glm::vec3(0.0f, 0.0f, m_lenFinger / 2.0f));
+    SceneNode* rightFingerLower = new Prism(m_mesh, m_shaderProgram);
+    rightFingerLower->setScale(glm::vec3(m_widthFinger / 2.0f, m_widthFinger / 2.0f, m_lenFinger / 2.0f));
+    rightFingerLower->setPosition(glm::vec3(0.0f, 0.0f, m_lenFinger / 2.0f));
     posRightFingerLower->attachChild(rightFingerLower);
     
     applyTransformation(glm::mat4(1.f));
@@ -244,41 +232,41 @@ void RoboticArm::moveBase(bool increment)
 {
     m_angBase += increment ? StandardAngleIncrement : -StandardAngleIncrement;
     m_angBase = fmodf(m_angBase, 360.0f);
-    rotateY(m_angBase);
+    setRotationY(m_angBase);
 }
 
 void RoboticArm::moveUpperArm(bool increment)
 {
     m_angUpperArm += increment ? StandardAngleIncrement : -StandardAngleIncrement;
     m_angUpperArm = clamp(m_angUpperArm, -90.0f, 0.0f);
-    m_upperArmHolder->rotateX(m_angUpperArm);
+    m_upperArmHolder->setRotationX(m_angUpperArm);
 }
 
 void RoboticArm::moveLowerArm(bool increment)
 {
     m_angLowerArm += increment ? StandardAngleIncrement : -StandardAngleIncrement;
     m_angLowerArm = clamp(m_angLowerArm, 0.0f, 146.25f);
-    m_lowerArmHolder->rotateX(m_angLowerArm);
+    m_lowerArmHolder->setRotationX(m_angLowerArm);
 }
 
 void RoboticArm::moveWristPitch(bool increment)
 {
     m_angWristPitch += increment ? StandardAngleIncrement : -StandardAngleIncrement;
     m_angWristPitch = clamp(m_angWristPitch, 0.0f, 90.0f);
-    m_wristHolder->rotateX(m_angWristPitch);
+    m_wristHolder->setRotationX(m_angWristPitch);
 }
 
 void RoboticArm::moveWristRoll(bool increment)
 {
     m_angWristRoll += increment ? StandardAngleIncrement : -StandardAngleIncrement;
     m_angWristRoll = fmodf(m_angWristRoll, 360.0f);
-    m_wristHolder->rotateZ(m_angWristRoll);
+    m_wristHolder->setRotationZ(m_angWristRoll);
 }
 
 void RoboticArm::moveFingerOpen(bool increment)
 {
     m_angFingerOpen += increment ? SmallAngleIncrement : -SmallAngleIncrement;
     m_angFingerOpen = clamp(m_angFingerOpen, 9.0f, 180.0f);
-    m_leftFingerHolder->rotateY(m_angFingerOpen);
-    m_rightFingerHolder->rotateY(-m_angFingerOpen);
+    m_leftFingerHolder->setRotationY(m_angFingerOpen);
+    m_rightFingerHolder->setRotationY(-m_angFingerOpen);
 }

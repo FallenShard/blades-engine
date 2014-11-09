@@ -53,12 +53,6 @@
     <ClCompile Include="src\Renderer\CameraController.cpp" />
     <ClCompile Include="src\Renderer\FreeCamera.cpp" />
     <ClCompile Include="src\Renderer\GLRenderer.cpp" />
-    <ClCompile Include="src\Scenes\GraphScene.cpp" />
-    <ClCompile Include="src\Scenes\OverlapScene.cpp" />
-    <ClCompile Include="src\Scenes\PrismScene.cpp" />
-    <ClCompile Include="src\Scenes\RobotArmScene.cpp" />
-    <ClCompile Include="src\Scenes\TranslationScene.cpp" />
-    <ClCompile Include="src\Scenes\TriangleScene.cpp" />
     <ClCompile Include="src\Transformations\MatrixStack.cpp" />
     <ClCompile Include="src\Utils\Logger.cpp" />
     <ClCompile Include="src\Utils\VertexLoader.cpp" />
@@ -78,7 +72,6 @@
     <ClCompile Include="src\Models\Sphere.cpp" />
     <ClCompile Include="src\Meshes\SphereMesh.cpp" />
     <ClCompile Include="src\Renderer\RenderPass.cpp" />
-    <ClCompile Include="src\Meshes\PrismMesh.cpp" />
     <ClCompile Include="src\OglWrapper\VertexBuffer.cpp" />
     <ClCompile Include="src\OglWrapper\VertexArray.cpp" />
     <ClCompile Include="src\OglWrapper\Texture.cpp" />
@@ -86,6 +79,9 @@
     <ClCompile Include="src\OglWrapper\Shader.cpp" />
     <ClCompile Include="src\OglWrapper\FrameBuffer.cpp" />
     <ClCompile Include="src\OglWrapper\IndexBuffer.cpp" />
+    <ClCompile Include="src\Meshes\PlaneMesh.cpp" />
+    <ClCompile Include="src\Renderer\Scene.cpp" />
+    <ClCompile Include="src\Meshes\CubeMesh.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="include\Core\Application.h" />
@@ -109,13 +105,6 @@
     <ClInclude Include="include\Renderer\FreeCamera.h" />
     <ClInclude Include="include\Renderer\GLRenderer.h" />
     <ClInclude Include="include\Renderer\TargetCamera.h" />
-    <ClInclude Include="include\Scenes\GraphScene.h" />
-    <ClInclude Include="include\Scenes\OverlapScene.h" />
-    <ClInclude Include="include\Scenes\PrismScene.h" />
-    <ClInclude Include="include\Scenes\RobotArmScene.h" />
-    <ClInclude Include="include\Scenes\Scene.h" />
-    <ClInclude Include="include\Scenes\TranslationScene.h" />
-    <ClInclude Include="include\Scenes\TriangleScene.h" />
     <ClInclude Include="include\Transformations\MatrixStack.h" />
     <ClInclude Include="include\Utils\GraphicsUtils.h" />
     <ClInclude Include="include\Utils\Logger.h" />
@@ -133,7 +122,6 @@
     <ClInclude Include="include\Models\Sphere.h" />
     <ClInclude Include="include\Meshes\SphereMesh.h" />
     <ClInclude Include="include\Renderer\RenderPass.h" />
-    <ClInclude Include="include\Meshes\PrismMesh.h" />
     <ClInclude Include="include\OglWrapper\VertexBuffer.h" />
     <ClInclude Include="include\OglWrapper\VertexAttribute.h" />
     <ClInclude Include="include\OglWrapper\VertexArray.h" />
@@ -142,6 +130,9 @@
     <ClInclude Include="include\OglWrapper\Shader.h" />
     <ClInclude Include="include\OglWrapper\IndexBuffer.h" />
     <ClInclude Include="include\OglWrapper\FrameBuffer.h" />
+    <ClInclude Include="include\Meshes\PlaneMesh.h" />
+    <ClInclude Include="include\Renderer\Scene.h" />
+    <ClInclude Include="include\Meshes\CubeMesh.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include="res\default.vert">
@@ -165,8 +156,8 @@
     <Text Include="res\TranslationData.txt" />
     <Text Include="res\PrismData.txt" />
     <Text Include="res\TrianglePosData.txt" />
-    <Text Include="res\RobotArmMesh.txt" />
     <Text Include="res\RobotArmFaces.txt" />
     <Text Include="res\ShaderList.txt" />
+    <Text Include="res\CubeMesh.txt" />
   </ItemGroup>
 </Project>

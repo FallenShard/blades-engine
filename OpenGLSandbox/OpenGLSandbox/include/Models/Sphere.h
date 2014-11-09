@@ -2,8 +2,8 @@
 
 #include "Models/SceneNode.h"
 
-#include "Renderer/VertexBuffer.h"
-#include "Renderer/IndexBuffer.h"
+#include "OglWrapper/VertexBuffer.h"
+#include "OglWrapper/IndexBuffer.h"
 
 #include "Meshes/SphereMesh.h"
 

@@ -155,6 +155,11 @@ void ShaderProgram::setUniformAttribute(std::string name, const glm::mat4& mat)
     glUniformMatrix4fv(m_uniformAttributes[name], 1, GL_FALSE, glm::value_ptr(mat));
 }
 
+void ShaderProgram::setUniformAttribute(std::string name, const glm::vec4& vec)
+{
+    glUniform4fv(m_uniformAttributes[name], 1, glm::value_ptr(vec));
+}
+
 void ShaderProgram::setUniformSampler(std::string name, GLint textureUnit)
 {
     glUniform1i(m_uniformAttributes[name], textureUnit);

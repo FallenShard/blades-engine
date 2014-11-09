@@ -20,12 +20,10 @@ void Sphere::render()
 {
     m_shaderProgram->use();
     m_shaderProgram->setUniformAttribute("modelToWorldMatrix", m_absoluteTrans);
-    m_shaderProgram->setUniformAttribute("useLight", 2.f);
+    m_shaderProgram->setUniformAttribute("color", glm::vec4(1.f, 0.5f, 0.f, 1.f));
     
     m_vertexArray->bind();
     m_vertexArray->renderIndexed();
-
-    m_shaderProgram->setUniformAttribute("useLight", -2.f);
 }
 
 void Sphere::setPrimitiveType(GLenum primType)

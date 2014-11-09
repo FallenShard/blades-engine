@@ -4,23 +4,18 @@
 #include "OglWrapper/VertexBuffer.h"
 #include "OglWrapper/IndexBuffer.h"
 
-class SphereMesh
+class PrismMesh
 {
 public:
-    SphereMesh();
-    SphereMesh(float radius, short int rings = 20, short int slices = 20);
+    PrismMesh();
 
     void bindToArray(VertexArray* vArray);
     VertexArray* getVertexArray();
 
-    ~SphereMesh();
+    ~PrismMesh();
 
 private:
-    void computeVertices();
-
-    float m_radius;
-    short int m_rings;
-    short int m_slices;
+    void init();
 
     VertexArray m_vertexArray;
     VertexBuffer m_vertexBuffer;

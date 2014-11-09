@@ -4,8 +4,8 @@
 #include <numeric>
 
 #include "Utils/VertexLoader.h"
-#include "Renderer/VertexBuffer.h"
-#include "Renderer/VertexArray.h"
+#include "OglWrapper/VertexBuffer.h"
+#include "OglWrapper/VertexArray.h"
 
 VertexLoader::VertexLoader()
 {

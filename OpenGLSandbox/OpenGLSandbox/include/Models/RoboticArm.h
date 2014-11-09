@@ -1,12 +1,15 @@
+#pragma once
+
 #include "Models/SceneNode.h"
 
+class PrismMesh;
 class VertexBuffer;
 class IndexBuffer;
 
 class RoboticArm : public SceneNode
 {
 public:
-    RoboticArm(ShaderProgram* program);
+    RoboticArm(PrismMesh* mesh, ShaderProgram* program);
 
     ~RoboticArm();
 
@@ -22,6 +25,8 @@ private:
     void moveFingerOpen(bool increment);
 
     void buildHierarchy();
+
+    PrismMesh* m_mesh;
 
     SceneNode* m_upperArmHolder;
     SceneNode* m_lowerArmHolder;

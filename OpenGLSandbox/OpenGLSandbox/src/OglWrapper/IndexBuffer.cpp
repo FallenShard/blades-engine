@@ -30,6 +30,7 @@ IndexBuffer::IndexBuffer(GLenum targetType, GLenum usageType)
 
 IndexBuffer::~IndexBuffer()
 {
+    glDeleteBuffers(1, &m_id);
 }
 
 void IndexBuffer::bind() const

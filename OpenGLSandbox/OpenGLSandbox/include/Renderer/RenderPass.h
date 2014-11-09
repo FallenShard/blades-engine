@@ -1,10 +1,10 @@
 #pragma once
 
-#include "Renderer/FrameBuffer.h"
-#include "Renderer/VertexArray.h"
-#include "Renderer/VertexBuffer.h"
-#include "Renderer/ShaderProgram.h"
-#include "Renderer/Texture.h"
+#include "OglWrapper/FrameBuffer.h"
+#include "OglWrapper/VertexArray.h"
+#include "OglWrapper/VertexBuffer.h"
+#include "OglWrapper/ShaderProgram.h"
+#include "OglWrapper/Texture.h"
 
 class RenderPass
 {
