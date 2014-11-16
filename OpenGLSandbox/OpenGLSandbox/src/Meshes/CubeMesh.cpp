@@ -1,17 +1,17 @@
 #include "Meshes/CubeMesh.h"
 #include "Utils/VertexLoader.h"
 
-PrismMesh::PrismMesh()
+CubeMesh::CubeMesh()
     : m_vertexBuffer(GL_STATIC_DRAW)
 {
     init();
 }
 
-PrismMesh::~PrismMesh()
+CubeMesh::~CubeMesh()
 {
 }
 
-void PrismMesh::init()
+void CubeMesh::init()
 {
     m_vertexArray.bind();
 
@@ -24,12 +24,13 @@ void PrismMesh::init()
     m_indexBuffer.loadFromFile("res/RobotArmFaces.txt");
     m_vertexArray.attachIndexBuffer(&m_indexBuffer);
 
-    m_vertexArray.attachAttribute(VertexAttribute("vPosition", 3, 0, 0));
+    m_vertexArray.attachAttribute(VertexAttribute("position", 3, 0, 0));
+    m_vertexArray.attachAttribute(VertexAttribute("normal", 3, 0, 3 * sizeof(GLfloat) * m_vertexBuffer.getVertexCount()));
 
     VertexArray::release();
 }
 
-VertexArray* PrismMesh::getVertexArray()
+VertexArray* CubeMesh::getVertexArray()
 {
     return &m_vertexArray;
 }

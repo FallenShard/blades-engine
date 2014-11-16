@@ -2,14 +2,14 @@
 
 #include "Models/SceneNode.h"
 
-class PrismMesh;
+class CubeMesh;
 class VertexBuffer;
 class IndexBuffer;
 
 class RoboticArm : public SceneNode
 {
 public:
-    RoboticArm(PrismMesh* mesh, ShaderProgram* program);
+    RoboticArm(CubeMesh* mesh, ShaderProgram* program);
 
     ~RoboticArm();
 
@@ -26,16 +26,13 @@ private:
 
     void buildHierarchy();
 
-    PrismMesh* m_mesh;
+    CubeMesh* m_mesh;
 
     SceneNode* m_upperArmHolder;
     SceneNode* m_lowerArmHolder;
     SceneNode* m_wristHolder;
     SceneNode* m_leftFingerHolder;
     SceneNode* m_rightFingerHolder;
-
-    VertexBuffer* m_vertexBuffer;
-    IndexBuffer*  m_indexBuffer;
 
     glm::vec3 m_posBase;
     float     m_angBase;

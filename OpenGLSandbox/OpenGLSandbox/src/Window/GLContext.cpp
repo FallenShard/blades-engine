@@ -1,4 +1,5 @@
 #include "Window/GLContext.h"
+#include <iostream>
 
 GLContext::GLContext(HDC deviceContextHandle)
     :   m_deviceContextHandle(deviceContextHandle)
@@ -73,4 +74,11 @@ void GLContext::initialize()
     wglMakeCurrent(m_deviceContextHandle, m_resourceContextHandle);
 
     version = glGetString(GL_SHADING_LANGUAGE_VERSION);
+
+#ifdef _DEBUG
+    std::cout << "Vendor:\t\t" << glGetString(GL_VENDOR) << std::endl;
+    std::cout << "Renderer:\t" << glGetString(GL_RENDERER) << std::endl;
+    std::cout << "OpenGL:\t\t" << glGetString(GL_VERSION) << std::endl;
+    std::cout << "GLSL:\t\t" << glGetString(GL_SHADING_LANGUAGE_VERSION) << std::endl;
+#endif
 }

@@ -130,6 +130,14 @@ GLint ShaderProgram::getUniformAttribute(std::string name)
     return location;
 }
 
+GLint ShaderProgram::getUniformBuffer(std::string name)
+{
+    //Query the location from OpenGL
+    GLint location = glGetUniformBlockIndex(m_id, name.c_str());
+
+    return location;
+}
+
 void ShaderProgram::setUniformAttribute(std::string name, GLfloat value)
 {
     glUniform1f(m_uniformAttributes[name], value);
@@ -153,6 +161,16 @@ void ShaderProgram::setUniformAttribute(std::string name, GLsizei count, GLboole
 void ShaderProgram::setUniformAttribute(std::string name, const glm::mat4& mat)
 {
     glUniformMatrix4fv(m_uniformAttributes[name], 1, GL_FALSE, glm::value_ptr(mat));
+}
+
+void ShaderProgram::setUniformAttribute(std::string name, const glm::mat3& mat)
+{
+    glUniformMatrix3fv(m_uniformAttributes[name], 1, GL_FALSE, glm::value_ptr(mat));
+}
+
+void ShaderProgram::setUniformAttribute(std::string name, const glm::vec3& vec)
+{
+    glUniform3fv(m_uniformAttributes[name], 1, glm::value_ptr(vec));
 }
 
 void ShaderProgram::setUniformAttribute(std::string name, const glm::vec4& vec)

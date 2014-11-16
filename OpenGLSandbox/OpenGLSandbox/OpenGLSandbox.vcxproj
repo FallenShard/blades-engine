@@ -15,15 +15,18 @@
     <ClCompile Include="src\Core\Timer.cpp" />
     <ClCompile Include="src\gl3w.c" />
     <ClCompile Include="src\main.cpp" />
+    <ClCompile Include="src\Materials\Material.cpp" />
+    <ClCompile Include="src\Materials\PhongMaterial.cpp" />
     <ClCompile Include="src\Meshes\PlaneMesh.cpp" />
     <ClCompile Include="src\Meshes\CubeMesh.cpp" />
     <ClCompile Include="src\Models\Sphere.cpp" />
     <ClCompile Include="src\Meshes\SphereMesh.cpp" />
     <ClCompile Include="src\Models\TransformNode.cpp" />
     <ClCompile Include="src\Models\PlaneGrid.cpp" />
-    <ClCompile Include="src\Models\Prism.cpp" />
+    <ClCompile Include="src\Models\Cube.cpp" />
     <ClCompile Include="src\Models\RoboticArm.cpp" />
     <ClCompile Include="src\Models\SceneNode.cpp" />
+    <ClCompile Include="src\OglWrapper\UniformBuffer.cpp" />
     <ClCompile Include="src\Renderer\AbstractCamera.cpp" />
     <ClCompile Include="src\Renderer\CameraController.cpp" />
     <ClCompile Include="src\OglWrapper\FrameBuffer.cpp" />
@@ -53,6 +56,7 @@
     <ClInclude Include="include\GL\gl3w.h" />
     <ClInclude Include="include\GL\glcorearb.h" />
     <ClInclude Include="include\GL\wglext.h" />
+    <ClInclude Include="include\Materials\Material.h" />
     <ClInclude Include="include\Meshes\PlaneMesh.h" />
     <ClInclude Include="include\Meshes\CubeMesh.h" />
     <ClInclude Include="include\Meshes\SphereMesh.h" />
@@ -60,10 +64,12 @@
     <ClInclude Include="include\Models\TransformNode.h" />
     <ClInclude Include="include\Models\IRenderable.h" />
     <ClInclude Include="include\Models\PlaneGrid.h" />
-    <ClInclude Include="include\Models\Prism.h" />
+    <ClInclude Include="include\Models\Cube.h" />
     <ClInclude Include="include\Models\RoboticArm.h" />
     <ClInclude Include="include\Models\SceneNode.h" />
+    <ClInclude Include="include\OglWrapper\UniformBuffer.h" />
     <ClInclude Include="include\OpenGL.h" />
+    <ClInclude Include="include\Materials\PhongMaterial.h" />
     <ClInclude Include="include\Renderer\AbstractCamera.h" />
     <ClInclude Include="include\Renderer\CameraController.h" />
     <ClInclude Include="include\OglWrapper\FrameBuffer.h" />
@@ -94,25 +100,15 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="include\Utils\Vector2D.inl" />
-    <None Include="res\circularMotion.vert" />
-    <None Include="res\default.frag" />
-    <None Include="res\default.vert" />
-    <None Include="res\circularMotion.frag" />
-    <None Include="res\defProj.vert" />
-    <None Include="res\manualOverlap.vert" />
-    <None Include="res\manualPerspective.vert" />
-    <None Include="res\motionVert.vert" />
+    <None Include="res\PhongShading.vert" />
     <None Include="res\passThrough.vert" />
     <None Include="res\fxaa.frag" />
+    <None Include="res\PhongShading.frag" />
   </ItemGroup>
   <ItemGroup>
-    <Text Include="res\PrismData.txt" />
-    <Text Include="res\OverlapData.txt" />
     <Text Include="res\RobotArmFaces.txt" />
     <Text Include="res\CubeMesh.txt" />
     <Text Include="res\ShaderList.txt" />
-    <Text Include="res\TranslationData.txt" />
-    <Text Include="res\TrianglePosData.txt" />
   </ItemGroup>
   <PropertyGroup Label="Globals">
     <ProjectGuid>{C78F7A58-C68B-4FDB-B61B-215B531D06AC}</ProjectGuid>

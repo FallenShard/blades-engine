@@ -1,10 +1,4 @@
-circularMotion.vert
-default.vert
-defProj.vert
-manualOverlap.vert
-manualPerspective.vert
-motionVert.vert
 passThrough.vert
-circularMotion.frag
-default.frag
 fxaa.frag
+PhongShading.vert
+PhongShading.frag

@@ -1,5 +1,5 @@
 #include "Models/RoboticArm.h"
-#include "Models/Prism.h"
+#include "Models/Cube.h"
 #include "Models/TransformNode.h"
 #include "OglWrapper/VertexBuffer.h"
 #include "Utils/VertexLoader.h"
@@ -23,7 +23,7 @@ namespace
     }
 }
 
-RoboticArm::RoboticArm(PrismMesh* mesh, ShaderProgram* program)
+RoboticArm::RoboticArm(CubeMesh* mesh, ShaderProgram* program)
     : SceneNode(nullptr, program)
     , m_mesh(mesh)
     , m_posBase(glm::vec3(-10.0f, 1.0f, -10.0f))
@@ -54,8 +54,6 @@ RoboticArm::RoboticArm(PrismMesh* mesh, ShaderProgram* program)
 
 RoboticArm::~RoboticArm()
 {
-    delete m_vertexBuffer;
-    delete m_vertexArray;
 }
 
 void RoboticArm::update(float timeDelta)
@@ -142,12 +140,12 @@ void RoboticArm::buildHierarchy()
     rotateY(m_angBase);
     
     // Base
-    SceneNode* baseLeft = new Prism(m_mesh, m_shaderProgram);
+    SceneNode* baseLeft = new Cube(m_mesh, m_shaderProgram);
     baseLeft->setScale(glm::vec3(1.f, 1.f, m_scaleBaseZ));
     baseLeft->setPosition(m_posBaseLeft);
     attachChild(baseLeft);
 
-    SceneNode* baseRight = new Prism(m_mesh, m_shaderProgram);
+    SceneNode* baseRight = new Cube(m_mesh, m_shaderProgram);
     baseRight->setScale(glm::vec3(1.f, 1.f, m_scaleBaseZ));
     baseRight->setPosition(m_posBaseRight);
     attachChild(baseRight);
@@ -157,7 +155,7 @@ void RoboticArm::buildHierarchy()
     m_upperArmHolder->setRotationX(m_angUpperArm);
     attachChild(m_upperArmHolder);
     
-    SceneNode* upperArm = new Prism(m_mesh, m_shaderProgram);
+    SceneNode* upperArm = new Cube(m_mesh, m_shaderProgram);
     upperArm->setScale(glm::vec3(1.0f, 1.0f, m_sizeUpperArm / 2.0f));
     upperArm->setPosition(glm::vec3(0.0f, 0.0f, (m_sizeUpperArm / 2.0f) - 1.0f));
     m_upperArmHolder->attachChild(upperArm);
@@ -168,7 +166,7 @@ void RoboticArm::buildHierarchy()
     m_lowerArmHolder->setPosition(m_posLowerArm);
     m_upperArmHolder->attachChild(m_lowerArmHolder);
 
-    SceneNode* lowerArm = new Prism(m_mesh, m_shaderProgram);
+    SceneNode* lowerArm = new Cube(m_mesh, m_shaderProgram);
     lowerArm->setScale(glm::vec3(m_widthLowerArm / 2.0f, m_widthLowerArm / 2.0f, m_lenLowerArm / 2.0f));
     lowerArm->setPosition(glm::vec3(0.0f, 0.0f, m_lenLowerArm / 2.0f));
     m_lowerArmHolder->attachChild(lowerArm);
@@ -180,7 +178,7 @@ void RoboticArm::buildHierarchy()
     m_wristHolder->setPosition(m_posWrist);
     m_lowerArmHolder->attachChild(m_wristHolder);
 
-    SceneNode* wrist = new Prism(m_mesh, m_shaderProgram);
+    SceneNode* wrist = new Cube(m_mesh, m_shaderProgram);
     wrist->setScale(glm::vec3(m_widthWrist / 2.0f, m_widthWrist / 2.0f, m_lenWrist / 2.0f));
     m_wristHolder->attachChild(wrist);
 
@@ -190,7 +188,7 @@ void RoboticArm::buildHierarchy()
     m_leftFingerHolder->setPosition(m_posLeftFinger);
     m_wristHolder->attachChild(m_leftFingerHolder);
 
-    SceneNode* leftFingerUpper = new Prism(m_mesh, m_shaderProgram);
+    SceneNode* leftFingerUpper = new Cube(m_mesh, m_shaderProgram);
     leftFingerUpper->setScale(glm::vec3(m_widthFinger / 2.0f, m_widthFinger / 2.0f, m_lenFinger / 2.0f));
     leftFingerUpper->setPosition(glm::vec3(0.0f, 0.0f, m_lenFinger / 2.0f));
     m_leftFingerHolder->attachChild(leftFingerUpper);
@@ -200,7 +198,7 @@ void RoboticArm::buildHierarchy()
     posLeftFingerLower->setPosition(glm::vec3(0.0f, 0.0f, m_lenFinger));
     m_leftFingerHolder->attachChild(posLeftFingerLower);
 
-    SceneNode* leftFingerLower = new Prism(m_mesh, m_shaderProgram);
+    SceneNode* leftFingerLower = new Cube(m_mesh, m_shaderProgram);
     leftFingerLower->setScale(glm::vec3(m_widthFinger / 2.0f, m_widthFinger / 2.0f, m_lenFinger / 2.0f));
     leftFingerLower->setPosition(glm::vec3(0.0f, 0.0f, m_lenFinger / 2.0f));
     posLeftFingerLower->attachChild(leftFingerLower);
@@ -211,7 +209,7 @@ void RoboticArm::buildHierarchy()
     m_rightFingerHolder->setPosition(m_posRightFinger);
     m_wristHolder->attachChild(m_rightFingerHolder);
 
-    SceneNode* rightFingerUpper = new Prism(m_mesh, m_shaderProgram);
+    SceneNode* rightFingerUpper = new Cube(m_mesh, m_shaderProgram);
     rightFingerUpper->setScale(glm::vec3(m_widthFinger / 2.0f, m_widthFinger / 2.0f, m_lenFinger / 2.0f));
     rightFingerUpper->setPosition(glm::vec3(0.0f, 0.0f, m_lenFinger / 2.0f));
     m_rightFingerHolder->attachChild(rightFingerUpper);
@@ -221,7 +219,7 @@ void RoboticArm::buildHierarchy()
     posRightFingerLower->setPosition(glm::vec3(0.0f, 0.0f, m_lenFinger));
     m_rightFingerHolder->attachChild(posRightFingerLower);
 
-    SceneNode* rightFingerLower = new Prism(m_mesh, m_shaderProgram);
+    SceneNode* rightFingerLower = new Cube(m_mesh, m_shaderProgram);
     rightFingerLower->setScale(glm::vec3(m_widthFinger / 2.0f, m_widthFinger / 2.0f, m_lenFinger / 2.0f));
     rightFingerLower->setPosition(glm::vec3(0.0f, 0.0f, m_lenFinger / 2.0f));
     posRightFingerLower->attachChild(rightFingerLower);

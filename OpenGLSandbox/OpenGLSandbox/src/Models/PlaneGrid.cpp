@@ -10,8 +10,7 @@ PlaneGrid::PlaneGrid(float size, float lineStep, int planes)
 {
     buildVertices();
 
-    m_vertexArray->attachAttribute(VertexAttribute("vPosition", 3, 7 * sizeof(GLfloat), 0));
-    m_vertexArray->attachAttribute(VertexAttribute("vColor", 4, 7 * sizeof(GLfloat), 3 * sizeof(GLfloat)));
+    m_vertexArray->attachAttribute(VertexAttribute("position", 3, 3 * sizeof(GLfloat), 0));
 }
 
 PlaneGrid::~PlaneGrid()
@@ -22,7 +21,11 @@ PlaneGrid::~PlaneGrid()
 void PlaneGrid::setProgram(ShaderProgram* program)
 {
     m_shaderProgram = program;
+    m_shaderProgram->use();
+
     m_vertexArray->enableAttributes(m_shaderProgram->getProgramId());
+
+    ShaderProgram::release();
 }
 
 void PlaneGrid::displayPlanes(int planes)
@@ -54,19 +57,15 @@ void PlaneGrid::buildVertices()
         for (float z = -halfSize; z <= halfSize; z += m_lineStep)
         {
             m_vertexBuffer.push(-1.f * halfSize, 0.f, 1.f * z);
-            m_vertexBuffer.push(0.6f, 0.f, 0.f, 1.f);
 
             m_vertexBuffer.push( 1.f * halfSize, 0.f, 1.f * z);
-            m_vertexBuffer.push(0.6f, 0.f, 0.f, 1.f);
         }
 
         for (float x = -halfSize; x <= halfSize; x += m_lineStep)
         {
             m_vertexBuffer.push(1.f * x, 0.f, -1.f * halfSize);
-            m_vertexBuffer.push(0.6f, 0.f, 0.f, 1.f);
 
             m_vertexBuffer.push(1.f * x, 0.f,  1.f * halfSize);
-            m_vertexBuffer.push(0.6f, 0.f, 0.f, 1.f);
         }
     }
 
@@ -75,19 +74,15 @@ void PlaneGrid::buildVertices()
         for (float x = -halfSize; x <= halfSize; x += m_lineStep)
         {
             m_vertexBuffer.push(1.f * x, -1.f * halfSize, 0.f);
-            m_vertexBuffer.push(0.f, 0.6f, 0.f, 1.f);
 
             m_vertexBuffer.push(1.f * x,  1.f * halfSize, 0.f);
-            m_vertexBuffer.push(0.f, 0.6f, 0.f, 1.f);
         }
 
         for (float y = -halfSize; y <= halfSize; y += m_lineStep)
         {
             m_vertexBuffer.push(-1.f * halfSize, 1.f * y, 0.f);
-            m_vertexBuffer.push(0.f, 0.6f, 0.f, 1.f);
 
             m_vertexBuffer.push( 1.f * halfSize, 1.f * y, 0.f);
-            m_vertexBuffer.push(0.f, 0.6f, 0.f, 1.f);
         }
     }
 
@@ -96,26 +91,22 @@ void PlaneGrid::buildVertices()
         for (float z = -halfSize; z <= halfSize; z += m_lineStep)
         {
             m_vertexBuffer.push(0.f, -1 * halfSize, 1.f * z);
-            m_vertexBuffer.push(0.f, 0.f, 0.6f, 1.f);
 
             m_vertexBuffer.push(0.f,  1 * halfSize, 1.f * z);
-            m_vertexBuffer.push(0.f, 0.f, 0.6f, 1.f);
         }
 
         for (float y = -halfSize; y <= halfSize; y += m_lineStep)
         {
             m_vertexBuffer.push(0.f, 1.f * y, -1.f * halfSize);
-            m_vertexBuffer.push(0.f, 0.f, 0.6f, 1.f);
 
             m_vertexBuffer.push(0.f, 1.f * y,  1.f * halfSize);
-            m_vertexBuffer.push(0.f, 0.f, 0.6f, 1.f);
         }
     }
 
     m_vertexArray->bind();
 
     m_vertexBuffer.bind();
-    m_vertexBuffer.setDataCountPerVertex(7);
+    m_vertexBuffer.setDataCountPerVertex(3);
     m_vertexBuffer.uploadData();
 
     m_vertexArray->setVertexCount(m_vertexBuffer.getVertexCount());

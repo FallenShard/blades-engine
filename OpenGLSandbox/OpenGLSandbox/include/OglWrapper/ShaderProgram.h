@@ -3,6 +3,7 @@
 #include <memory>
 #include <map>
 #include "OglWrapper/Shader.h"
+#include "OglWrapper/UniformBuffer.h"
 
 class ShaderProgram
 {
@@ -22,12 +23,15 @@ public:
     bool checkLinkStatus();
 
     GLint getUniformAttribute(std::string name);
+    GLint getUniformBuffer(std::string name);
 
     void setUniformAttribute(std::string name, GLfloat value);
     void setUniformAttribute(std::string name, GLfloat x, GLfloat y);
     void setUniformAttribute(std::string name, GLfloat x, GLfloat y, GLfloat z);
     void setUniformAttribute(std::string name, GLsizei count, GLboolean transpose, const GLfloat* values);
+    void setUniformAttribute(std::string name, const glm::mat3& mat);
     void setUniformAttribute(std::string name, const glm::mat4& mat);
+    void setUniformAttribute(std::string name, const glm::vec3& vec);
     void setUniformAttribute(std::string name, const glm::vec4& vec);
     void setUniformSampler(std::string name, GLint textureUnit);
     void setUniformSampler(GLint location, GLint textureUnit);
@@ -41,4 +45,5 @@ private:
 
     std::map<std::string, ShaderPtr> m_shaders;
     std::map<std::string, GLint> m_uniformAttributes;
+    //std::map<std::string, UniformBuffer*> m_uniformBuffers;
 };

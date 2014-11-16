@@ -4,15 +4,15 @@
 #include "OglWrapper/VertexBuffer.h"
 #include "OglWrapper/IndexBuffer.h"
 
-class PrismMesh
+class CubeMesh
 {
 public:
-    PrismMesh();
+    CubeMesh();
 
     void bindToArray(VertexArray* vArray);
     VertexArray* getVertexArray();
 
-    ~PrismMesh();
+    ~CubeMesh();
 
 private:
     void init();

@@ -28,10 +28,10 @@ void SphereMesh::computeVertices()
     float ringIncr = 180.f / (m_rings + 1);
 
     // Fill the buffer with vertices and faces
-    m_vertexBuffer.setDataCountPerVertex(3);
+    m_vertexBuffer.setDataCountPerVertex(6);
 
     m_vertexBuffer.push(0.f, m_radius, 0.f);
-    //m_vertexBuffer.push(0.f, 1.f, 0.f, 1.f);
+    m_vertexBuffer.push(0.f, m_radius, 0.f);
 
     // Faces for initial sphere fan cap
     short int v = 1;
@@ -53,7 +53,7 @@ void SphereMesh::computeVertices()
         {
             float rads = glm::radians(slice * sliceIncr);
             m_vertexBuffer.push(m_radius * ySin * cos(rads), m_radius * yCos, m_radius * ySin * sin(rads));
-            //m_vertexBuffer.push(0.f, 1.f, 0.f, 1.f);
+            m_vertexBuffer.push(m_radius * ySin * cos(rads), m_radius * yCos, m_radius * ySin * sin(rads));
         }
 
         if (ring == m_rings)
@@ -75,7 +75,7 @@ void SphereMesh::computeVertices()
     }
 
     m_vertexBuffer.push(0.f, -m_radius, 0.f);
-    //m_vertexBuffer.push(0.f, 1.f, 0.f, 1.f);
+    m_vertexBuffer.push(0.f, -m_radius, 0.f);
 
     int vertexcount = m_vertexBuffer.getVertexCount();
 
@@ -99,7 +99,8 @@ void SphereMesh::computeVertices()
     m_indexBuffer.uploadData();
     m_vertexArray.attachIndexBuffer(&m_indexBuffer);
 
-    m_vertexArray.attachAttribute(VertexAttribute("vPosition", 3, 7 * sizeof(GLfloat), 0));
+    m_vertexArray.attachAttribute(VertexAttribute("position", 3, 6 * sizeof(GLfloat), 0));
+    m_vertexArray.attachAttribute(VertexAttribute("normal", 3, 6 * sizeof(GLfloat), 3 * sizeof(GLfloat)));
     
     VertexArray::release();
 }

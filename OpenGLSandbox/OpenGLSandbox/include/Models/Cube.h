@@ -3,19 +3,19 @@
 #include "Models/SceneNode.h"
 #include "Meshes/CubeMesh.h"
 
-class Prism : public SceneNode
+class Cube : public SceneNode
 {
 public:
-    Prism();
-    Prism(VertexArray* vertexArray, ShaderProgram* program);
-    Prism(PrismMesh* mesh, ShaderProgram* program);
+    Cube();
+    Cube(VertexArray* vertexArray, ShaderProgram* program);
+    Cube(CubeMesh* mesh, ShaderProgram* program);
     
-    ~Prism();
+    ~Cube();
 
     virtual void render(const glm::mat4& projection, const glm::mat4& view);
 
 private:
     void init();
 
-    PrismMesh* m_mesh;
+    CubeMesh* m_mesh;
 };

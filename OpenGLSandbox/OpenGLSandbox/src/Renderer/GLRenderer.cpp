@@ -46,7 +46,6 @@ void GLRenderer::init()
     m_scene = new Scene(m_window, m_shaderManager);
     m_scene->prepare();
 
-    
     glEnable(GL_CULL_FACE);
     glCullFace(GL_BACK);
     glFrontFace(GL_CW);
@@ -55,7 +54,7 @@ void GLRenderer::init()
     glDepthMask(GL_TRUE);
     glDepthFunc(GL_LEQUAL);
     glDepthRange(0.0f, 1.0f);
-
+    
     glClearColor(0.1f, 0.1f, 0.1f, 1.f);
     glClearDepth(1.0f);
 

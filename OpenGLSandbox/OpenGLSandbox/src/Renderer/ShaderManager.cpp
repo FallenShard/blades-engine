@@ -6,8 +6,7 @@ ShaderManager::ShaderManager()
 {
     loadShaderConfig("res/ShaderList.txt");
 
-    getProgram("default", "default.vert", "default.frag");
-    getProgram("perspective", "motionVert.vert", "default.frag");
+    getProgram("perspective", "PhongShading.vert", "PhongShading.frag");
     getProgram("FXAAPass", "passThrough.vert", "fxaa.frag");
 }
 
