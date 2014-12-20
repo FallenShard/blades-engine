@@ -6,7 +6,6 @@
 #include <queue>
 
 #include "vec2.hpp"
-#include "Utils/Vector2D.h"
 #include "VideoMode.h"
 #include "GLContext.h"
 

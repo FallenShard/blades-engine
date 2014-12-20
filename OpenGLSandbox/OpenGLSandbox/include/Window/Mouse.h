@@ -1,6 +1,6 @@
 #pragma once
 
-#include "Utils/Vector2D.h"
+#include "vec2.hpp"
 
 class Window;
 
@@ -20,9 +20,9 @@ public:
 
     static bool isButtonPressed(Button button);
 
-    static Vector2Di getPosition();
-    static Vector2Di getPosition(const Window& relativeTo);
+    static glm::ivec2 getPosition();
+    static glm::ivec2 getPosition(const Window& relativeTo);
 
-    static void setPosition(const Vector2Di& position);
-    static void setPosition(const Vector2Di& position, const Window& relativeTo);
+    static void setPosition(const glm::ivec2& position);
+    static void setPosition(const glm::ivec2& position, const Window& relativeTo);
 };

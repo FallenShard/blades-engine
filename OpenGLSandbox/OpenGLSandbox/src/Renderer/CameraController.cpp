@@ -93,12 +93,12 @@ void CameraController::update(float timeDelta)
         glm::ivec2 windowSize = m_window->getSize();
         glm::ivec2 windowCenter = windowPos + windowSize / 2;
 
-        Vector2Di mousePos = Mouse::getPosition(*m_window);
-        glm::ivec2 mPos(mousePos.getX(), mousePos.getY());
+        glm::ivec2 mousePos = Mouse::getPosition(*m_window);
+        glm::ivec2 mPos(mousePos.x, mousePos.y);
 
         if (!(windowCenter == mPos))
         {
-            Mouse::setPosition(Vector2Di(windowCenter.x, windowCenter.y));
+            Mouse::setPosition(glm::ivec2(windowCenter.x, windowCenter.y));
             m_activeCamera->rotate(m_yaw, m_pitch, 0.f);
         }
     }

@@ -41,7 +41,6 @@
     <ClCompile Include="src\OglWrapper\VertexArray.cpp" />
     <ClCompile Include="src\OglWrapper\VertexBuffer.cpp" />
     <ClCompile Include="src\Renderer\Scene.cpp" />
-    <ClCompile Include="src\Transformations\MatrixStack.cpp" />
     <ClCompile Include="src\Utils\Logger.cpp" />
     <ClCompile Include="src\Utils\VertexLoader.cpp" />
     <ClCompile Include="src\Window\GLContext.cpp" />
@@ -87,10 +86,7 @@
     <ClInclude Include="include\OglWrapper\VertexAttribute.h" />
     <ClInclude Include="include\OglWrapper\VertexBuffer.h" />
     <ClInclude Include="include\Renderer\Scene.h" />
-    <ClInclude Include="include\Transformations\MatrixStack.h" />
-    <ClInclude Include="include\Utils\GraphicsUtils.h" />
     <ClInclude Include="include\Utils\Logger.h" />
-    <ClInclude Include="include\Utils\Vector2D.h" />
     <ClInclude Include="include\Utils\VertexLoader.h" />
     <ClInclude Include="include\Window\Event.h" />
     <ClInclude Include="include\Window\GLContext.h" />
@@ -100,7 +96,6 @@
     <ClInclude Include="include\Window\Window.h" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="include\Utils\Vector2D.inl" />
     <None Include="res\PhongShading.vert" />
     <None Include="res\passThrough.vert" />
     <None Include="res\fxaa.frag" />

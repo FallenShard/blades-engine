@@ -9,14 +9,14 @@ bool Mouse::isButtonPressed(Button button)
     return false;
 }
 
-Vector2Di Mouse::getPosition()
+glm::ivec2 Mouse::getPosition()
 {
     POINT point;
     GetCursorPos(&point);
-    return Vector2Di(point.x, point.y);
+    return glm::ivec2(point.x, point.y);
 }
 
-Vector2Di Mouse::getPosition(const Window& window)
+glm::ivec2 Mouse::getPosition(const Window& window)
 {
     HWND handle = window.getWindowHandle();
     if (handle != nullptr)
@@ -24,25 +24,25 @@ Vector2Di Mouse::getPosition(const Window& window)
         POINT point;
         GetCursorPos(&point);
         ScreenToClient(handle, &point);
-        return Vector2Di(point.x, point.y);
+        return glm::ivec2(point.x, point.y);
     }
     else
     {
-        return Vector2Di();
+        return glm::ivec2();
     }
 }
 
-void Mouse::setPosition(const Vector2Di& position)
+void Mouse::setPosition(const glm::ivec2& position)
 {
-    SetCursorPos(position.getX(), position.getY());
+    SetCursorPos(position.x, position.y);
 }
 
-void Mouse::setPosition(const Vector2Di& position, const Window& window)
+void Mouse::setPosition(const glm::ivec2& position, const Window& window)
 {
     HWND handle = window.getWindowHandle();
     if (handle)
     {
-        POINT point = { position.getX(), position.getY()};
+        POINT point = { position.x, position.y};
         ClientToScreen(handle, &point);
         SetCursorPos(point.x, point.y);
     }
