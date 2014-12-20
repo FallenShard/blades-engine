@@ -39,7 +39,7 @@ void main()
     float specular = max(0, pow(dot(N, H), material.shininess));
 
     vec4 ambCol = material.ambient * 0.15f;
-    vec4 diffCol = material.diffuse * diffuse * attenuation;
+    vec4 diffCol = material.diffuse * diffuse * attenuation * 0.25;
     vec4 specCol = material.specular * specular * attenuation;
 
     color = ambCol + diffCol + specCol;

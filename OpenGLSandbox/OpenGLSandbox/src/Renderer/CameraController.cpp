@@ -144,17 +144,12 @@ void CameraController::resize(int width, int height)
 {
     m_activeCamera->setupProjection(45, static_cast<GLfloat>(width) / height);
 
-    m_program->use();
-    m_program->setUniformAttribute("cameraToClipMatrix", 1, GL_FALSE, glm::value_ptr(m_activeCamera->getProjectionMatrix()));
-    ShaderProgram::release();
-
     glViewport(0, 0, static_cast<GLsizei>(width), static_cast<GLsizei>(height));
 }
 
 glm::mat4 CameraController::getViewMatrix() const
 {
     return m_activeCamera->getViewMatrix();
-
 }
 
 glm::mat4 CameraController::getProjectionMatrix() const

@@ -62,7 +62,6 @@
     <ClCompile Include="src\gl3w.c" />
     <ClCompile Include="src\Models\PlaneGrid.cpp" />
     <ClCompile Include="src\Renderer\CameraController.cpp" />
-    <ClCompile Include="src\Models\Prism.cpp" />
     <ClCompile Include="src\Models\RoboticArm.cpp" />
     <ClCompile Include="src\main.cpp" />
     <ClCompile Include="src\Models\TransformNode.cpp" />
@@ -97,7 +96,6 @@
     <ClInclude Include="include\Models\RoboticArm.h" />
     <ClInclude Include="include\Models\IRenderable.h" />
     <ClInclude Include="include\Models\PlaneGrid.h" />
-    <ClInclude Include="include\Models\Prism.h" />
     <ClInclude Include="include\Models\RoboticArm.h" />
     <ClInclude Include="include\Models\SceneNode.h" />
     <ClInclude Include="include\Renderer\AbstractCamera.h" />
@@ -137,6 +135,7 @@
     <ClInclude Include="include\Materials\Material.h" />
     <ClInclude Include="include\Materials\PhongMaterial.h" />
     <ClInclude Include="include\Models\Cube.h" />
+    <ClInclude Include="include\OglWrapper\VertexStreams.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include="include\Utils\Vector2D.inl" />

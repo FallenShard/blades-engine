@@ -13,6 +13,8 @@
 #include "Renderer/ShaderManager.h"
 #include "Window/Window.h"
 
+#include <vector>
+
 class Scene
 {
 public:
@@ -36,6 +38,8 @@ private:
     ShaderManager* m_shaderManager;
     //MeshManager* m_meshManager;
     SceneNode* m_sceneGraph;
+
+    std::vector<SceneNode*> m_validationVector;
 
     PlaneGrid*  m_planeGrid;
     RoboticArm* m_roboticArm;

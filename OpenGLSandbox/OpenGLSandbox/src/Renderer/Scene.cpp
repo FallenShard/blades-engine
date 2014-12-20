@@ -60,12 +60,6 @@ void Scene::prepare()
 {
     prog = m_shaderManager->getProgram("perspective");
 
-    prog->getUniformAttribute("MVP");
-    prog->getUniformAttribute("MV");
-    prog->getUniformAttribute("normalMatrix");
-    prog->getUniformAttribute("mvLightPos");
-    prog->getUniformAttribute("mvCameraPos");
-
     m_cameraController.setShaderProgram(prog);
     m_cameraController.setPosition(glm::vec3(0.f, 32.f, 36.f));
 
@@ -74,7 +68,7 @@ void Scene::prepare()
 
     g_prMesh = new CubeMesh();
 
-    m_roboticArm = new RoboticArm(g_prMesh, prog);
+    m_roboticArm = new RoboticArm(g_prMesh, prog, &m_validationVector);
 
     m_sceneGraph->attachChild(m_roboticArm);
     
@@ -86,6 +80,11 @@ void Scene::prepare()
 
     m_sphere = new Sphere(g_sphMesh, prog);
     m_sphere->translate(glm::vec3(10.f, 0.f, -10.f));
+
+    Sphere* smallSphere = new Sphere(g_sphMesh, prog);
+    smallSphere->setScale(glm::vec3(0.5f, 0.5f, 0.5f));
+    smallSphere->translate(glm::vec3(0.f, 5.f, 0.f));
+    m_sphere->attachChild(smallSphere);
 
     g_spheres = new Sphere*[10];
     for (int i = 0; i < 10; i++)
@@ -100,9 +99,11 @@ void Scene::prepare()
 
     g_mat = new PhongMaterial(prog);
     g_mat->setShininess(shininess);
-    g_mat->setAmbientColor(glm::vec4(1.f, 0.f, 0.f, 1.f));
-    g_mat->setDiffuseColor(glm::vec4(1.f, 0.f, 0.f, 1.f));
+    g_mat->setAmbientColor(glm::vec4(0.f, 0.f, 1.f, 1.f));
+    g_mat->setDiffuseColor(glm::vec4(0.f, 0.f, 1.f, 1.f));
     g_mat->setSpecularColor(glm::vec4(1.f, 1.f, 1.f, 1.f));
+
+    m_validationVector.push_back(m_sceneGraph);
 }
 
 void Scene::handleEvents(const Event& event)
@@ -121,10 +122,12 @@ void Scene::update(float timeDelta)
     m_cameraController.update(timeDelta);
 
     m_roboticArm->update(timeDelta);
+    //m_validationVector.push_back(m_roboticArm);
 
     if (Keyboard::isKeyPressed(Keyboard::I))
     {
         m_sphere->translate(glm::vec3(-5.f * timeDelta, 0.f, 0.f));
+        m_validationVector.push_back(m_sphere);
     }
 
     if (Keyboard::isKeyPressed(Keyboard::Add))
@@ -140,37 +143,52 @@ void Scene::update(float timeDelta)
     if (Keyboard::isKeyPressed(Keyboard::O))
     {
         m_sphere->translate(glm::vec3(5.f * timeDelta, 0.f, 0.f));
+        m_validationVector.push_back(m_sphere);
     }
 
     if (Keyboard::isKeyPressed(Keyboard::NumPad8))
     {
         m_Cube->translate(glm::vec3(0.f, 0.f, -0.16f));
+        m_validationVector.push_back(m_Cube);
     }
 
     if (Keyboard::isKeyPressed(Keyboard::NumPad5))
     {
         m_Cube->translate(glm::vec3(0.f, 0.f, 0.16f));
+        m_validationVector.push_back(m_Cube);
     }
 
     if (Keyboard::isKeyPressed(Keyboard::NumPad4))
     {
         m_Cube->translate(glm::vec3(-0.16f, 0.f, 0.f));
+        m_validationVector.push_back(m_Cube);
     }
 
     if (Keyboard::isKeyPressed(Keyboard::NumPad6))
     {
         m_Cube->translate(glm::vec3(0.16f, 0.f, 0.f));
+        m_validationVector.push_back(m_Cube);
     }
 
     if (Keyboard::isKeyPressed(Keyboard::NumPad7))
     {
         m_Cube->rotateY(1.5f);
+        m_validationVector.push_back(m_Cube);
     }
 
     if (Keyboard::isKeyPressed(Keyboard::NumPad9))
     {
         m_Cube->rotateY(-1.5f);
+        m_validationVector.push_back(m_Cube);
     }
+
+    for (SceneNode* node : m_validationVector)
+    {
+        SceneNode* nodeToValidate = node->getTopLevelInvalidated();
+        nodeToValidate->validate(timeDelta);
+    }
+
+    m_validationVector.clear();
 }
 
 void Scene::render()

@@ -138,6 +138,11 @@ GLint ShaderProgram::getUniformBuffer(std::string name)
     return location;
 }
 
+void ShaderProgram::bindVertexAttribute(GLuint index, std::string name)
+{
+    glBindAttribLocation(m_id, index, name.c_str());
+}
+
 void ShaderProgram::setUniformAttribute(std::string name, GLfloat value)
 {
     glUniform1f(m_uniformAttributes[name], value);
@@ -191,4 +196,29 @@ void ShaderProgram::setUniformSampler(GLint location, GLint textureUnit)
 GLuint ShaderProgram::getProgramId() const
 {
     return m_id;
+}
+
+void ShaderProgram::queryActiveUniforms()
+{
+    GLint numActiveUniforms = 0;
+    glGetProgramiv(m_id, GL_ACTIVE_UNIFORMS, &numActiveUniforms);
+
+    std::vector<GLchar> nameData(256);
+
+    for (int unif = 0; unif < numActiveUniforms; ++unif)
+    {
+        GLint arraySize = 0;
+        GLenum type = 0;
+        GLsizei actualLength = 0;
+        glGetActiveUniform(m_id, unif, nameData.size(), &actualLength, &arraySize, &type, &nameData[0]);
+        std::string name((char*)&nameData[0], actualLength);
+
+        if (name.find(".") == std::string::npos)
+        {
+            GLint location = glGetUniformLocation(m_id, name.c_str());
+
+            // Insert the name and location into attribute hash table
+            m_uniformAttributes[name] = location;
+        }
+    }
 }

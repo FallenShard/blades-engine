@@ -59,92 +59,101 @@ void SceneNode::setUpdateStatus(bool status)
 void SceneNode::setPosition(const glm::vec3& position)
 {
     m_position = position;
-    updateRelativeTrans();
-    updateAbsoluteTrans();
+
+    m_needUpdate = true;
 }
 
 void SceneNode::translate(const glm::vec3& translation)
 {
     m_position += translation;
-    updateRelativeTrans();
-    updateAbsoluteTrans();
+
+    m_needUpdate = true;
 }
 
 void SceneNode::rotate(const float angle, const glm::vec3& axis)
 {
     m_rotation = glm::rotate(m_rotation, glm::radians(angle), axis);
-    updateRelativeTrans();
-    updateAbsoluteTrans();
+    
+    m_needUpdate = true;
 }
 
 void SceneNode::setRotationX(const float angle)
 {
     m_rotation.x = glm::radians(angle);
-    updateRelativeTrans();
-    updateAbsoluteTrans();
+    
+    m_needUpdate = true;
 }
 
 void SceneNode::rotateX(const float angle)
 {
     m_rotation.x += glm::radians(angle);
-    updateRelativeTrans();
-    updateAbsoluteTrans();
+    
+    m_needUpdate = true;
 }
 
 void SceneNode::setRotationY(const float angle)
 {
     m_rotation.y = glm::radians(angle);
-    updateRelativeTrans();
-    updateAbsoluteTrans();
+
+    m_needUpdate = true;
 }
 
 void SceneNode::rotateY(const float angle)
 {
     m_rotation.y += glm::radians(angle);
-    updateRelativeTrans();
-    updateAbsoluteTrans();
+
+    m_needUpdate = true;
 }
 
 void SceneNode::setRotationZ(const float angle)
 {
     m_rotation.z = glm::radians(angle);
-    updateRelativeTrans();
-    updateAbsoluteTrans();
+
+    m_needUpdate = true;
 }
 
 void SceneNode::rotateZ(const float angle)
 {
     m_rotation.z += glm::radians(angle);
-    updateRelativeTrans();
-    updateAbsoluteTrans();
+    
+    m_needUpdate = true;
 }
 
 void SceneNode::setScale(const glm::vec3& scale)
 {
     m_scale = scale;
-    updateRelativeTrans();
-    updateAbsoluteTrans();
+    
+    m_needUpdate = true;
 }
 
 void SceneNode::setTransformationMatrix(glm::mat4& matrix)
 {
     m_relativeTrans = matrix;
-    updateAbsoluteTrans();
+
+    m_needUpdate = true;
 }
 
 void SceneNode::scale(const glm::vec3& scale)
 {
     m_scale += scale;
-    updateRelativeTrans();
-    updateAbsoluteTrans();
+    
+    m_needUpdate = true;
 }
 
 void SceneNode::applyTransformation(const glm::mat4& transformation)
-{         
+{
     m_absoluteTrans = transformation * m_relativeTrans;
 
     for (auto& child : m_children)
         child->applyTransformation(m_absoluteTrans);
+}
+
+void SceneNode::validate(float timeDelta)
+{
+    if (m_needUpdate)
+    {
+        propagateTransforms(timeDelta);
+    }
 }
 
 const glm::mat4& SceneNode::getModelMatrix() const
@@ -173,4 +182,42 @@ void SceneNode::renderChildren(const glm::mat4& projection, const glm::mat4& vie
 {
     for (auto& child : m_children)
         child->render(projection, view);
+}
+
+SceneNode* SceneNode::getTopLevelInvalidated()
+{
+    SceneNode* resultNode = this;
+
+    SceneNode* iterator = resultNode;
+    while (iterator->m_parent)
+    {
+        if (iterator->m_parent->m_needUpdate)
+            resultNode = iterator->m_parent;
+
+        iterator = iterator->m_parent;
+    }
+
+    return resultNode;
+}
+
+void SceneNode::propagateTransforms(float timeDelta)
+{
+    static int x = 0;
+
+    updateRelativeTrans();
+
+    if (m_parent)
+        m_absoluteTrans = m_parent->m_absoluteTrans * m_relativeTrans;
+    else
+        m_absoluteTrans = m_relativeTrans;
+
+    for (auto& child : m_children)
+        child->propagateTransforms(timeDelta);
+
+    m_needUpdate = false;
+
+#ifdef _DEBUG
+    //std::cout << "Update called: " << x << std::endl;
+    x++;
+#endif
 }

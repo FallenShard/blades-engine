@@ -28,6 +28,8 @@ void Sphere::render(const glm::mat4& projection, const glm::mat4& view)
     
     m_vertexArray->bind();
     m_vertexArray->renderIndexed();
+
+    renderChildren(projection, view);
 }
 
 void Sphere::setPrimitiveType(GLenum primType)

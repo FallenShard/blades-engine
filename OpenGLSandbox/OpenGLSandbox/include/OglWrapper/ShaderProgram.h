@@ -22,8 +22,11 @@ public:
 
     bool checkLinkStatus();
 
+    void queryActiveUniforms();
     GLint getUniformAttribute(std::string name);
     GLint getUniformBuffer(std::string name);
+
+    void bindVertexAttribute(GLuint index, std::string attribName);
 
     void setUniformAttribute(std::string name, GLfloat value);
     void setUniformAttribute(std::string name, GLfloat x, GLfloat y);

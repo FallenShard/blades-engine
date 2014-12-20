@@ -23,7 +23,7 @@ namespace
     }
 }
 
-RoboticArm::RoboticArm(CubeMesh* mesh, ShaderProgram* program)
+RoboticArm::RoboticArm(CubeMesh* mesh, ShaderProgram* program, std::vector<SceneNode*>* validationVec)
     : SceneNode(nullptr, program)
     , m_mesh(mesh)
     , m_posBase(glm::vec3(-10.0f, 1.0f, -10.0f))
@@ -48,6 +48,7 @@ RoboticArm::RoboticArm(CubeMesh* mesh, ShaderProgram* program)
     , m_lenFinger(2.0f)
     , m_widthFinger(0.5f)
     , m_angLowerFinger(45.0f)
+    , m_validationVec(validationVec)
 {
     buildHierarchy();
 }
@@ -232,6 +233,7 @@ void RoboticArm::moveBase(bool increment)
     m_angBase += increment ? StandardAngleIncrement : -StandardAngleIncrement;
     m_angBase = fmodf(m_angBase, 360.0f);
     setRotationY(m_angBase);
+    m_validationVec->push_back(this);
 }
 
 void RoboticArm::moveUpperArm(bool increment)
@@ -239,6 +241,7 @@ void RoboticArm::moveUpperArm(bool increment)
     m_angUpperArm += increment ? StandardAngleIncrement : -StandardAngleIncrement;
     m_angUpperArm = clamp(m_angUpperArm, -90.0f, 0.0f);
     m_upperArmHolder->setRotationX(m_angUpperArm);
+    m_validationVec->push_back(m_upperArmHolder);
 }
 
 void RoboticArm::moveLowerArm(bool increment)
@@ -246,6 +249,7 @@ void RoboticArm::moveLowerArm(bool increment)
     m_angLowerArm += increment ? StandardAngleIncrement : -StandardAngleIncrement;
     m_angLowerArm = clamp(m_angLowerArm, 0.0f, 146.25f);
     m_lowerArmHolder->setRotationX(m_angLowerArm);
+    m_validationVec->push_back(m_lowerArmHolder);
 }
 
 void RoboticArm::moveWristPitch(bool increment)
@@ -253,6 +257,7 @@ void RoboticArm::moveWristPitch(bool increment)
     m_angWristPitch += increment ? StandardAngleIncrement : -StandardAngleIncrement;
     m_angWristPitch = clamp(m_angWristPitch, 0.0f, 90.0f);
     m_wristHolder->setRotationX(m_angWristPitch);
+    m_validationVec->push_back(m_wristHolder);
 }
 
 void RoboticArm::moveWristRoll(bool increment)
@@ -260,6 +265,7 @@ void RoboticArm::moveWristRoll(bool increment)
     m_angWristRoll += increment ? StandardAngleIncrement : -StandardAngleIncrement;
     m_angWristRoll = fmodf(m_angWristRoll, 360.0f);
     m_wristHolder->setRotationZ(m_angWristRoll);
+    m_validationVec->push_back(m_wristHolder);
 }
 
 void RoboticArm::moveFingerOpen(bool increment)
@@ -268,4 +274,6 @@ void RoboticArm::moveFingerOpen(bool increment)
     m_angFingerOpen = clamp(m_angFingerOpen, 9.0f, 180.0f);
     m_leftFingerHolder->setRotationY(m_angFingerOpen);
     m_rightFingerHolder->setRotationY(-m_angFingerOpen);
+    m_validationVec->push_back(m_leftFingerHolder);
+    m_validationVec->push_back(m_rightFingerHolder);
 }

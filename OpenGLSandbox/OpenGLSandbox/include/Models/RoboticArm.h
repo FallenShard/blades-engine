@@ -9,7 +9,7 @@ class IndexBuffer;
 class RoboticArm : public SceneNode
 {
 public:
-    RoboticArm(CubeMesh* mesh, ShaderProgram* program);
+    RoboticArm(CubeMesh* mesh, ShaderProgram* program, std::vector<SceneNode*>* validationVec);
 
     ~RoboticArm();
 
@@ -25,6 +25,8 @@ private:
     void moveFingerOpen(bool increment);
 
     void buildHierarchy();
+
+    std::vector<SceneNode*>* m_validationVec;
 
     CubeMesh* m_mesh;
 

@@ -36,12 +36,17 @@ public:
     void applyTransformation(const glm::mat4& transformation = glm::mat4(1.f));
     const glm::mat4& getModelMatrix() const;
 
+    void validate(float timeDelta);
+
+    SceneNode* getTopLevelInvalidated();
     virtual void render(const glm::mat4& projection, const glm::mat4& view) = 0;
 
 protected:
     void updateRelativeTrans();
     void updateAbsoluteTrans();
     void renderChildren(const glm::mat4& projection, const glm::mat4& view);
+    void propagateTransforms(float timeDelta);
+
 
     std::list<SceneNode*> m_children;
     SceneNode* m_parent;

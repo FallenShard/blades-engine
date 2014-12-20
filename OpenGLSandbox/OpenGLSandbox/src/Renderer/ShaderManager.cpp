@@ -1,5 +1,6 @@
 #include <fstream>
 #include "Renderer/ShaderManager.h"
+#include "OglWrapper/VertexStreams.h"
 
 ShaderManager::ShaderManager()
     : m_relativePath("res/")
@@ -95,6 +96,14 @@ ShaderProgram* ShaderManager::getProgram(const std::string& key, const std::stri
     program->attachShader(*fragShader);
     program->link();
     program->checkLinkStatus();
+
+    // Bind vertex attribute to indices
+    program->bindVertexAttribute(VertexStream::Position, "position");
+    program->bindVertexAttribute(VertexStream::Normal, "normal");
+    program->bindVertexAttribute(VertexStream::TexCoord0, "texCoord");
+
+    // Get all uniforms in the shader sources
+    program->queryActiveUniforms();
 
     m_programCache[key] = program;
 
