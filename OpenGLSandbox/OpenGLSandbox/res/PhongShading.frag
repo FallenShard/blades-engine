@@ -6,7 +6,7 @@ in VsOut
     smooth in vec3 normal;
 } fsIn;
 
-uniform Material
+layout(std140) uniform Material
 {
     vec4 ambient;
     vec4 diffuse;

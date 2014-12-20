@@ -8,6 +8,13 @@ Material::Material()
 
 }
 
+void Material::setShaderProgram(ShaderProgram* program)
+{
+    m_program = program;
+
+    initialize();
+}
+
 Material::~Material()
 {
     delete m_uniformBuffer;

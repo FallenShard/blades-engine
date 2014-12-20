@@ -193,6 +193,17 @@ void ShaderProgram::setUniformSampler(GLint location, GLint textureUnit)
     glUniform1i(location, textureUnit);
 }
 
+void ShaderProgram::setUniformBlockBinding(GLuint blockIndex, GLuint bindingPoint)
+{
+    glUniformBlockBinding(m_id, blockIndex, bindingPoint);
+}
+
+void ShaderProgram::setUniformBlockBinding(std::string blockName, GLuint bindingPoint)
+{
+    GLuint blockIndex = glGetUniformBlockIndex(m_id, blockName.c_str());
+    glUniformBlockBinding(m_id, blockIndex, bindingPoint);
+}
+
 GLuint ShaderProgram::getProgramId() const
 {
     return m_id;

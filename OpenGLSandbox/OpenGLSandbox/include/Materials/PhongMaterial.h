@@ -6,7 +6,7 @@
 class PhongMaterial : public Material
 {
 public:
-    PhongMaterial(ShaderProgram* program);
+    PhongMaterial(glm::vec4& ambient, glm::vec4& diffuse, glm::vec4& specular, float shininess);
     ~PhongMaterial();
 
     void setAmbientColor(const glm::vec4& ambient);
@@ -17,7 +17,8 @@ public:
     virtual void apply();
 
 private:
-    void setupUniformBuffer();
+    //void setupUniformBuffer();
+    virtual void initialize();
 
     struct PhongData
     {
@@ -31,8 +32,5 @@ private:
 
     GLuint m_uniformBufferId;
     GLint m_uniformBufferIndex;
-    std::vector<std::string> m_uniformNames;
-    std::vector<GLuint>      m_uniformIndices;
-    std::vector<GLint>       m_uniformOffsets;
     GLsizei m_uniformBufferSize;
 };

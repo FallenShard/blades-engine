@@ -1,9 +1,11 @@
 #include "Materials/PhongMaterial.h"
 
-PhongMaterial::PhongMaterial(ShaderProgram* program)
+PhongMaterial::PhongMaterial(glm::vec4& ambient, glm::vec4& diffuse, glm::vec4& specular, float shininess)
 {
-    m_program = program;
-    setupUniformBuffer();
+    m_data.ambient = ambient;
+    m_data.diffuse = diffuse;
+    m_data.specular = specular;
+    m_data.shininess = shininess;
 }
 
 PhongMaterial::~PhongMaterial()
@@ -32,41 +34,16 @@ void PhongMaterial::setShininess(float shininess)
 
 void PhongMaterial::apply()
 {
-    glBufferData(GL_UNIFORM_BUFFER, sizeof(PhongData), &m_data, GL_STREAM_DRAW);
-    glBindBufferBase(GL_UNIFORM_BUFFER, 1, m_uniformBufferId);
-    //glUniformBlockBinding(m_program->getProgramId(), m_uniformBufferIndex, 1);
+    m_uniformBuffer->bindToBindingPoint();
 }
 
-void PhongMaterial::setupUniformBuffer()
+void PhongMaterial::initialize()
 {
-    glGenBuffers(1, &m_uniformBufferId);
-    glBindBuffer(GL_UNIFORM_BUFFER, m_uniformBufferId);
-
+    m_uniformBuffer = new UniformBuffer();
+    m_uniformBuffer->bind();
+    m_uniformBuffer->setBufferData(&m_data, sizeof(PhongData));
+    
     std::string blockName = "Material";
-    m_uniformBufferIndex = glGetUniformBlockIndex(m_program->getProgramId(), blockName.c_str());
-    glUniformBlockBinding(m_program->getProgramId(), m_uniformBufferIndex, 1);
-
-
-    m_uniformNames.push_back(blockName + ".ambient");
-    m_uniformNames.push_back(blockName + ".diffuse");
-    m_uniformNames.push_back(blockName + ".specular");
-    m_uniformNames.push_back(blockName + ".shininess");
-
-    //const GLchar** names = new GLchar*[m_uniformNames.size()];
-    //for (int i = 0; i < m_uniformNames.size(); i++)
-    //    names[i] = m_uniformNames[i].c_str();
-
-    //glGetUniformIndices(m_program->getProgramId(), 4, names, &m_uniformIndices[0]);
-    //glGetActiveUniformsiv(m_program->getProgramId(), 4, m_uniformIndices.data(), GL_UNIFORM_OFFSET, &m_uniformOffsets[0]);
-    //glGetActiveUniformBlockiv(m_program->getProgramId(), m_uniformBufferIndex, GL_UNIFORM_BLOCK_DATA_SIZE, &m_uniformBufferSize);
-
-    m_data.ambient = glm::vec4(0.1f, 0.0f, 0.0f, 1.f);
-    m_data.diffuse = glm::vec4(0.1f, 0.1f, 0.0f, 1.f);
-    m_data.specular = glm::vec4(1.f, 1.f, 1.f, 1.f);
-    m_data.shininess = 0.2f;
-
-
-    //glBufferData(GL_UNIFORM_BUFFER, uniformBlockSize, buffer.data(), GL_DYNAMIC_DRAW);
-    //glBindBufferBase(GL_UNIFORM_BUFFER, 1, ubo);
-    //glUniformBlockBinding(prog->getProgramId(), uboLoc, 1);
+    m_uniformBuffer->setBindingPoint(0);
+    m_program->setUniformBlockBinding(blockName, 0);
 }

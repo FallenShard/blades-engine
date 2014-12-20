@@ -36,8 +36,12 @@ public:
     void setUniformAttribute(std::string name, const glm::mat4& mat);
     void setUniformAttribute(std::string name, const glm::vec3& vec);
     void setUniformAttribute(std::string name, const glm::vec4& vec);
+    
     void setUniformSampler(std::string name, GLint textureUnit);
     void setUniformSampler(GLint location, GLint textureUnit);
+
+    void setUniformBlockBinding(GLuint blockIndex, GLuint bindingPoint);
+    void setUniformBlockBinding(std::string blockName, GLuint bindingPoint);
 
     GLuint getProgramId() const;
 
