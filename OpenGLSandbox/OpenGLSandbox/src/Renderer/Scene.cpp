@@ -97,11 +97,11 @@ void Scene::prepare()
 
     m_sceneGraph->attachChild(m_sphere);
 
-    g_mat = new PhongMaterial(prog);
-    g_mat->setShininess(shininess);
-    g_mat->setAmbientColor(glm::vec4(0.f, 0.f, 1.f, 1.f));
-    g_mat->setDiffuseColor(glm::vec4(0.f, 0.f, 1.f, 1.f));
-    g_mat->setSpecularColor(glm::vec4(1.f, 1.f, 1.f, 1.f));
+    g_mat = new PhongMaterial(glm::vec4(0.f, 0.f, 1.f, 1.f),
+                              glm::vec4(0.f, 0.f, 1.f, 1.f),
+                              glm::vec4(1.f, 1.f, 1.f, 1.f),
+                              shininess);
+    g_mat->setShaderProgram(prog);
 
     m_validationVector.push_back(m_sceneGraph);
 }

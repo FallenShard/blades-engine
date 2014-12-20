@@ -17,9 +17,13 @@ public:
     void init(int width, int height);
     void activate();
 
+    void resize(int width, int height);
+
     void render();
 
 private:
+    void cleanUp();
+
     FrameBuffer*   m_frameBuffer;
     Texture*       m_fullTex;
     VertexArray*   m_quadVertexArray;

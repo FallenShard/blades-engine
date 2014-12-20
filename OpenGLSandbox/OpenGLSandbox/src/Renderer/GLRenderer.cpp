@@ -92,6 +92,9 @@ void GLRenderer::handleEvents(const Event& event)
     if (event.type == Event::KeyPressed && event.key.code == Keyboard::Space)
         useFXAA = !useFXAA;
 
+    if (event.type == Event::Resized)
+        m_aaPass->resize(event.size.width, event.size.height);
+
     m_scene->handleEvents(event);
 }
 
@@ -105,4 +108,5 @@ void GLRenderer::update(float timeDelta)
 void GLRenderer::resize(int width, int height)
 {
     m_scene->reshape(width, height);
+    
 }

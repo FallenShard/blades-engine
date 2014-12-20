@@ -11,10 +11,7 @@ RenderPass::RenderPass()
 
 RenderPass::~RenderPass()
 {
-    delete m_fullTex;
-    delete m_quadVertexArray;
-    glDeleteRenderbuffers(1, &m_depthRenderBuffer);
-    delete m_frameBuffer;
+    cleanUp();
 }
 
 void RenderPass::attachProgram(ShaderProgram* program)
@@ -22,8 +19,26 @@ void RenderPass::attachProgram(ShaderProgram* program)
     m_shaderProgram = program;
 }
 
+void RenderPass::cleanUp()
+{
+    delete m_fullTex;
+    m_fullTex = nullptr;
+    delete m_quadVertexArray;
+    m_quadVertexArray = nullptr;
+    glDeleteRenderbuffers(1, &m_depthRenderBuffer);
+    delete m_frameBuffer;
+    m_frameBuffer = nullptr;
+}
+
 void RenderPass::init(int width, int height)
 {
+    m_shaderProgram->getUniformAttribute("screenWidth");
+    m_shaderProgram->getUniformAttribute("screenHeight");
+    m_shaderProgram->use();
+    m_shaderProgram->setUniformAttribute("screenWidth", static_cast<GLfloat>(width));
+    m_shaderProgram->setUniformAttribute("screenHeight", static_cast<GLfloat>(height));
+    ShaderProgram::release();
+
     m_frameBuffer = new FrameBuffer(width, height);
     m_frameBuffer->bind();
 
@@ -65,6 +80,36 @@ void RenderPass::init(int width, int height)
     FrameBuffer::bindScreen();
 
     delete qBuffer;
+}
+
+void RenderPass::resize(int width, int height)
+{
+    m_shaderProgram->use();
+    m_shaderProgram->setUniformAttribute("screenWidth", static_cast<GLfloat>(width));
+    m_shaderProgram->setUniformAttribute("screenHeight", static_cast<GLfloat>(height));
+    ShaderProgram::release();
+
+    delete m_frameBuffer;
+    m_frameBuffer = new FrameBuffer(width, height);
+    m_frameBuffer->bind();
+
+    delete m_fullTex;
+    m_fullTex = new Texture(width, height, "renderedTexture");
+    m_fullTex->bind();
+    m_fullTex->create();
+    m_fullTex->setWrapMode(GL_CLAMP_TO_EDGE, GL_CLAMP_TO_EDGE);
+    m_fullTex->setMinFilter(GL_NEAREST);
+    m_fullTex->setMagFilter(GL_NEAREST);
+    m_fullTex->locate(m_shaderProgram);
+    m_frameBuffer->attachTexture(GL_COLOR_ATTACHMENT0, m_fullTex->getTextureId());
+
+    glRenderbufferStorage(GL_RENDERBUFFER, GL_DEPTH_COMPONENT24, width, height);
+    glFramebufferRenderbuffer(GL_FRAMEBUFFER, GL_DEPTH_ATTACHMENT, GL_RENDERBUFFER, m_depthRenderBuffer);
+
+    m_frameBuffer->enableAttachments();
+
+    Texture::release();
+    FrameBuffer::bindScreen();
 }
 
 void RenderPass::activate()

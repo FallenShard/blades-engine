@@ -7,13 +7,16 @@ in vec2 UV;
 uniform sampler2D renderedTexture;
 
 out vec4 color;
+
+uniform float screenWidth;
+uniform float screenHeight;
  
 void main()
 {
     float FXAA_SPAN_MAX = 8.f;
     float FXAA_REDUCE_MUL = 1.0/FXAA_SPAN_MAX;
     float FXAA_REDUCE_MIN = (1.0/128.0);
-    vec2 texcoordOffset = vec2(1/1366.f, 1/768.f);
+    vec2 texcoordOffset = vec2(1.f/screenWidth, 1.f/screenHeight);
     vec3 rgbNW = texture2D(renderedTexture, UV.xy + (vec2(-1.0, -1.0) * texcoordOffset)).xyz;
     vec3 rgbNE = texture2D(renderedTexture, UV.xy + (vec2(+1.0, -1.0) * texcoordOffset)).xyz;
     vec3 rgbSW = texture2D(renderedTexture, UV.xy + (vec2(-1.0, +1.0) * texcoordOffset)).xyz;
