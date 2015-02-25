@@ -98,9 +98,9 @@ ShaderProgram* ShaderManager::getProgram(const std::string& key, const std::stri
     program->checkLinkStatus();
 
     // Bind vertex attribute to indices
-    program->bindVertexAttribute(VertexStream::Position, "position");
-    program->bindVertexAttribute(VertexStream::Normal, "normal");
-    program->bindVertexAttribute(VertexStream::TexCoord0, "texCoord");
+    program->bindVertexAttribute(VertexAttrib::Position,  "position");
+    program->bindVertexAttribute(VertexAttrib::Normal,    "normal");
+    program->bindVertexAttribute(VertexAttrib::TexCoord0, "texCoord");
 
     // Get all uniforms in the shader sources
     program->queryActiveUniforms();

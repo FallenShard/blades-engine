@@ -102,6 +102,14 @@ void IndexBuffer::push(GLshort p1, GLshort p2, GLshort p3)
     m_indices.push_back(p3);
 }
 
+void IndexBuffer::push(GLshort p1, GLshort p2, GLshort p3, GLshort p4)
+{
+    m_indices.push_back(p1);
+    m_indices.push_back(p2);
+    m_indices.push_back(p3);
+    m_indices.push_back(p4);
+}
+
 void IndexBuffer::uploadData()
 {
     glBufferData(m_targetType, sizeof(GLshort) * m_indices.size(), m_indices.data(), m_usageType);

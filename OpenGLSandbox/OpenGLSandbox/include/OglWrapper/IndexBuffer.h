@@ -42,6 +42,9 @@ public:
     // Pushes a triangle face into the buffer
     void push(GLshort p1, GLshort p2, GLshort p3);
 
+    // Pushes a quad face into the buffer
+    void push(GLshort p1, GLshort p2, GLshort p3, GLshort p4);
+
     // Uploads the index data onto the GPU
     void uploadData();
 

@@ -32,8 +32,6 @@ void RenderPass::cleanUp()
 
 void RenderPass::init(int width, int height)
 {
-    m_shaderProgram->getUniformAttribute("screenWidth");
-    m_shaderProgram->getUniformAttribute("screenHeight");
     m_shaderProgram->use();
     m_shaderProgram->setUniformAttribute("screenWidth", static_cast<GLfloat>(width));
     m_shaderProgram->setUniformAttribute("screenHeight", static_cast<GLfloat>(height));

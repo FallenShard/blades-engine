@@ -72,7 +72,7 @@ void GLRenderer::draw()
         m_aaPass->activate();
 
         m_scene->render();
-
+        
         FrameBuffer::bindScreen();
         FrameBuffer::clear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 

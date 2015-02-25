@@ -21,6 +21,7 @@
     <ClCompile Include="src\Meshes\CubeMesh.cpp" />
     <ClCompile Include="src\Models\Sphere.cpp" />
     <ClCompile Include="src\Meshes\SphereMesh.cpp" />
+    <ClCompile Include="src\Models\Terrain.cpp" />
     <ClCompile Include="src\Models\TransformNode.cpp" />
     <ClCompile Include="src\Models\PlaneGrid.cpp" />
     <ClCompile Include="src\Models\Cube.cpp" />
@@ -60,6 +61,7 @@
     <ClInclude Include="include\Meshes\CubeMesh.h" />
     <ClInclude Include="include\Meshes\SphereMesh.h" />
     <ClInclude Include="include\Models\Sphere.h" />
+    <ClInclude Include="include\Models\Terrain.h" />
     <ClInclude Include="include\Models\TransformNode.h" />
     <ClInclude Include="include\Models\IRenderable.h" />
     <ClInclude Include="include\Models\PlaneGrid.h" />
@@ -100,6 +102,10 @@
     <None Include="res\passThrough.vert" />
     <None Include="res\fxaa.frag" />
     <None Include="res\PhongShading.frag" />
+    <None Include="res\terrain.frag" />
+    <None Include="res\terrain.tesc" />
+    <None Include="res\terrain.tese" />
+    <None Include="res\terrain.vert" />
   </ItemGroup>
   <ItemGroup>
     <Text Include="res\RobotArmFaces.txt" />
@@ -158,7 +164,7 @@
       <PreprocessorDefinitions>WIN32;_DEBUG;_WINDOWS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <SDLCheck>true</SDLCheck>
       <TreatWarningAsError>true</TreatWarningAsError>
-      <AdditionalIncludeDirectories>$(ProjectDir)include;$(SolutionDir)External Libraries\glm;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(ProjectDir)include;$(SolutionDir)External Libraries\stb;$(SolutionDir)External Libraries\glm;$(SolutionDir)External Libraries\CImg;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <BrowseInformation>true</BrowseInformation>
     </ClCompile>
     <Link>
@@ -182,14 +188,14 @@
       <PreprocessorDefinitions>WIN32;NDEBUG;_WINDOWS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <SDLCheck>true</SDLCheck>
       <TreatWarningAsError>true</TreatWarningAsError>
-      <AdditionalIncludeDirectories>$(ProjectDir)include;$(SolutionDir)External Libraries\glm;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(ProjectDir)include;$(SolutionDir)External Libraries\stb;$(SolutionDir)External Libraries\glm;$(SolutionDir)External Libraries\CImg;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <SubSystem>Windows</SubSystem>
       <GenerateDebugInformation>true</GenerateDebugInformation>
       <EnableCOMDATFolding>true</EnableCOMDATFolding>
       <OptimizeReferences>true</OptimizeReferences>
-      <AdditionalLibraryDirectories>D:\Github\OpenGLSandbox\OpenGLSandbox\OpenGLSandbox\External Libraries\GLEW\lib\Release\x64;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <AdditionalLibraryDirectories>%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
       <AdditionalDependencies>opengl32.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
   </ItemDefinitionGroup>

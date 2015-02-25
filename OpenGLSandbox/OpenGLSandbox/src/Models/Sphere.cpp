@@ -8,6 +8,15 @@ Sphere::Sphere()
 Sphere::Sphere(SphereMesh* mesh, ShaderProgram* program)
     : SceneNode(nullptr, program)
     , m_mesh(mesh)
+    , m_material(nullptr)
+{
+    init();
+}
+
+Sphere::Sphere(SphereMesh* mesh, ShaderProgram* program, Material* material)
+    : SceneNode(nullptr, program)
+    , m_mesh(mesh)
+    , m_material(material)
 {
     init();
 }
@@ -26,6 +35,8 @@ void Sphere::render(const glm::mat4& projection, const glm::mat4& view)
     m_shaderProgram->setUniformAttribute("MV", MV);
     m_shaderProgram->setUniformAttribute("normalMatrix", normalMatrix);
     
+    if (m_material) m_material->apply();
+    
     m_vertexArray->bind();
     m_vertexArray->renderIndexed();
 
@@ -42,6 +53,5 @@ void Sphere::init()
     m_vertexArray = m_mesh->getVertexArray();
     m_vertexArray->bind();
     m_vertexArray->enableAttributes(m_shaderProgram->getProgramId());
-    m_shaderProgram->getUniformAttribute("useLight");
     VertexArray::release();
 }

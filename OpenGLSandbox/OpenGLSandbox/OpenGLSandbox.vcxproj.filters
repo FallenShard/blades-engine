@@ -82,6 +82,7 @@
     <ClCompile Include="src\Materials\Material.cpp" />
     <ClCompile Include="src\Materials\PhongMaterial.cpp" />
     <ClCompile Include="src\Models\Cube.cpp" />
+    <ClCompile Include="src\Models\Terrain.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="include\Core\Application.h" />
@@ -132,12 +133,17 @@
     <ClInclude Include="include\Materials\PhongMaterial.h" />
     <ClInclude Include="include\Models\Cube.h" />
     <ClInclude Include="include\OglWrapper\VertexStreams.h" />
+    <ClInclude Include="include\Models\Terrain.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include="res\passThrough.vert" />
     <None Include="res\fxaa.frag" />
     <None Include="res\PhongShading.frag" />
     <None Include="res\PhongShading.vert" />
+    <None Include="res\terrain.vert" />
+    <None Include="res\terrain.frag" />
+    <None Include="res\terrain.tese" />
+    <None Include="res\terrain.tesc" />
   </ItemGroup>
   <ItemGroup>
     <Text Include="res\RobotArmFaces.txt" />

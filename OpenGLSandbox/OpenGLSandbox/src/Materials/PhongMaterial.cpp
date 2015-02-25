@@ -30,6 +30,9 @@ void PhongMaterial::setSpecularColor(const glm::vec4& specular)
 void PhongMaterial::setShininess(float shininess)
 {
     m_data.shininess = shininess;
+
+    m_uniformBuffer->bind();
+    m_uniformBuffer->setBufferData(&m_data, sizeof(PhongData));
 }
 
 void PhongMaterial::apply()

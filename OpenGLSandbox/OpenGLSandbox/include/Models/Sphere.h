@@ -5,6 +5,8 @@
 #include "OglWrapper/VertexBuffer.h"
 #include "OglWrapper/IndexBuffer.h"
 
+#include "Materials/Material.h"
+
 #include "Meshes/SphereMesh.h"
 
 class Sphere : public SceneNode
@@ -12,6 +14,7 @@ class Sphere : public SceneNode
 public:
     Sphere();
     Sphere(SphereMesh* mesh, ShaderProgram* program);
+    Sphere(SphereMesh* mesh, ShaderProgram* program, Material* material);
 
     ~Sphere();
 
@@ -22,4 +25,5 @@ private:
     void init();
 
     SphereMesh* m_mesh;
+    Material* m_material;
 };

@@ -1,9 +1,21 @@
 #pragma once
 
-
-enum VertexStream
+namespace VertexAttrib
 {
-    Position  = 0,
-    Normal    = 1,
-    TexCoord0 = 2
-};
+    enum ID
+    {
+        Position  = 0,
+        Normal    = 1,
+        TexCoord0 = 2
+    };
+}
+
+namespace VertexStream
+{
+    enum ID
+    {
+        Position  = 0,
+        Normal    = 1,
+        TexCoord0 = 2
+    };
+}
