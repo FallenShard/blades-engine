@@ -3,6 +3,9 @@
 #include <string>
 #include <fstream>
 
+#define LOG(message) Logger::log(message);
+#define FLUSH_LOG() Logger::flush();
+
 class Logger
 {
 public:
@@ -15,6 +18,8 @@ public:
 
 private:
     Logger();
+
+    void openNewFile();
 
     static Logger* m_instance;
     std::ofstream m_logFile;

@@ -1,12 +1,14 @@
-#include <windows.h>
 #include <iomanip>
+#include <iostream>
+#include <ctime>
+
 #include "Utils/Logger.h"
 
 Logger* Logger::m_instance = nullptr;
 
 Logger::Logger()
 {
-    m_logFile.open("error.log", std::ios::app);
+    openNewFile();
 }
 
 Logger* Logger::getInstance()
@@ -21,10 +23,12 @@ void Logger::log(std::string message)
 {
     Logger* logger = Logger::getInstance();
 
-    SYSTEMTIME time;
-    GetLocalTime(&time);
-    logger->m_logFile << '\n' << time.wHour << ":" << time.wMinute << ":" << time.wSecond << " ";
+    time_t currentTime = time(0);
+    tm time;
+    localtime_s(&time, &currentTime);
+    logger->m_logFile << time.tm_hour << ":" << time.tm_min << ":" << time.tm_sec << " ";
     logger->m_logFile << message;
+    logger->m_logFile << '\n';
 }
 
 void Logger::flush()
@@ -32,7 +36,7 @@ void Logger::flush()
     Logger* logger = Logger::getInstance();
     
     logger->m_logFile.close();
-    logger->m_logFile.open("error.log", std::ios::app);
+    logger->openNewFile();
 }
 
 Logger::~Logger()
@@ -42,3 +46,17 @@ Logger::~Logger()
     delete m_instance;
     m_instance = nullptr;
 }
+
+void Logger::openNewFile()
+{
+    time_t currentTime = time(0);
+    tm time;
+    localtime_s(&time, &currentTime);
+
+    char strBuffer[80];
+    strftime(strBuffer, sizeof(strBuffer), "%Y-%m-%d %H.%M.%S", &time);
+    std::string fileName(strBuffer);
+
+    m_logFile.open(fileName + ".log", std::ios::app);
+}
+
