@@ -4,9 +4,9 @@
 #include "OglWrapper/VertexBuffer.h"
 #include "Utils/VertexLoader.h"
 
-#include "Window/Keyboard.h"
+#include "Input/Keyboard.h"
 
-#include "gtc/matrix_transform.hpp"
+#include "glm/gtc/matrix_transform.hpp"
 
 namespace
 {

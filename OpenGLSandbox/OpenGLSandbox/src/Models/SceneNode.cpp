@@ -1,5 +1,7 @@
-#include "Models/SceneNode.h"
 #include <iostream>
+
+#include "Models/SceneNode.h"
+
 
 SceneNode::SceneNode()
     : m_absoluteTrans(1.f)
@@ -202,7 +204,9 @@ SceneNode* SceneNode::getTopLevelInvalidated()
 
 void SceneNode::propagateTransforms(float timeDelta)
 {
+#ifdef _DEBUG
     static int x = 0;
+#endif
 
     updateRelativeTrans();
 

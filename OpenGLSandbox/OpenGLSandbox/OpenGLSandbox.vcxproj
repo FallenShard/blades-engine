@@ -45,8 +45,8 @@
     <ClCompile Include="src\Utils\Logger.cpp" />
     <ClCompile Include="src\Utils\VertexLoader.cpp" />
     <ClCompile Include="src\Window\GLContext.cpp" />
-    <ClCompile Include="src\Window\Keyboard.cpp" />
-    <ClCompile Include="src\Window\Mouse.cpp" />
+    <ClCompile Include="src\Input\Keyboard.cpp" />
+    <ClCompile Include="src\Input\Mouse.cpp" />
     <ClCompile Include="src\Window\VideoMode.cpp" />
     <ClCompile Include="src\Window\Window.cpp" />
   </ItemGroup>
@@ -56,6 +56,9 @@
     <ClInclude Include="include\GL\gl3w.h" />
     <ClInclude Include="include\GL\glcorearb.h" />
     <ClInclude Include="include\GL\wglext.h" />
+    <ClInclude Include="include\Input\Event.h" />
+    <ClInclude Include="include\Input\Keyboard.h" />
+    <ClInclude Include="include\Input\Mouse.h" />
     <ClInclude Include="include\Materials\Material.h" />
     <ClInclude Include="include\Meshes\PlaneMesh.h" />
     <ClInclude Include="include\Meshes\CubeMesh.h" />
@@ -90,10 +93,7 @@
     <ClInclude Include="include\Renderer\Scene.h" />
     <ClInclude Include="include\Utils\Logger.h" />
     <ClInclude Include="include\Utils\VertexLoader.h" />
-    <ClInclude Include="include\Window\Event.h" />
     <ClInclude Include="include\Window\GLContext.h" />
-    <ClInclude Include="include\Window\Keyboard.h" />
-    <ClInclude Include="include\Window\Mouse.h" />
     <ClInclude Include="include\Window\VideoMode.h" />
     <ClInclude Include="include\Window\Window.h" />
   </ItemGroup>
@@ -164,7 +164,7 @@
       <PreprocessorDefinitions>WIN32;_DEBUG;_WINDOWS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <SDLCheck>true</SDLCheck>
       <TreatWarningAsError>true</TreatWarningAsError>
-      <AdditionalIncludeDirectories>$(ProjectDir)include;$(SolutionDir)External Libraries\stb;$(SolutionDir)External Libraries\glm;$(SolutionDir)External Libraries\CImg;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(ProjectDir)include;$(SolutionDir)External Libraries;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <BrowseInformation>true</BrowseInformation>
     </ClCompile>
     <Link>
@@ -188,7 +188,7 @@
       <PreprocessorDefinitions>WIN32;NDEBUG;_WINDOWS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <SDLCheck>true</SDLCheck>
       <TreatWarningAsError>true</TreatWarningAsError>
-      <AdditionalIncludeDirectories>$(ProjectDir)include;$(SolutionDir)External Libraries\stb;$(SolutionDir)External Libraries\glm;$(SolutionDir)External Libraries\CImg;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(ProjectDir)include;$(SolutionDir)External Libraries;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <SubSystem>Windows</SubSystem>

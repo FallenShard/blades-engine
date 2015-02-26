@@ -1,8 +1,9 @@
 #pragma once
 
-#include "glm.hpp"
 #include <list>
 #include <memory>
+
+#include "glm/glm.hpp"
 
 #include "OglWrapper/VertexArray.h"
 #include "OglWrapper/ShaderProgram.h"

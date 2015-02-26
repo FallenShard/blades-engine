@@ -3,7 +3,7 @@
 
 #include "OglWrapper/ShaderProgram.h"
 #include "Renderer/AbstractCamera.h"
-#include "Window/Event.h"
+#include "Input/Event.h"
 #include "Window/Window.h"
 
 #include "Renderer/CameraController.h"

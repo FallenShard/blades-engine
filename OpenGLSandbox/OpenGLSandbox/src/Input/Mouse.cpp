@@ -1,12 +1,23 @@
 #include <windows.h>
 
-#include "Window/Mouse.h"
+#include "Input/Mouse.h"
 #include "Window/Window.h"
 
 
 bool Mouse::isButtonPressed(Button button)
 {
-    return false;
+    int vkey = 0;
+    switch (button)
+    {
+        case Mouse::Left:     vkey = VK_LBUTTON;  break;
+        case Mouse::Right:    vkey = VK_RBUTTON;  break;
+        case Mouse::Middle:   vkey = VK_MBUTTON;  break;
+        case Mouse::XButton1: vkey = VK_XBUTTON1; break;
+        case Mouse::XButton2: vkey = VK_XBUTTON2; break;
+        default:              vkey = 0;           break;
+    }
+
+    return (GetAsyncKeyState(vkey) & 0x8000) != 0;
 }
 
 glm::ivec2 Mouse::getPosition()

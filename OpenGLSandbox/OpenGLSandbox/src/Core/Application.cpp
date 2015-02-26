@@ -1,6 +1,7 @@
+#include <fstream>
+
 #include "Core/Application.h"
 #include "Core/Timer.h"
-#include <fstream>
 
 #include "Utils/Logger.h"
 
@@ -15,19 +16,13 @@ namespace
 }
 
 Application::Application()
+    : m_window(std::make_shared<Window>(VideoMode(windowWidth, windowHeight, 32), "OpenGL Tessellation"))
+    , m_renderer(std::make_unique<GLRenderer>(m_window.get()))
 {
-    m_window = new Window(VideoMode(windowWidth, windowHeight, 32), "OpenGL Test");
-    m_renderer = new GLRenderer(m_window);
-    backColor = 0.f;
 }
 
 Application::~Application()
 {
-    delete m_window;
-    m_window = nullptr;
-
-    delete m_renderer;
-    m_renderer = nullptr;
 }
 
 void Application::run()
@@ -61,6 +56,9 @@ void Application::processInput()
     while (m_window->pollEvent(event))
     {
         if (event.type == Event::KeyPressed && event.key.code == Keyboard::Escape)
+            m_window->close();
+
+        if (event.type == Event::Closed)
             m_window->close();
 
         m_renderer->handleEvents(event);

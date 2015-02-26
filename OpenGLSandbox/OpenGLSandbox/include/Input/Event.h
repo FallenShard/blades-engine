@@ -1,7 +1,7 @@
 #pragma once
 
-#include "Window/Keyboard.h"
-#include "Window/Mouse.h"
+#include "Input/Keyboard.h"
+#include "Input/Mouse.h"
 
 struct Event
 {

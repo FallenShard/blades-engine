@@ -16,8 +16,6 @@ private:
     void render();
     void renderInit();
 
-    Window* m_window;
-    GLRenderer* m_renderer;
-
-    float backColor;
+    std::shared_ptr<Window> m_window;
+    std::unique_ptr<GLRenderer> m_renderer;
 };

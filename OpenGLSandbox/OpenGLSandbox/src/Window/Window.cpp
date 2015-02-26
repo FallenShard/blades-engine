@@ -1,5 +1,5 @@
 #include "Window/Window.h"
-#include "Window/Event.h"
+#include "Input/Event.h"
 
 namespace
 {

@@ -1,6 +1,6 @@
 #include <windows.h>
 
-#include "Window/Keyboard.h"
+#include "Input/Keyboard.h"
 
 bool Keyboard::isKeyPressed(Key key)
 {

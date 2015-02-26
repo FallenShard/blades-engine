@@ -5,12 +5,13 @@
 #include <string>
 #include <queue>
 
-#include "vec2.hpp"
-#include "VideoMode.h"
-#include "GLContext.h"
+#include "glm/vec2.hpp"
 
-#include "Window/Keyboard.h"
-#include "Window/Event.h"
+#include "Window/VideoMode.h"
+#include "Window/GLContext.h"
+
+#include "Input/Keyboard.h"
+#include "Input/Event.h"
 
 // Basic window class for OpenGL rendering
 class Window
