@@ -2,6 +2,9 @@
 
 #include "OpenGL.h"
 
+namespace fsi
+{
+
 class AbstractCamera
 {
 public:
@@ -54,3 +57,5 @@ protected:
     glm::mat4 m_viewMatrix;
     glm::mat4 m_projectionMatrix;
 };
+
+}

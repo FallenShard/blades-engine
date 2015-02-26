@@ -4,6 +4,9 @@
 
 #include "OpenGL.h"
 
+namespace fsi
+{
+
 class GLContext
 {
 public:
@@ -26,3 +29,5 @@ private:
     unsigned int m_stencilBufferBits;
     unsigned int m_antiAliasingLevel;
 };
+
+}

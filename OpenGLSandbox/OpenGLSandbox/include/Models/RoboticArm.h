@@ -2,6 +2,9 @@
 
 #include "Models/SceneNode.h"
 
+namespace fsi
+{
+
 class CubeMesh;
 class VertexBuffer;
 class IndexBuffer;
@@ -64,3 +67,5 @@ private:
     float     m_widthFinger;
     float     m_angLowerFinger;
 };
+
+}

@@ -1,5 +1,8 @@
 #include "OglWrapper/Texture.h"
 
+namespace fsi
+{
+
 Texture::Texture()
 {
     glGenTextures(1, &m_id);
@@ -74,4 +77,6 @@ GLuint Texture::getTextureId() const
 GLint Texture::getSamplerLocation() const
 {
     return m_location;
+}
+
 }

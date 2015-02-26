@@ -3,6 +3,9 @@
 #include <string>
 #include "OpenGL.h"
 
+namespace fsi
+{
+
 struct VertexAttribute
 {
     std::string name;
@@ -60,3 +63,5 @@ struct VertexAttribute
         glDisableVertexAttribArray(location);
     }
 };
+
+}

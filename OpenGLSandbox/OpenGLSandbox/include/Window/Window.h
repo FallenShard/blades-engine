@@ -13,6 +13,9 @@
 #include "Input/Keyboard.h"
 #include "Input/Event.h"
 
+namespace fsi
+{
+
 // Basic window class for OpenGL rendering
 class Window
 {
@@ -74,3 +77,5 @@ private:
     bool m_containsMouse;
     bool m_isResizing;
 };
+
+}

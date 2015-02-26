@@ -7,6 +7,9 @@
 #include "OglWrapper/VertexBuffer.h"
 #include "OglWrapper/VertexArray.h"
 
+namespace fsi
+{
+
 VertexLoader::VertexLoader()
 {
 }
@@ -79,4 +82,6 @@ std::vector<int> VertexLoader::getAttributeSizes()
 std::vector<int> VertexLoader::getAttributeOffsets()
 {
     return m_attributeOffsets;
+}
+
 }

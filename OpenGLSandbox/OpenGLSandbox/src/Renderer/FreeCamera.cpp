@@ -1,5 +1,8 @@
 #include "Renderer/FreeCamera.h"
 
+namespace fsi
+{
+
 FreeCamera::FreeCamera()
     : m_speed(0.5f)
     , m_translation(0.f)
@@ -63,4 +66,6 @@ void FreeCamera::setSpeed(const float speed)
 const float FreeCamera::getSpeed() const
 {
     return m_speed;
+}
+
 }

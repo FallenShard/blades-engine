@@ -1,6 +1,9 @@
 #include "Meshes/CubeMesh.h"
 #include "Utils/VertexLoader.h"
 
+namespace fsi
+{
+
 CubeMesh::CubeMesh()
     : m_vertexBuffer(GL_STATIC_DRAW)
 {
@@ -35,3 +38,4 @@ VertexArray* CubeMesh::getVertexArray()
     return &m_vertexArray;
 }
 
+}

@@ -2,6 +2,9 @@
 
 #include "Input/Keyboard.h"
 
+namespace fsi
+{
+
 bool Keyboard::isKeyPressed(Key key)
 {
     int virtualKey = 0;
@@ -114,4 +117,6 @@ bool Keyboard::isKeyPressed(Key key)
     }
 
     return (GetAsyncKeyState(virtualKey) & 0x8000) != 0;
+}
+
 }

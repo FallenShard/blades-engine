@@ -8,6 +8,9 @@ namespace
     GLuint boundVBO = 0;
 }
 
+namespace fsi
+{
+
 VertexBuffer::VertexBuffer(GLenum usageType)
     : m_targetType(GL_ARRAY_BUFFER)
     , m_usageType(usageType)
@@ -149,4 +152,6 @@ GLfloat& VertexBuffer::operator[](unsigned int index)
     assert(index >= 0 && index < m_vertexData.size());
     
     return m_vertexData[index];
+}
+
 }

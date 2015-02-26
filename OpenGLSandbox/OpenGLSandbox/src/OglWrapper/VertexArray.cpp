@@ -5,6 +5,9 @@ namespace
     GLuint boundVAO = 0;
 }
 
+namespace fsi
+{
+
 VertexArray::VertexArray()
     : m_primitiveType(GL_TRIANGLES)
     , m_vertexCount(0)
@@ -112,4 +115,4 @@ void VertexArray::renderIndexed(GLsizei offset)
     glDrawElementsBaseVertex(m_primitiveType, m_indexCount, m_indexType, 0, offset);
 }
 
-
+}

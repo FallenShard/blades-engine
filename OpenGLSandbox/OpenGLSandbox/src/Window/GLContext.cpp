@@ -1,6 +1,9 @@
 #include "Window/GLContext.h"
 #include <iostream>
 
+namespace fsi
+{
+
 GLContext::GLContext(HDC deviceContextHandle)
     :   m_deviceContextHandle(deviceContextHandle)
 {
@@ -81,4 +84,6 @@ void GLContext::initialize()
     std::cout << "OpenGL:\t\t" << glGetString(GL_VERSION) << std::endl;
     std::cout << "GLSL:\t\t" << glGetString(GL_SHADING_LANGUAGE_VERSION) << std::endl;
 #endif
+}
+
 }

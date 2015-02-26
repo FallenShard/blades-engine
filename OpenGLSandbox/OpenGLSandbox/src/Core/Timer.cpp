@@ -10,6 +10,9 @@ namespace
     }
 }
 
+namespace fsi
+{
+
 Timer::Timer()
     : m_accumulatedTime(getCurrentTime())
 {
@@ -51,3 +54,4 @@ __int64 Timer::restart()
     return elapsedTime;
 }
 
+}

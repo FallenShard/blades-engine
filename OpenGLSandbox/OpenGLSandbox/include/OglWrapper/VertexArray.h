@@ -6,6 +6,9 @@
 #include "OglWrapper/VertexBuffer.h"
 #include "OglWrapper/IndexBuffer.h"
 
+namespace fsi
+{
+
 class VertexArray
 {
 public:
@@ -76,3 +79,5 @@ private:
     std::map<std::string, VertexAttribute> m_attributes;
     IndexBuffer* m_indexBuffer;
 };
+
+}

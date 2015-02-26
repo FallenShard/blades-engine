@@ -2,6 +2,9 @@
 
 #include "Renderer/AbstractCamera.h"
 
+namespace fsi
+{
+
 class FreeCamera : public AbstractCamera
 {
 public:
@@ -25,3 +28,5 @@ private:
     glm::vec3 m_translation;
 
 };
+
+}

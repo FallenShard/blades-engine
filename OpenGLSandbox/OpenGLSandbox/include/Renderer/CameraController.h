@@ -2,6 +2,9 @@
 
 #include "Renderer/FreeCamera.h"
 
+namespace fsi
+{
+
 class AbstractCamera;
 class ShaderProgram;
 class Window;
@@ -44,3 +47,5 @@ private:
     bool    m_freeLook;
     Window* m_window;
 };
+
+}

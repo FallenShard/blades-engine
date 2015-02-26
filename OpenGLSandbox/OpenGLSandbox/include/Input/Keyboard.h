@@ -1,5 +1,8 @@
 #pragma once
 
+namespace fsi
+{
+
 class Keyboard
 {
 public:
@@ -116,3 +119,5 @@ public:
 
     static bool isKeyPressed(Key key);
 };
+
+}

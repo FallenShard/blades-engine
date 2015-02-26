@@ -4,6 +4,9 @@
 #include <vector>
 #include "OpenGL.h"
 
+namespace fsi
+{
+
 class VertexBuffer
 {
 public:
@@ -76,3 +79,5 @@ private:
     GLsizei m_dataCountPerVertex;
     std::vector<GLfloat> m_vertexData;
 };
+
+}

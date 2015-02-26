@@ -2,6 +2,9 @@
 
 #include <windows.h>
 
+namespace fsi
+{
+
 // Measures in microseconds
 
 class Timer
@@ -18,3 +21,5 @@ private:
 
     LARGE_INTEGER m_accumulatedTime;
 };
+
+}

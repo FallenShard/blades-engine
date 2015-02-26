@@ -15,6 +15,9 @@
 
 #include <vector>
 
+namespace fsi
+{
+
 class Scene
 {
 public:
@@ -46,3 +49,5 @@ private:
     Cube*      m_Cube;
     Sphere*     m_sphere;
 };
+
+}

@@ -4,6 +4,9 @@
 
 #include "OglWrapper/ShaderProgram.h"
 
+namespace fsi
+{
+
 class Texture
 {
 public:
@@ -37,3 +40,5 @@ private:
     GLint m_location;
     GLint m_textureUnit;
 };
+
+}

@@ -1,5 +1,8 @@
 #include "Models/Cube.h"
 
+namespace fsi
+{
+
 Cube::Cube()
 {
 }
@@ -42,3 +45,4 @@ void Cube::init()
     VertexArray::release();
 }
 
+}

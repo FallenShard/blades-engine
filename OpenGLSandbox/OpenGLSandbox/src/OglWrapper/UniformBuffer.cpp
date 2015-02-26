@@ -6,6 +6,9 @@ namespace
     GLuint prevBoundId = 0;
 }
 
+namespace fsi
+{
+
 UniformBuffer::UniformBuffer()
 {
     glGenBuffers(1, &m_id);
@@ -54,4 +57,6 @@ void UniformBuffer::release()
         glBindBuffer(GL_UNIFORM_BUFFER, 0);
         prevBoundId = 0;
     }
+}
+
 }

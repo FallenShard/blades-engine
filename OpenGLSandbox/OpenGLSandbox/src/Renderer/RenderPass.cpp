@@ -1,5 +1,8 @@
 #include "Renderer/RenderPass.h"
 
+namespace fsi
+{
+
 RenderPass::RenderPass()
     : m_quadVertexArray(nullptr)
     , m_frameBuffer(nullptr)
@@ -126,4 +129,6 @@ void RenderPass::render()
     
     m_quadVertexArray->bind();
     m_quadVertexArray->render();
+}
+
 }

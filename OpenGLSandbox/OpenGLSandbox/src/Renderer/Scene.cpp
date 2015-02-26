@@ -15,25 +15,31 @@
 
 #include "Models/Terrain.h"
 
-namespace
+namespace fsi
 {
-    SphereMesh* g_sphMesh = nullptr;
-    CubeMesh* g_prMesh = nullptr;
+    namespace
+    {
+        SphereMesh* g_sphMesh = nullptr;
+        CubeMesh* g_prMesh = nullptr;
 
-    ShaderProgram* prog = nullptr;
+        ShaderProgram* prog = nullptr;
 
 
-    GLenum glError;
+        GLenum glError;
 
-    PhongMaterial* g_mat;
-    PhongMaterial* g_mat2;
+        PhongMaterial* g_mat;
+        PhongMaterial* g_mat2;
 
-    Sphere** g_spheres;
+        Sphere** g_spheres;
 
-    float shininess = 100.f;
+        float shininess = 100.f;
 
-    Terrain* g_terrain;
+        Terrain* g_terrain;
+    }
 }
+
+namespace fsi
+{
 
 Scene::Scene()
     : m_timePassed(0.f)
@@ -237,4 +243,6 @@ bool Scene::reshape(int width, int height)
 {
     m_cameraController.resize(width, height);
     return true;
+}
+
 }

@@ -15,7 +15,8 @@
 #include "Renderer/Scene.h"
 #include "Window/Window.h"
 
-
+namespace fsi
+{
 
 struct Event;
 
@@ -45,3 +46,5 @@ private:
 
     Scene* m_scene;
 };
+
+}

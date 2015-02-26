@@ -15,6 +15,9 @@ namespace
     const int windowHeight = 768;
 }
 
+namespace fsi
+{
+
 Application::Application()
     : m_window(std::make_shared<Window>(VideoMode(windowWidth, windowHeight, 32), "OpenGL Tessellation"))
     , m_renderer(std::make_unique<GLRenderer>(m_window.get()))
@@ -42,7 +45,7 @@ void Application::run()
             processInput();
             m_renderer->update(timePerFrame);
 
-            timeSinceLastUpdate -= microTimePerFrame;    
+            timeSinceLastUpdate -= microTimePerFrame;
         }
 
         m_renderer->draw();
@@ -65,3 +68,4 @@ void Application::processInput()
     }
 }
 
+}

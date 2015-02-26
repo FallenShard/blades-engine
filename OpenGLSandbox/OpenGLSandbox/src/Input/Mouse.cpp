@@ -3,6 +3,8 @@
 #include "Input/Mouse.h"
 #include "Window/Window.h"
 
+namespace fsi
+{
 
 bool Mouse::isButtonPressed(Button button)
 {
@@ -57,4 +59,6 @@ void Mouse::setPosition(const glm::ivec2& position, const Window& window)
         ClientToScreen(handle, &point);
         SetCursorPos(point.x, point.y);
     }
+}
+
 }

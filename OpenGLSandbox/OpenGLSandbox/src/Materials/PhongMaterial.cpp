@@ -1,5 +1,8 @@
 #include "Materials/PhongMaterial.h"
 
+namespace fsi
+{
+
 PhongMaterial::PhongMaterial(glm::vec4& ambient, glm::vec4& diffuse, glm::vec4& specular, float shininess)
 {
     m_data.ambient = ambient;
@@ -49,4 +52,6 @@ void PhongMaterial::initialize()
     std::string blockName = "Material";
     m_uniformBuffer->setBindingPoint(0);
     m_program->setUniformBlockBinding(blockName, 0);
+}
+
 }

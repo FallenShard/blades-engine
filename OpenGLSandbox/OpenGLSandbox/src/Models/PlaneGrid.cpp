@@ -1,5 +1,8 @@
 #include "Models/PlaneGrid.h"
 
+namespace fsi
+{
+
 PlaneGrid::PlaneGrid(float size, float lineStep, int planes)
     : SceneNode(new VertexArray(GL_LINES), nullptr)
     , m_size(size)
@@ -110,4 +113,6 @@ void PlaneGrid::buildVertices()
     m_vertexBuffer.uploadData();
 
     m_vertexArray->setVertexCount(m_vertexBuffer.getVertexCount());
+}
+
 }

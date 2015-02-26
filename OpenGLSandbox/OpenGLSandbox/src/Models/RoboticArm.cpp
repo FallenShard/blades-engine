@@ -23,6 +23,9 @@ namespace
     }
 }
 
+namespace fsi
+{
+
 RoboticArm::RoboticArm(CubeMesh* mesh, ShaderProgram* program, std::vector<SceneNode*>* validationVec)
     : SceneNode(nullptr, program)
     , m_mesh(mesh)
@@ -276,4 +279,6 @@ void RoboticArm::moveFingerOpen(bool increment)
     m_rightFingerHolder->setRotationY(-m_angFingerOpen);
     m_validationVec->push_back(m_leftFingerHolder);
     m_validationVec->push_back(m_rightFingerHolder);
+}
+
 }

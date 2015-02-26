@@ -5,6 +5,9 @@
 #include "OglWrapper/Shader.h"
 #include "OglWrapper/UniformBuffer.h"
 
+namespace fsi
+{
+
 class ShaderProgram
 {
 public:
@@ -54,3 +57,5 @@ private:
     std::map<std::string, GLint> m_uniformAttributes;
     //std::map<std::string, UniformBuffer*> m_uniformBuffers;
 };
+
+}

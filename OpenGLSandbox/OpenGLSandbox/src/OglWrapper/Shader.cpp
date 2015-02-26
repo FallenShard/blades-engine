@@ -3,6 +3,9 @@
 #include "OglWrapper/Shader.h"
 #include "Utils/Logger.h"
 
+namespace fsi
+{
+
 Shader::Shader()
 {
 }
@@ -116,4 +119,6 @@ GLuint Shader::getShaderId() const
 std::string Shader::getSourceFileName() const
 {
     return m_sourceFileName;
+}
+
 }

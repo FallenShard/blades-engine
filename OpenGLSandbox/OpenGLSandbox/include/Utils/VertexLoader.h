@@ -4,6 +4,9 @@
 #include <vector>
 #include "OpenGL.h"
 
+namespace fsi
+{
+
 class VertexBuffer;
 
 class VertexLoader
@@ -21,3 +24,5 @@ private:
 
     std::vector<GLfloat> m_vertexData;
 };
+
+}

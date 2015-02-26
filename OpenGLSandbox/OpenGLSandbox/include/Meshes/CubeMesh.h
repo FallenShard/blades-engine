@@ -4,6 +4,9 @@
 #include "OglWrapper/VertexBuffer.h"
 #include "OglWrapper/IndexBuffer.h"
 
+namespace fsi
+{
+
 class CubeMesh
 {
 public:
@@ -21,3 +24,5 @@ private:
     VertexBuffer m_vertexBuffer;
     IndexBuffer m_indexBuffer;
 };
+
+}

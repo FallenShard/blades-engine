@@ -3,6 +3,9 @@
 #include "Renderer/ShaderManager.h"
 #include "Materials/Material.h"
 
+namespace fsi
+{
+
 class PhongMaterial : public Material
 {
 public:
@@ -34,3 +37,5 @@ private:
     GLint m_uniformBufferIndex;
     GLsizei m_uniformBufferSize;
 };
+
+}

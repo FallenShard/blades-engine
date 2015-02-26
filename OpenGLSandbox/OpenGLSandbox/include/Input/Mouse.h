@@ -2,6 +2,9 @@
 
 #include "glm/vec2.hpp"
 
+namespace fsi
+{
+
 class Window;
 
 class Mouse
@@ -26,3 +29,5 @@ public:
     static void setPosition(const glm::ivec2& position);
     static void setPosition(const glm::ivec2& position, const Window& relativeTo);
 };
+
+}

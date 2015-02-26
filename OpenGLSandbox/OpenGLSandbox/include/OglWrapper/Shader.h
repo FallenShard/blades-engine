@@ -3,6 +3,9 @@
 #include <string>
 #include "OpenGL.h"
 
+namespace fsi
+{
+
 class Shader
 {
 public:
@@ -38,3 +41,5 @@ private:
     GLuint m_id;
     GLenum m_type;
 };
+
+}

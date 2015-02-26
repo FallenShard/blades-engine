@@ -6,6 +6,9 @@ namespace
     GLuint prevBoundProgram = 0;
 }
 
+namespace fsi
+{
+
 ShaderProgram::ShaderProgram()
 {
     // Create an identifier to recognize this program among others
@@ -232,4 +235,6 @@ void ShaderProgram::queryActiveUniforms()
             m_uniformAttributes[name] = location;
         }
     }
+}
+
 }

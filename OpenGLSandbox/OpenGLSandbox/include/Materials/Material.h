@@ -2,6 +2,9 @@
 
 #include "glm/glm.hpp"
 
+namespace fsi
+{
+
 class UniformBuffer;
 class ShaderProgram;
 
@@ -23,3 +26,5 @@ protected:
     ShaderProgram* m_program;
 
 };
+
+}

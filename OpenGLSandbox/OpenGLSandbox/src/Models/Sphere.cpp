@@ -1,5 +1,8 @@
 #include "Models/Sphere.h"
 
+namespace fsi
+{
+
 Sphere::Sphere()
 {
     //init();
@@ -54,4 +57,6 @@ void Sphere::init()
     m_vertexArray->bind();
     m_vertexArray->enableAttributes(m_shaderProgram->getProgramId());
     VertexArray::release();
+}
+
 }

@@ -1,5 +1,8 @@
 #pragma once
 
+namespace fsi
+{
+
 namespace VertexAttrib
 {
     enum ID
@@ -18,4 +21,6 @@ namespace VertexStream
         Normal    = 1,
         TexCoord0 = 2
     };
+}
+
 }

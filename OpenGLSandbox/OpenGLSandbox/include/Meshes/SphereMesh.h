@@ -4,6 +4,9 @@
 #include "OglWrapper/VertexBuffer.h"
 #include "OglWrapper/IndexBuffer.h"
 
+namespace fsi
+{
+
 class SphereMesh
 {
 public:
@@ -26,3 +29,5 @@ private:
     VertexBuffer m_vertexBuffer;
     IndexBuffer m_indexBuffer;
 };
+
+}

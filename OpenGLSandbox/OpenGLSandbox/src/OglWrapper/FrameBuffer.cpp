@@ -5,6 +5,9 @@ namespace
     GLuint boundFBO = 0;
 }
 
+namespace fsi
+{
+
 FrameBuffer::FrameBuffer(int width, int height)
     : m_size(width, height)
 {
@@ -56,4 +59,6 @@ bool FrameBuffer::checkCompleteness()
 void FrameBuffer::enableAttachments()
 {
     glDrawBuffers(m_attachmentPoints.size(), m_attachmentPoints.data());
+}
+
 }

@@ -2,6 +2,9 @@
 
 #include "OpenGL.h"
 
+namespace fsi
+{
+
 class Terrain
 {
 public:
@@ -19,3 +22,5 @@ public:
 private:
     
 };
+
+}

@@ -7,6 +7,9 @@ namespace
     const char* windowClassName = "GL_Window";
 }
 
+namespace fsi
+{
+
 Window::Window(VideoMode videoMode, const std::string& title, Window::Style style)
     :   m_size(videoMode.getModeWidth(), videoMode.getModeHeight())
     ,   m_windowHandle(nullptr)
@@ -650,4 +653,6 @@ glm::ivec2 Window::getPosition() const
 HWND Window::getWindowHandle() const
 {
     return m_windowHandle;
+}
+
 }

@@ -4,6 +4,9 @@
 
 #include <vector>
 
+namespace fsi
+{
+
 class FrameBuffer
 {
 public:
@@ -27,3 +30,5 @@ private:
 
     std::vector<GLenum> m_attachmentPoints;
 };
+
+}

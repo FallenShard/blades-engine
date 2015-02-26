@@ -9,6 +9,9 @@ namespace
     bool useFXAA = true;
 }
 
+namespace fsi
+{
+
 GLRenderer::GLRenderer(Window* window)
     : m_aspectRatio(-1.f)
     , m_timePassed(0.f)
@@ -109,4 +112,6 @@ void GLRenderer::resize(int width, int height)
 {
     m_scene->reshape(width, height);
     
+}
+
 }

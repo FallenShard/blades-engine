@@ -4,6 +4,9 @@
 #include <vector>
 #include "OpenGL.h"
 
+namespace fsi
+{
+
 class IndexBuffer
 {
 public:
@@ -65,3 +68,5 @@ private:
 
     std::vector<GLshort> m_indices;
 };
+
+}

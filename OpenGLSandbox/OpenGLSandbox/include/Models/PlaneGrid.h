@@ -6,6 +6,9 @@
 
 #include "Models/SceneNode.h"
 
+namespace fsi
+{
+
 class PlaneGrid : public SceneNode
 {
 public:
@@ -33,3 +36,5 @@ private:
 
     VertexBuffer m_vertexBuffer;
 };
+
+}

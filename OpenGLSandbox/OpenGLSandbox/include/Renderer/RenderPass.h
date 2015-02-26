@@ -6,6 +6,9 @@
 #include "OglWrapper/ShaderProgram.h"
 #include "OglWrapper/Texture.h"
 
+namespace fsi
+{
+
 class RenderPass
 {
 public:
@@ -34,3 +37,5 @@ private:
     //VertexBuffer m_
 
 };
+
+}

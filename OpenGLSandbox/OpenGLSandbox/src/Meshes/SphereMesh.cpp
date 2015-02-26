@@ -1,5 +1,8 @@
 #include "Meshes/SphereMesh.h"
 
+namespace fsi
+{
+
 SphereMesh::SphereMesh()
     : m_radius(5.f)
     , m_rings(20)
@@ -108,4 +111,6 @@ void SphereMesh::computeVertices()
 VertexArray* SphereMesh::getVertexArray()
 {
     return &m_vertexArray;
+}
+
 }

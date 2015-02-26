@@ -1,12 +1,11 @@
 #include "Core/Application.h"
 
-
 #if defined(_DEBUG)
 #include <tchar.h>
 
 int _tmain(int argc, _TCHAR* argv[])
 {
-    Application application;
+    fsi::Application application;
     application.run();
     return 0;
 }

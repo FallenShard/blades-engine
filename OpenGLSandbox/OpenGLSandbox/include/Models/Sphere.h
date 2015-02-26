@@ -9,6 +9,9 @@
 
 #include "Meshes/SphereMesh.h"
 
+namespace fsi
+{
+
 class Sphere : public SceneNode
 {
 public:
@@ -27,3 +30,5 @@ private:
     SphereMesh* m_mesh;
     Material* m_material;
 };
+
+}

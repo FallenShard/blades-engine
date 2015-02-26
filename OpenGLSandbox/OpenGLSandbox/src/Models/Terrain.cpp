@@ -117,9 +117,9 @@ namespace
 
 namespace
 {
-    VertexArray* vao;
-    VertexBuffer* vbo;
-    IndexBuffer* ibo;
+    fsi::VertexArray* vao;
+    fsi::VertexBuffer* vbo;
+    fsi::IndexBuffer* ibo;
 
     GLuint texId;
     GLuint prog;
@@ -129,6 +129,9 @@ namespace
     GLuint timeUnif;
     GLfloat timeVal = 0.f;
 }
+
+namespace fsi
+{
 
 Terrain::Terrain()
 {
@@ -239,4 +242,6 @@ void Terrain::render(const glm::mat4& projection, const glm::mat4& view)
     glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
 
     //glEnable(GL_CULL_FACE);
+}
+
 }

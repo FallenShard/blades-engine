@@ -3,6 +3,9 @@
 #include <vector>
 #include "OpenGL.h"
 
+namespace fsi
+{
+
 class ShaderProgram;
 
 class UniformBuffer
@@ -30,3 +33,5 @@ private:
 
     GLint   m_bindingPoint;
 };
+
+}

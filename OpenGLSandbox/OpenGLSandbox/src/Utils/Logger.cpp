@@ -4,6 +4,9 @@
 
 #include "Utils/Logger.h"
 
+namespace fsi
+{
+
 Logger* Logger::m_instance = nullptr;
 
 Logger::Logger()
@@ -60,3 +63,4 @@ void Logger::openNewFile()
     m_logFile.open(fileName + ".log", std::ios::app);
 }
 
+}

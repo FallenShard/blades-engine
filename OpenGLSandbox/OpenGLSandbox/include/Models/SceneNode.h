@@ -8,6 +8,9 @@
 #include "OglWrapper/VertexArray.h"
 #include "OglWrapper/ShaderProgram.h"
 
+namespace fsi
+{
+
 class SceneNode
 {
 public:
@@ -64,3 +67,5 @@ protected:
     VertexArray* m_vertexArray;
     ShaderProgram* m_shaderProgram;
 };
+
+}

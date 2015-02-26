@@ -2,6 +2,9 @@
 
 #include <vector>
 
+namespace fsi
+{
+
 // This class represents video mode used by a window
 class VideoMode
 {
@@ -35,3 +38,5 @@ private:
     unsigned int m_modeHeight;
     unsigned int m_modeBitsPerPixel;
 };
+
+}

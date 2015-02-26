@@ -2,6 +2,9 @@
 
 #include "Window/VideoMode.h"
 
+namespace fsi
+{
+
 VideoMode::VideoMode()
     :   m_modeWidth(0)
     ,   m_modeHeight(0)
@@ -103,4 +106,6 @@ unsigned int VideoMode::getModeBitsPerPixel() const
 void VideoMode::setModeBitsPerPixel(unsigned int modeBitsPerPixel)
 {
     m_modeBitsPerPixel = modeBitsPerPixel;
+}
+
 }

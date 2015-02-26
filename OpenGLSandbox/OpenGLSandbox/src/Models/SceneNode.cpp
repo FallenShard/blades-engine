@@ -2,6 +2,8 @@
 
 #include "Models/SceneNode.h"
 
+namespace fsi
+{
 
 SceneNode::SceneNode()
     : m_absoluteTrans(1.f)
@@ -224,4 +226,6 @@ void SceneNode::propagateTransforms(float timeDelta)
     //std::cout << "Update called: " << x << std::endl;
     x++;
 #endif
+}
+
 }

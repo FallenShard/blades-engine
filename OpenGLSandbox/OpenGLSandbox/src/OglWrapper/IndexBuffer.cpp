@@ -7,6 +7,9 @@ namespace
     GLuint boundIBO = 0;
 }
 
+namespace fsi
+{
+
 IndexBuffer::IndexBuffer()
     : m_targetType(GL_ELEMENT_ARRAY_BUFFER)
     , m_usageType(GL_STATIC_DRAW)
@@ -125,4 +128,6 @@ GLshort& IndexBuffer::operator[](unsigned int index)
     assert(index >= 0 && index < m_indices.size());
 
     return m_indices[index];
+}
+
 }

@@ -8,6 +8,9 @@
 
 #include "Renderer/CameraController.h"
 
+namespace fsi
+{
+
 CameraController::CameraController(ShaderProgram* program, Window* window)
     : m_activeCamera(&m_freeCamera)
     , m_program(program)
@@ -160,4 +163,6 @@ glm::mat4 CameraController::getProjectionMatrix() const
 glm::vec3 CameraController::getCameraPosition() const
 {
     return m_activeCamera->getPosition();
+}
+
 }

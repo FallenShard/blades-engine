@@ -3,6 +3,9 @@
 #include "Models/SceneNode.h"
 #include "Meshes/CubeMesh.h"
 
+namespace fsi
+{
+
 class Cube : public SceneNode
 {
 public:
@@ -19,3 +22,5 @@ private:
 
     CubeMesh* m_mesh;
 };
+
+}

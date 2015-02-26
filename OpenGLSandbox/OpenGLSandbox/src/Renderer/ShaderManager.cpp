@@ -2,6 +2,9 @@
 #include "Renderer/ShaderManager.h"
 #include "OglWrapper/VertexStreams.h"
 
+namespace fsi
+{
+
 ShaderManager::ShaderManager()
     : m_relativePath("res/")
 {
@@ -113,4 +116,6 @@ ShaderProgram* ShaderManager::getProgram(const std::string& key, const std::stri
 ShaderProgram* ShaderManager::getProgram(const std::string& key)
 {
     return m_programCache[key];
+}
+
 }

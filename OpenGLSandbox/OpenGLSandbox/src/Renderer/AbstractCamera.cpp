@@ -1,5 +1,8 @@
 #include "Renderer/AbstractCamera.h"
 
+namespace fsi
+{
+
 AbstractCamera::AbstractCamera()
     : m_zNear(0.1f)
     , m_zFar(1000.f)
@@ -70,4 +73,6 @@ const float AbstractCamera::getAspectRatio() const
 void AbstractCamera::calcFrustumPlanes()
 {
     // TO DO
+}
+
 }

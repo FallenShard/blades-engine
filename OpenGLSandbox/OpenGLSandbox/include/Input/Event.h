@@ -3,6 +3,9 @@
 #include "Input/Keyboard.h"
 #include "Input/Mouse.h"
 
+namespace fsi
+{
+
 struct Event
 {
     // Keyboard event
@@ -61,3 +64,5 @@ struct Event
         SizeEvent            size;
     };
 };
+
+}

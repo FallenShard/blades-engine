@@ -3,8 +3,11 @@
 #include <string>
 #include <fstream>
 
-#define LOG(message) Logger::log(message);
-#define FLUSH_LOG() Logger::flush();
+#define LOG(message) fsi::Logger::log(message);
+#define FLUSH_LOG() fsi::Logger::flush();
+
+namespace fsi
+{
 
 class Logger
 {
@@ -24,3 +27,5 @@ private:
     static Logger* m_instance;
     std::ofstream m_logFile;
 };
+
+}

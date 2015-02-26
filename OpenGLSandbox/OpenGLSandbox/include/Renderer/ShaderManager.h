@@ -3,6 +3,9 @@
 #include "OglWrapper/Shader.h"
 #include "OglWrapper/ShaderProgram.h"
 
+namespace fsi
+{
+
 class ShaderManager
 {
 public:
@@ -31,3 +34,5 @@ private:
 
     std::map<std::string, ShaderProgram*> m_programCache;
 };
+
+}
