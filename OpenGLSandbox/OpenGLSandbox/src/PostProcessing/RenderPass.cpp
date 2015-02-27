@@ -1,4 +1,4 @@
-#include "Renderer/RenderPass.h"
+#include "PostProcessing/RenderPass.h"
 
 namespace fsi
 {

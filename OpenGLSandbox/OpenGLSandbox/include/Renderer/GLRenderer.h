@@ -11,8 +11,8 @@
 #include "OglWrapper/VertexBuffer.h"
 #include "OglWrapper/IndexBuffer.h"
 #include "OglWrapper/VertexAttribute.h"
-#include "Renderer/RenderPass.h"
-#include "Renderer/Scene.h"
+#include "PostProcessing/RenderPass.h"
+#include "Renderer/SceneManager.h"
 #include "Window/Window.h"
 
 namespace fsi
@@ -44,7 +44,7 @@ private:
 
     RenderPass* m_aaPass;
 
-    Scene* m_scene;
+    SceneManager* m_sceneManager;
 };
 
 }

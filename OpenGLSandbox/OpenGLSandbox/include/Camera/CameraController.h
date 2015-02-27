@@ -1,6 +1,6 @@
 #pragma once
 
-#include "Renderer/FreeCamera.h"
+#include "Camera/FreeCamera.h"
 
 namespace fsi
 {

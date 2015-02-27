@@ -18,7 +18,7 @@ GLRenderer::GLRenderer(Window* window)
     , m_window(window)
     , m_shaderManager(nullptr)
     , m_aaPass(nullptr)
-    , m_scene(nullptr)
+    , m_sceneManager(nullptr)
 {
     init();
 }
@@ -32,7 +32,7 @@ GLRenderer::GLRenderer(int width, int height)
 
 GLRenderer::~GLRenderer()
 {
-    delete m_scene;
+    delete m_sceneManager;
     delete m_aaPass;
 }
 
@@ -46,8 +46,8 @@ void GLRenderer::init()
 
     m_shaderManager = new ShaderManager();
 
-    m_scene = new Scene(m_window, m_shaderManager);
-    m_scene->prepare();
+    m_sceneManager = new SceneManager(m_window, m_shaderManager);
+    m_sceneManager->prepare();
 
     glEnable(GL_CULL_FACE);
     glCullFace(GL_BACK);
@@ -74,7 +74,7 @@ void GLRenderer::draw()
     {
         m_aaPass->activate();
 
-        m_scene->render();
+        m_sceneManager->render();
         
         FrameBuffer::bindScreen();
         FrameBuffer::clear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
@@ -86,7 +86,7 @@ void GLRenderer::draw()
         FrameBuffer::bindScreen();
         FrameBuffer::clear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
-        m_scene->render();
+        m_sceneManager->render();
     }
 }
 
@@ -98,19 +98,19 @@ void GLRenderer::handleEvents(const Event& event)
     if (event.type == Event::Resized)
         m_aaPass->resize(event.size.width, event.size.height);
 
-    m_scene->handleEvents(event);
+    m_sceneManager->handleEvents(event);
 }
 
 void GLRenderer::update(float timeDelta)
 {
     m_timePassed += timeDelta;
 
-    m_scene->update(timeDelta);
+    m_sceneManager->update(timeDelta);
 }
 
 void GLRenderer::resize(int width, int height)
 {
-    m_scene->reshape(width, height);
+    m_sceneManager->reshape(width, height);
     
 }
 

@@ -1,4 +1,4 @@
-#include "Renderer/AbstractCamera.h"
+#include "Camera/AbstractCamera.h"
 
 namespace fsi
 {

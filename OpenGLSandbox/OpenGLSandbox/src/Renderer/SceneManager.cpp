@@ -1,4 +1,4 @@
-#include "Renderer/Scene.h"
+#include "Renderer/SceneManager.h"
 
 #include "Models/SceneNode.h"
 #include "Models/TransformNode.h"
@@ -41,14 +41,14 @@ namespace fsi
 namespace fsi
 {
 
-Scene::Scene()
+SceneManager::SceneManager()
     : m_timePassed(0.f)
     , m_planeGrid(new PlaneGrid(1000.f, 10.f, PlaneGrid::XZ))
     , m_cameraController(nullptr, nullptr)
 {
 }
 
-Scene::Scene(Window* window, ShaderManager* shaderManager)
+SceneManager::SceneManager(Window* window, ShaderManager* shaderManager)
     : m_timePassed(0.f)
     , m_planeGrid(new PlaneGrid(1000.f, 10.f, PlaneGrid::XZ))
     , m_cameraController(nullptr, window)
@@ -57,7 +57,7 @@ Scene::Scene(Window* window, ShaderManager* shaderManager)
 {
 }
 
-Scene::~Scene()
+SceneManager::~SceneManager()
 {
     delete m_sceneGraph;
     delete g_sphMesh;
@@ -68,7 +68,7 @@ Scene::~Scene()
     delete g_terrain;
 }
 
-void Scene::prepare()
+void SceneManager::prepare()
 {
     prog = m_shaderManager->getProgram("perspective");
 
@@ -129,7 +129,7 @@ void Scene::prepare()
     m_validationVector.push_back(m_sceneGraph);
 }
 
-void Scene::handleEvents(const Event& event)
+void SceneManager::handleEvents(const Event& event)
 {
     m_cameraController.handleEvents(event);
 
@@ -138,7 +138,7 @@ void Scene::handleEvents(const Event& event)
             g_mat->setAmbientColor(glm::vec4(0.f, 0.f, 1.f, 1.f));
 }
 
-void Scene::update(float timeDelta)
+void SceneManager::update(float timeDelta)
 {
     m_timePassed += timeDelta;
 
@@ -215,7 +215,7 @@ void Scene::update(float timeDelta)
     m_validationVector.clear();
 }
 
-void Scene::render()
+void SceneManager::render()
 {
     prog->use();
 
@@ -239,7 +239,7 @@ void Scene::render()
     //glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
 }
 
-bool Scene::reshape(int width, int height)
+bool SceneManager::reshape(int width, int height)
 {
     m_cameraController.resize(width, height);
     return true;

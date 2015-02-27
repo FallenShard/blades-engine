@@ -47,9 +47,6 @@
     <ClCompile Include="src\Models\PlaneGrid.cpp" />
     <ClCompile Include="src\Models\RoboticArm.cpp" />
     <ClCompile Include="src\Models\SceneNode.cpp" />
-    <ClCompile Include="src\Renderer\AbstractCamera.cpp" />
-    <ClCompile Include="src\Renderer\CameraController.cpp" />
-    <ClCompile Include="src\Renderer\FreeCamera.cpp" />
     <ClCompile Include="src\Renderer\GLRenderer.cpp" />
     <ClCompile Include="src\Utils\Logger.cpp" />
     <ClCompile Include="src\Utils\VertexLoader.cpp" />
@@ -65,7 +62,6 @@
     <ClCompile Include="src\Renderer\ShaderManager.cpp" />
     <ClCompile Include="src\Models\Sphere.cpp" />
     <ClCompile Include="src\Meshes\SphereMesh.cpp" />
-    <ClCompile Include="src\Renderer\RenderPass.cpp" />
     <ClCompile Include="src\OglWrapper\VertexBuffer.cpp" />
     <ClCompile Include="src\OglWrapper\VertexArray.cpp" />
     <ClCompile Include="src\OglWrapper\Texture.cpp" />
@@ -74,7 +70,6 @@
     <ClCompile Include="src\OglWrapper\FrameBuffer.cpp" />
     <ClCompile Include="src\OglWrapper\IndexBuffer.cpp" />
     <ClCompile Include="src\Meshes\PlaneMesh.cpp" />
-    <ClCompile Include="src\Renderer\Scene.cpp" />
     <ClCompile Include="src\Meshes\CubeMesh.cpp" />
     <ClCompile Include="src\OglWrapper\UniformBuffer.cpp" />
     <ClCompile Include="src\Materials\Material.cpp" />
@@ -83,6 +78,11 @@
     <ClCompile Include="src\Models\Terrain.cpp" />
     <ClCompile Include="src\Input\Mouse.cpp" />
     <ClCompile Include="src\Input\Keyboard.cpp" />
+    <ClCompile Include="src\Renderer\SceneManager.cpp" />
+    <ClCompile Include="src\PostProcessing\RenderPass.cpp" />
+    <ClCompile Include="src\Camera\AbstractCamera.cpp" />
+    <ClCompile Include="src\Camera\CameraController.cpp" />
+    <ClCompile Include="src\Camera\FreeCamera.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="include\Core\Application.h" />
@@ -91,18 +91,14 @@
     <ClInclude Include="include\GL\glcorearb.h" />
     <ClInclude Include="include\GL\wglext.h" />
     <ClInclude Include="include\Models\PlaneGrid.h" />
-    <ClInclude Include="include\Renderer\CameraController.h" />
     <ClInclude Include="include\Models\IRenderable.h" />
     <ClInclude Include="include\Models\RoboticArm.h" />
     <ClInclude Include="include\Models\IRenderable.h" />
     <ClInclude Include="include\Models\PlaneGrid.h" />
     <ClInclude Include="include\Models\RoboticArm.h" />
     <ClInclude Include="include\Models\SceneNode.h" />
-    <ClInclude Include="include\Renderer\AbstractCamera.h" />
     <ClInclude Include="include\Renderer\CameraController.h" />
-    <ClInclude Include="include\Renderer\FreeCamera.h" />
     <ClInclude Include="include\Renderer\GLRenderer.h" />
-    <ClInclude Include="include\Renderer\TargetCamera.h" />
     <ClInclude Include="include\Utils\Logger.h" />
     <ClInclude Include="include\Utils\VertexLoader.h" />
     <ClInclude Include="include\Window\GLContext.h" />
@@ -113,7 +109,6 @@
     <ClInclude Include="include\Renderer\ShaderManager.h" />
     <ClInclude Include="include\Models\Sphere.h" />
     <ClInclude Include="include\Meshes\SphereMesh.h" />
-    <ClInclude Include="include\Renderer\RenderPass.h" />
     <ClInclude Include="include\OglWrapper\VertexBuffer.h" />
     <ClInclude Include="include\OglWrapper\VertexAttribute.h" />
     <ClInclude Include="include\OglWrapper\VertexArray.h" />
@@ -123,7 +118,6 @@
     <ClInclude Include="include\OglWrapper\IndexBuffer.h" />
     <ClInclude Include="include\OglWrapper\FrameBuffer.h" />
     <ClInclude Include="include\Meshes\PlaneMesh.h" />
-    <ClInclude Include="include\Renderer\Scene.h" />
     <ClInclude Include="include\Meshes\CubeMesh.h" />
     <ClInclude Include="include\OglWrapper\UniformBuffer.h" />
     <ClInclude Include="include\Materials\Material.h" />
@@ -134,6 +128,12 @@
     <ClInclude Include="include\Input\Event.h" />
     <ClInclude Include="include\Input\Keyboard.h" />
     <ClInclude Include="include\Input\Mouse.h" />
+    <ClInclude Include="include\Renderer\SceneManager.h" />
+    <ClInclude Include="include\PostProcessing\RenderPass.h" />
+    <ClInclude Include="include\Camera\AbstractCamera.h" />
+    <ClInclude Include="include\Camera\CameraController.h" />
+    <ClInclude Include="include\Camera\FreeCamera.h" />
+    <ClInclude Include="include\Camera\TargetCamera.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include="res\passThrough.vert" />
