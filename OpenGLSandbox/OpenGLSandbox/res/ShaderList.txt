@@ -1,4 +1,8 @@
-passThrough.vert
+pass_through.vert
 fxaa.frag
-PhongShading.vert
-PhongShading.frag
+phong.vert
+phong.frag
+terrain.frag
+terrain.tesc
+terrain.tese
+terrain.vert

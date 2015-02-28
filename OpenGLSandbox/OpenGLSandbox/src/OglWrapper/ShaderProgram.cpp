@@ -29,11 +29,18 @@ void ShaderProgram::attachShader(Shader& shader)
     m_shaders[shader.getSourceFileName()] = std::make_shared<Shader>(shader);
 }
 
+void ShaderProgram::attachShader(std::shared_ptr<Shader> shader)
+{
+    glAttachShader(m_id, shader->getShaderId());
+    
+    m_shaders[shader->getSourceFileName()] = shader;
+}
+
 void ShaderProgram::attachShader(Shader::Type type, std::string sourceFileName)
 {
     // Create a shader first
     Shader shader(sourceFileName, type);
-    shader.checkCompileStatus();
+    shader.checkForErrors();
 
     // Attach it to this program
     glAttachShader(m_id, shader.getShaderId());

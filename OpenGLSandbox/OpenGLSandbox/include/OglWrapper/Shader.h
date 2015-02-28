@@ -27,13 +27,13 @@ public:
 
     bool create(Type type);
 
-    void loadFromFile(std::string fileName, Type type = None);
+    void loadFromFile(std::string fileName);
     void compile();
 
     GLuint getShaderId() const;
     std::string getSourceFileName() const;
 
-    bool checkCompileStatus();
+    bool checkForErrors();
 
 private:
     std::string m_sourceFileName;

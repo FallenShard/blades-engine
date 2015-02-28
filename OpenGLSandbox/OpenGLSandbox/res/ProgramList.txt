@@ -1,0 +1,3 @@
+fxaa pass_through.vert fxaa.frag
+phong phong.vert phong.frag
+terrain terrain.vert terrain.tesc terrain.tese terrain.frag

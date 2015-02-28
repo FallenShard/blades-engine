@@ -15,6 +15,7 @@ public:
     ~ShaderProgram();
 
     void attachShader(Shader& shader);
+    void attachShader(std::shared_ptr<Shader> shader);
     void attachShader(Shader::Type type, std::string fileName);
     void detachShader(Shader& shader);
 
@@ -51,9 +52,7 @@ public:
 private:
     GLuint m_id;
 
-    typedef std::shared_ptr<Shader> ShaderPtr;
-
-    std::map<std::string, ShaderPtr> m_shaders;
+    std::map<std::string, std::shared_ptr<Shader>> m_shaders;
     std::map<std::string, GLint> m_uniformAttributes;
     //std::map<std::string, UniformBuffer*> m_uniformBuffers;
 };
