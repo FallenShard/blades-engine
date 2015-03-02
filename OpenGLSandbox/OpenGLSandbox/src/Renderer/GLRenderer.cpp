@@ -64,7 +64,7 @@ void GLRenderer::init()
     glm::ivec2 windowSize = m_window->getSize();
 
     m_aaPass = new RenderPass();
-    m_aaPass->attachProgram(m_shaderManager->getProgram("FXAAPass"));
+    m_aaPass->attachProgram(m_shaderManager->getProgram("fxaa"));
     m_aaPass->init(windowSize.x, windowSize.y);
 }
 
