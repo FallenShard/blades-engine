@@ -44,14 +44,14 @@ namespace fsi
 SceneManager::SceneManager()
     : m_timePassed(0.f)
     , m_planeGrid(new PlaneGrid(1000.f, 10.f, PlaneGrid::XZ))
-    , m_cameraController(nullptr, nullptr)
+    , m_cameraController(nullptr)
 {
 }
 
 SceneManager::SceneManager(Window* window, ShaderManager* shaderManager)
     : m_timePassed(0.f)
     , m_planeGrid(new PlaneGrid(1000.f, 10.f, PlaneGrid::XZ))
-    , m_cameraController(nullptr, window)
+    , m_cameraController(window)
     , m_shaderManager(shaderManager)
     , m_sceneGraph(new TransformNode())
 {
@@ -72,7 +72,6 @@ void SceneManager::prepare()
 {
     prog = m_shaderManager->getProgram("phong");
 
-    m_cameraController.setShaderProgram(prog);
     m_cameraController.setPosition(glm::vec3(0.f, 32.f, 36.f));
 
     m_planeGrid->setProgram(prog);

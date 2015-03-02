@@ -13,9 +13,8 @@
 namespace fsi
 {
 
-CameraController::CameraController(ShaderProgram* program, Window* window)
+CameraController::CameraController(Window* window)
     : m_activeCamera(&m_freeCamera)
-    , m_program(program)
     , m_yaw(180.f)
     , m_pitch(35.f)
     , m_roll(0.f)
@@ -44,11 +43,6 @@ void CameraController::setSpeed(float translationSpeed, float lookSpeed)
     m_freeCamera.setSpeed(translationSpeed);
 
     m_lookSpeed = lookSpeed;
-}
-
-void CameraController::setShaderProgram(ShaderProgram* program)
-{
-    m_program = program;
 }
 
 bool CameraController::handleEvents(const Event& event)
@@ -122,10 +116,6 @@ void CameraController::update(float timeDelta)
     if (prev != m_activeCamera->getPosition())
         std::cout << "CameraPos X:" << m_freeCamera.getPosition().x << " Y: " 
         << m_activeCamera->getPosition().y << " Z: " << m_activeCamera->getPosition().z << std::endl;
-
-    m_program->use();
-    m_program->setUniformAttribute("worldToCameraMatrix", 1, GL_FALSE, glm::value_ptr(m_activeCamera->getViewMatrix()));
-    ShaderProgram::release();
 }
 
 void CameraController::setFreeLook(bool freeLook)

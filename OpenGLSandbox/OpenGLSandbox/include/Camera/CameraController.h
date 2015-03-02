@@ -13,12 +13,11 @@ struct Event;
 class CameraController
 {
 public:
-    CameraController(ShaderProgram* program, Window* window);
+    CameraController(Window* window);
     ~CameraController();
 
     void setPosition(glm::vec3& position);
     void setSpeed(float translationSpeed, float lookSpeed);
-    void setShaderProgram(ShaderProgram* program);
 
     bool handleEvents(const Event& event);
     void update(float timeDelta);
@@ -41,8 +40,6 @@ private:
     float m_yaw;
     float m_pitch;
     float m_roll;
-
-    ShaderProgram*  m_program;
 
     bool    m_freeLook;
     Window* m_window;
