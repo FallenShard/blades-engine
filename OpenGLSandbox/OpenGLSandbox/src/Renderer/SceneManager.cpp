@@ -70,7 +70,7 @@ SceneManager::~SceneManager()
 
 void SceneManager::prepare()
 {
-    prog = m_shaderManager->getProgram("perspective");
+    prog = m_shaderManager->getProgram("phong");
 
     m_cameraController.setShaderProgram(prog);
     m_cameraController.setPosition(glm::vec3(0.f, 32.f, 36.f));
