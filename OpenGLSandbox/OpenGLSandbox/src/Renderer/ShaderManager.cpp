@@ -9,6 +9,10 @@ namespace fsi
 ShaderManager::ShaderManager()
     : m_relativePath("res/")
 {
+    m_attributeTable["position"] = VertexAttrib::Position;
+    m_attributeTable["normal"] = VertexAttrib::Normal;
+    m_attributeTable["texCoord0"] = VertexAttrib::TexCoord0;
+
     loadShaderConfig(m_relativePath + "ShaderList.txt");
     loadProgramConfig(m_relativePath + "ProgramList.txt");
     
@@ -29,9 +33,8 @@ void ShaderManager::loadShader(const std::string& fileName)
     if (type != Shader::None)
     {
         std::shared_ptr<Shader> shader = std::make_shared<Shader>(fileName, type);
-        //Shader* shader = new Shader(fileName, type);
         shader->checkForErrors();
-        m_shaders[fileName] = shader; //std::make_shared<Shader>(shader);
+        m_shaders[fileName] = shader;
     }
 }
 
@@ -92,7 +95,7 @@ std::shared_ptr<Shader> ShaderManager::getShader(const std::string& fileName)
 
 void ShaderManager::buildProgram(const std::string& key, const std::vector<std::string>& shaderNames)
 {
-    std::shared_ptr<ShaderProgram> program = std::make_shared<ShaderProgram>();
+    std::unique_ptr<ShaderProgram> program = std::make_unique<ShaderProgram>();
     
 //    ShaderProgram* program = new ShaderProgram();
 
@@ -102,17 +105,18 @@ void ShaderManager::buildProgram(const std::string& key, const std::vector<std::
     }
 
     program->link();
-    program->checkLinkStatus();
+    program->checkForErrors();
 
     // Bind vertex attribute to indices
-    program->bindVertexAttribute(VertexAttrib::Position,  "position");
-    program->bindVertexAttribute(VertexAttrib::Normal,    "normal");
-    program->bindVertexAttribute(VertexAttrib::TexCoord0, "texCoord");
+    program->queryActiveAttributes(m_attributeTable);
+    //program->bindVertexAttribute(VertexAttrib::Position,  "position");
+    //program->bindVertexAttribute(VertexAttrib::Normal,    "normal");
+    //program->bindVertexAttribute(VertexAttrib::TexCoord0, "texCoord");
 
     // Get all uniforms in the shader sources
     program->queryActiveUniforms();
 
-    m_programCache[key] = program;
+    m_programCache[key] = std::move(program);
 }
 
 ShaderProgram* ShaderManager::getProgram(const std::string& key)

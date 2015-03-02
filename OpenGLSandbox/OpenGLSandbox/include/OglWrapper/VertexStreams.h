@@ -9,17 +9,19 @@ namespace VertexAttrib
     {
         Position  = 0,
         Normal    = 1,
-        TexCoord0 = 2
+        TexCoord0 = 2,
+        Count
     };
 }
 
-namespace VertexStream
+namespace VertexBufferBinding
 {
     enum ID
     {
         Position  = 0,
         Normal    = 1,
-        TexCoord0 = 2
+        TexCoord0 = 2,
+        Count
     };
 }
 

@@ -60,6 +60,7 @@
     <ClInclude Include="include\Input\Keyboard.h" />
     <ClInclude Include="include\Input\Mouse.h" />
     <ClInclude Include="include\Materials\Material.h" />
+    <ClInclude Include="include\Meshes\Mesh.h" />
     <ClInclude Include="include\Meshes\PlaneMesh.h" />
     <ClInclude Include="include\Meshes\CubeMesh.h" />
     <ClInclude Include="include\Meshes\SphereMesh.h" />
@@ -98,16 +99,17 @@
     <ClInclude Include="include\Window\Window.h" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="res\PhongShading.vert" />
-    <None Include="res\passThrough.vert" />
+    <None Include="res\phong.vert" />
+    <None Include="res\pass_through.vert" />
     <None Include="res\fxaa.frag" />
-    <None Include="res\PhongShading.frag" />
+    <None Include="res\phong.frag" />
     <None Include="res\terrain.frag" />
     <None Include="res\terrain.tesc" />
     <None Include="res\terrain.tese" />
     <None Include="res\terrain.vert" />
   </ItemGroup>
   <ItemGroup>
+    <Text Include="res\ProgramList.txt" />
     <Text Include="res\RobotArmFaces.txt" />
     <Text Include="res\CubeMesh.txt" />
     <Text Include="res\ShaderList.txt" />

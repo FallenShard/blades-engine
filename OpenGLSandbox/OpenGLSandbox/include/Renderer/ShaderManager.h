@@ -36,8 +36,9 @@ private:
 
     std::string m_relativePath;
 
+    std::map<std::string, GLuint> m_attributeTable;
     std::map<std::string, std::shared_ptr<Shader>> m_shaders;
-    std::map<std::string, std::shared_ptr<ShaderProgram>> m_programCache;
+    std::map<std::string, std::unique_ptr<ShaderProgram>> m_programCache;
 };
 
 }

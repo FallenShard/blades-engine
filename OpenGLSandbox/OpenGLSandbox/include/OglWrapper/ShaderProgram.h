@@ -24,9 +24,11 @@ public:
     void use();
     static void release();
 
-    bool checkLinkStatus();
+    bool checkForErrors();
 
     void queryActiveUniforms();
+    void queryActiveAttributes(const std::map<std::string, GLuint>& attribTable);
+
     GLint getUniformAttribute(std::string name);
     GLint getUniformBuffer(std::string name);
 

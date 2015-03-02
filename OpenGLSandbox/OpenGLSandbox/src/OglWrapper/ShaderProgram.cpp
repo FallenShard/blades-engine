@@ -18,6 +18,8 @@ ShaderProgram::ShaderProgram()
 ShaderProgram::~ShaderProgram()
 {
     m_shaders.clear();
+
+    glDeleteProgram(m_id);
 }
 
 void ShaderProgram::attachShader(Shader& shader)
@@ -98,7 +100,7 @@ void ShaderProgram::release()
     }
 }
 
-bool ShaderProgram::checkLinkStatus()
+bool ShaderProgram::checkForErrors()
 {
     // Used to grab actual error status
     GLint linkStatus = 0;
@@ -113,17 +115,19 @@ bool ShaderProgram::checkLinkStatus()
     if (linkStatus == GL_FALSE)
     {
         hasError = true;
+
+        // Get the length of additional info
         int infoLogLength = 0;
-
-        // Log the additional info
         glGetProgramiv(m_id, GL_INFO_LOG_LENGTH, &infoLogLength);
-        GLchar* buffer = new GLchar[infoLogLength];
+        
+        std::vector<GLchar> buffer(infoLogLength);
+        buffer.push_back('\0');
         GLsizei charsWritten = 0;
-        glGetProgramInfoLog(m_id, infoLogLength, &charsWritten, buffer);
+        glGetProgramInfoLog(m_id, infoLogLength, &charsWritten, &buffer[0]);
 
-        Logger::log(buffer);
+        std::string infoLog(buffer.begin(), buffer.end());
 
-        delete[] buffer;
+        LOG(infoLog)
     }
 
     return hasError;
@@ -240,6 +244,30 @@ void ShaderProgram::queryActiveUniforms()
 
             // Insert the name and location into attribute hash table
             m_uniformAttributes[name] = location;
+        }
+    }
+}
+
+void ShaderProgram::queryActiveAttributes(const std::map<std::string, GLuint>& attribTable)
+{
+    GLint numActiveAttribs = 0;
+    glGetProgramiv(m_id, GL_ACTIVE_ATTRIBUTES, &numActiveAttribs);
+
+    std::vector<GLchar> nameData(256);
+
+    for (int attrib = 0; attrib < numActiveAttribs; ++attrib)
+    {
+        GLint arraySize = 0;
+        GLenum type = 0;
+        GLsizei actualLength = 0;
+        glGetActiveAttrib(m_id, attrib, nameData.size(), &actualLength, &arraySize, &type, &nameData[0]);
+        std::string name((char*)&nameData[0], actualLength);
+
+        auto attribute = attribTable.find(name);
+
+        if (attribute != attribTable.end())
+        {
+            glBindAttribLocation(m_id, attribute->second, attribute->first.c_str());
         }
     }
 }

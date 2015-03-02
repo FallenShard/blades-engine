@@ -55,7 +55,6 @@
     <ClCompile Include="src\Window\Window.cpp" />
     <ClCompile Include="src\gl3w.c" />
     <ClCompile Include="src\Models\PlaneGrid.cpp" />
-    <ClCompile Include="src\Renderer\CameraController.cpp" />
     <ClCompile Include="src\Models\RoboticArm.cpp" />
     <ClCompile Include="src\main.cpp" />
     <ClCompile Include="src\Models\TransformNode.cpp" />
@@ -97,7 +96,6 @@
     <ClInclude Include="include\Models\PlaneGrid.h" />
     <ClInclude Include="include\Models\RoboticArm.h" />
     <ClInclude Include="include\Models\SceneNode.h" />
-    <ClInclude Include="include\Renderer\CameraController.h" />
     <ClInclude Include="include\Renderer\GLRenderer.h" />
     <ClInclude Include="include\Utils\Logger.h" />
     <ClInclude Include="include\Utils\VertexLoader.h" />
@@ -134,20 +132,22 @@
     <ClInclude Include="include\Camera\CameraController.h" />
     <ClInclude Include="include\Camera\FreeCamera.h" />
     <ClInclude Include="include\Camera\TargetCamera.h" />
+    <ClInclude Include="include\Meshes\Mesh.h" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="res\passThrough.vert" />
     <None Include="res\fxaa.frag" />
-    <None Include="res\PhongShading.frag" />
-    <None Include="res\PhongShading.vert" />
     <None Include="res\terrain.vert" />
     <None Include="res\terrain.frag" />
     <None Include="res\terrain.tese" />
     <None Include="res\terrain.tesc" />
+    <None Include="res\phong.frag" />
+    <None Include="res\phong.vert" />
+    <None Include="res\pass_through.vert" />
   </ItemGroup>
   <ItemGroup>
     <Text Include="res\RobotArmFaces.txt" />
     <Text Include="res\ShaderList.txt" />
     <Text Include="res\CubeMesh.txt" />
+    <Text Include="res\ProgramList.txt" />
   </ItemGroup>
 </Project>
