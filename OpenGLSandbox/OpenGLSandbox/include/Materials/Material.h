@@ -14,13 +14,16 @@ public:
     Material();
     virtual ~Material();
 
+    virtual void init() = 0;
+
     void setShaderProgram(ShaderProgram* program);
+    ShaderProgram* getShaderProgram() const;
 
     virtual void apply() = 0;
 
 
 protected:
-    virtual void initialize() = 0;
+    
 
     UniformBuffer* m_uniformBuffer;
     ShaderProgram* m_program;

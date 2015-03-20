@@ -3,6 +3,8 @@
 #include <string>
 #include "OpenGL.h"
 
+#include "VertexStreams.h"
+
 namespace fsi
 {
 
@@ -15,6 +17,8 @@ struct VertexAttribute
     GLboolean normalized;
     GLsizei stride;
     const GLvoid* offset;
+    GLint iOffset;
+    VertexAttrib::ID attribLoc;
 
     VertexAttribute()
     {
@@ -38,6 +42,15 @@ struct VertexAttribute
         this->normalized = normalized;
         this->stride = stride;
         this->offset = (const GLvoid *)offset;
+    }
+
+    VertexAttribute(VertexAttrib::ID attrib, GLint vertexSize, GLenum type, GLboolean normalized, GLint offset)
+    {
+        this->attribLoc = attrib;
+        this->size = vertexSize;
+        this->type = type;
+        this->normalized = normalized;
+        this->iOffset = offset;
     }
 
     void locate(GLuint programId)

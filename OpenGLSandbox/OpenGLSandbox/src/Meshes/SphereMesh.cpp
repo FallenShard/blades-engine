@@ -31,7 +31,7 @@ void SphereMesh::computeVertices()
     float ringIncr = 180.f / (m_rings + 1);
 
     // Fill the buffer with vertices and faces
-    m_vertexBuffer.setDataCountPerVertex(6);
+    m_vertexBuffer.setVertexSize(6);
 
     m_vertexBuffer.push(0.f, m_radius, 0.f);
     m_vertexBuffer.push(0.f, m_radius, 0.f);

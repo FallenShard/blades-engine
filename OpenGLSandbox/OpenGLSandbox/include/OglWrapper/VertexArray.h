@@ -36,8 +36,11 @@ public:
     // Returns vertex count of the vertex array
     GLsizei getVertexCount() const;
 
-    // Calculates per vertex data count
-    GLsizei getPerVertexDataCount() const;
+    // Sets the index count for the vertex array, usually received from index buffer
+    void setIndexCount(GLsizei indexCount);
+
+    // Returns index count of this vertex array
+    GLsizei getIndexCount() const;
 
     // Attaches a vertex buffer to the vertex array
     void attachBuffer(std::string name, VertexBuffer* buffer);
@@ -50,6 +53,15 @@ public:
 
     // Enables all the attached attributes on a given shader program ID
     void enableAttributes(GLuint programId);
+
+    // Enables a vertex attribute on this vertex array
+    void enableVertexAttrib(GLuint attribLocation);
+
+    // Specifies a vertex attribute on this vertex array
+    void attributeFormat(VertexAttribute attribute);
+
+    // Specifies attribute binding on this vertex array
+    void attributeBinding(GLuint attribLocation, GLuint bufferBinding);
 
     // Sets the primitive type to be rendered by this array
     void setPrimitiveType(GLenum primitive);

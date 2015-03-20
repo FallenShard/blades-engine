@@ -70,14 +70,14 @@ void IndexBuffer::create(GLshort* vertices, unsigned int size)
     for (unsigned int i = 0; i < size; i++)
         m_indices.push_back(vertices[i]);
 
-    glBufferData(m_targetType, sizeof(GLshort) * m_indices.size(), m_indices.data(), m_usageType);
+    uploadData();
 }
 
 void IndexBuffer::create(std::vector<GLshort> indices)
 {
     m_indices = indices;
 
-    glBufferData(m_targetType, sizeof(GLshort) * m_indices.size(), m_indices.data(), m_usageType);
+    uploadData();
 }
 
 void IndexBuffer::loadFromFile(std::string fileName)
@@ -95,22 +95,22 @@ void IndexBuffer::loadFromFile(std::string fileName)
 
     inputFile.close();
 
-    glBufferData(m_targetType, sizeof(GLshort) * m_indices.size(), m_indices.data(), m_usageType);
+    uploadData();
 }
 
 void IndexBuffer::push(GLshort p1, GLshort p2, GLshort p3)
 {
-    m_indices.push_back(p1);
-    m_indices.push_back(p2);
-    m_indices.push_back(p3);
+    m_indices.emplace_back(p1);
+    m_indices.emplace_back(p2);
+    m_indices.emplace_back(p3);
 }
 
 void IndexBuffer::push(GLshort p1, GLshort p2, GLshort p3, GLshort p4)
 {
-    m_indices.push_back(p1);
-    m_indices.push_back(p2);
-    m_indices.push_back(p3);
-    m_indices.push_back(p4);
+    m_indices.emplace_back(p1);
+    m_indices.emplace_back(p2);
+    m_indices.emplace_back(p3);
+    m_indices.emplace_back(p4);
 }
 
 void IndexBuffer::uploadData()

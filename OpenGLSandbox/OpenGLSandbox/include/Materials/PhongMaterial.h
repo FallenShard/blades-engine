@@ -17,11 +17,12 @@ public:
     void setSpecularColor(const glm::vec4& specular);
     void setShininess(float shininess);
 
+    virtual void init();
     virtual void apply();
 
 private:
     //void setupUniformBuffer();
-    virtual void initialize();
+    
 
     struct PhongData
     {

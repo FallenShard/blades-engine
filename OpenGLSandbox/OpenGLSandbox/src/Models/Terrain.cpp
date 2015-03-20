@@ -2,132 +2,25 @@
 #include <fstream>
 #include <iostream>
 
-#include "OglWrapper/VertexArray.h"
+
 #include "OglWrapper/IndexBuffer.h"
 #include "OglWrapper/VertexBuffer.h"
+#include "OglWrapper/VertexStreams.h"
+#include "OglWrapper/ShaderProgram.h"
 
 #define STB_IMAGE_IMPLEMENTATION
 #include "stb/stb_image.h"
 
-namespace
-{
-
-    bool hasCompileError(GLint id)
-    {
-        GLint compileStatus = 0;
-        bool hasError = 0;
-        glGetShaderiv(id, GL_COMPILE_STATUS, &compileStatus);
-
-        if (compileStatus == GL_FALSE)
-        {
-            hasError = true;
-            int infoLogLength = 0;
-
-            glGetShaderiv(id, GL_INFO_LOG_LENGTH, &infoLogLength);
-            GLchar* buffer = new GLchar[infoLogLength];
-            GLsizei charsWritten = 0;
-            glGetShaderInfoLog(id, infoLogLength, &charsWritten, buffer);
-
-            std::cout << buffer << '\n';
-
-            delete[] buffer;
-        }
-
-        return hasError;
-    }
-
-    bool hasLinkError(GLint id)
-    {
-        GLint linkStatus = 0;
-        bool hasError = 0;
-        glGetProgramiv(id, GL_LINK_STATUS, &linkStatus);
-
-        if (linkStatus == GL_FALSE)
-        {
-            hasError = true;
-            int infoLogLength = 0;
-
-            glGetProgramiv(id, GL_INFO_LOG_LENGTH, &infoLogLength);
-            GLchar* buffer = new GLchar[infoLogLength];
-            GLsizei charsWritten = 0;
-            glGetProgramInfoLog(id, infoLogLength, &charsWritten, buffer);
-
-            std::cout << buffer << '\n';
-
-            delete[] buffer;
-        }
-
-        return hasError;
-    }
-
-    void loadFile(std::string fileName, std::string& outData)
-    {
-        std::ifstream inputFile(fileName);
-
-        if (inputFile.is_open())
-        {
-            std::string line;
-            while (std::getline(inputFile, line))
-                outData += line + '\n';
-            inputFile.close();
-        }
-    }
-
-    GLint createShader(GLenum type, std::string fileName)
-    {
-        GLint shaderId = glCreateShader(type);
-        std::string shaderSrc = "";
-        loadFile(fileName, shaderSrc);
-        const GLchar* source = shaderSrc.c_str();
-        glShaderSource(shaderId, 1, &source, nullptr);
-        glCompileShader(shaderId);
-        if (hasCompileError(shaderId))
-            return -1;
-
-        return shaderId;
-    }
-
-    GLint createProgram()
-    {
-        GLint vShaderId = createShader(GL_VERTEX_SHADER, "res/terrain.vert");
-        GLint fShaderId = createShader(GL_FRAGMENT_SHADER, "res/terrain.frag");
-        GLint tcShaderId = createShader(GL_TESS_CONTROL_SHADER, "res/terrain.tesc");
-        GLint teShaderId = createShader(GL_TESS_EVALUATION_SHADER, "res/terrain.tese");
-
-        GLint progId = glCreateProgram();
-
-        glAttachShader(progId, vShaderId);
-        glAttachShader(progId, fShaderId);
-        glAttachShader(progId, tcShaderId);
-        glAttachShader(progId, teShaderId);
-
-        glLinkProgram(progId);
-
-        if (hasLinkError(progId))
-            return -1;
-
-        glDeleteShader(vShaderId);
-        glDeleteShader(fShaderId);
-        glDeleteShader(tcShaderId);
-        glDeleteShader(teShaderId);
-
-        return progId;
-    }
-}
+#include "Renderer/RenderComponent.h"
 
 namespace
 {
-    fsi::VertexArray* vao;
-    fsi::VertexBuffer* vbo;
-    fsi::IndexBuffer* ibo;
-
     GLuint texId;
-    GLuint prog;
-    GLint MVPunif;
     GLint hMap;
 
     GLuint timeUnif;
     GLfloat timeVal = 0.f;
+
 }
 
 namespace fsi
@@ -137,80 +30,68 @@ Terrain::Terrain()
 {
 }
 
+Terrain::Terrain(PlaneMesh* mesh, HeightMapMaterial* material)
+    //: m_renderComp(std::make_unique<RenderComponent>(mesh, material))
+    : m_mesh(mesh)
+    , m_material(material)
+    , m_program(material->getShaderProgram())
+    , m_vertexArray(GL_PATCHES)
+{
+    //m_renderComp->setPrimitiveType(GL_PATCHES);
+}
+
 Terrain::~Terrain()
 {
-    delete vao;
-    delete vbo;
-    delete ibo;
 }
 
 
 void Terrain::init()
 {
-    vao = new VertexArray(GL_PATCHES);
-    vao->bind();
+    m_vertexArray.bind();
 
-    vbo = new VertexBuffer(GL_STATIC_DRAW);
-    ibo = new IndexBuffer();
+    m_mesh->bind();
 
-    prog = createProgram();
+    const std::vector<VertexAttribute>& attribs = m_mesh->getVertexAttributes();
 
-    MVPunif = glGetUniformLocation(prog, "MVP");
-    hMap = glGetUniformLocation(prog, "hMap");
-    timeUnif = glGetUniformLocation(prog, "time");
+    for (auto attribute : attribs)
+    {
+        m_vertexArray.enableVertexAttrib(attribute.attribLoc);
+        m_vertexArray.attributeFormat(attribute);
+        m_vertexArray.attributeBinding(attribute.attribLoc, RenderComponent::bindingTable[attribute.attribLoc]);
+    }
 
-    GLint positionLoc = glGetAttribLocation(prog, "position");
-    GLint colorLoc = glGetAttribLocation(prog, "color");
+    m_vertexArray.setVertexCount(m_mesh->getVertexCount());
+    m_vertexArray.setIndexCount(m_mesh->getIndexCount());
 
-    int squares = 32;
-    float squareSize = 8.f;
-    float netSize = 256.f;
-
-    int i = 0;
-    for (int z = 0; z < squares + 1; z++)
-        for (int x = 0; x < squares + 1; x++)
-            vbo->push(x * squareSize - netSize / 2, 0.f, z * squareSize - netSize / 2);
-
-    for (int z = 0; z < squares; z++)
-        for (int x = 0; x < squares; x++)
-        {
-            ibo->push(z * (squares + 1) + x, z * (squares + 1) + x + 1, (z + 1) * (squares + 1) + x + 1, (z + 1) * (squares + 1) + x);
-        }
-
-    vbo->bind();
-    vbo->setDataCountPerVertex(3);
-    vbo->uploadData();
-    vao->setVertexCount(vbo->getVertexCount());
-
-    ibo->bind();
-    ibo->uploadData();
-    vao->attachIndexBuffer(ibo);
-
-    vao->attachAttribute(VertexAttribute("position", 3, 0, 0));
-    vao->enableAttributes(prog);
-
-    glPatchParameteri(GL_PATCH_VERTICES, 4);
+    m_material->init();
 
     int w;
     int h;
     int comp;
 
-    glUseProgram(prog);
-    glUniform1i(hMap, 1);
+    m_program->use();
+    //m_program->setUniformSampler(hMap)
+    //glUniform1i(hMap, 1);
+
+    hMap = glGetUniformLocation(m_program->getProgramId(), "hMap");
     
 
-    unsigned char* img = stbi_load("res/heightmap.png", &w, &h, &comp, STBI_rgb_alpha);
+    unsigned char* img = stbi_load("res/heightmap2.png", &w, &h, &comp, STBI_rgb_alpha);
 
     glGenTextures(1, &texId);
 
     glBindTexture(GL_TEXTURE_2D, texId);
-    glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, 256, 256, 0, GL_RGB, GL_UNSIGNED_BYTE, img);
-    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
-    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
+    glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, w, h, 0, GL_RGBA, GL_UNSIGNED_BYTE, img);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
 
     stbi_image_free(img);
 
-    VertexArray::release();
+    int maxVert;
+    glGetIntegerv(GL_MAX_TESS_GEN_LEVEL, &maxVert);
+    std::cout << maxVert << '\n';
 }
 
 void Terrain::update(const float deltaTime)
@@ -218,30 +99,43 @@ void Terrain::update(const float deltaTime)
     timeVal += deltaTime;
 }
 
-
 void Terrain::render(const glm::mat4& projection, const glm::mat4& view)
 {
     glm::mat4 model = glm::translate(glm::vec3(0.f, -50.f, 0.f));
     glm::mat4 mat = projection * view * model;
+    glm::mat3& normalMatrix = glm::mat3(glm::inverseTranspose(view * model));
 
-    glUseProgram(prog);
+    glm::vec4 cameraPos = glm::inverse(view)[3];
 
-    glUniformMatrix4fv(MVPunif, 1, GL_FALSE, glm::value_ptr(mat));
-    glUniform1f(timeUnif, timeVal);
+    //std::cout << cameraPos.x << " " << cameraPos.y << " " << cameraPos.z << '\n';
 
-    ////glDisable(GL_CULL_FACE);
+    m_program->use();
+    m_program->setUniformAttribute("normalMatrix", normalMatrix);
+    m_program->setUniformAttribute("MVP", mat);
+    m_program->setUniformAttribute("cameraPos", cameraPos);
+    m_program->setUniformAttribute("time", timeVal);
+    m_program->setUniformAttribute("mvLightDir", view * glm::vec4(0.f, -1.f, 0.f, 0.f));
 
-    glLineWidth(1.f);
+    glActiveTexture(GL_TEXTURE0);
+    glBindTexture(GL_TEXTURE_2D, texId);
+    m_program->setUniformSampler(hMap, 0);
+
+    glLineWidth(3.f);
+
+    m_program->setUniformAttribute("wireframe", false);
+
+    m_vertexArray.bind();
+    m_vertexArray.renderIndexed();
 
     glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
 
-    vao->bind();
+    m_program->setUniformAttribute("wireframe", true);
+    //m_program->setUniformAttribute("MVP", projection * view * glm::translate(glm::vec3(0.f, -49.5f, 0.f)));
 
-    vao->renderIndexed();
+    m_vertexArray.bind();
+    m_vertexArray.renderIndexed();
 
     glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
-
-    //glEnable(GL_CULL_FACE);
 }
 
 }

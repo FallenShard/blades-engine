@@ -43,7 +43,7 @@ void PhongMaterial::apply()
     m_uniformBuffer->bindToBindingPoint();
 }
 
-void PhongMaterial::initialize()
+void PhongMaterial::init()
 {
     m_uniformBuffer = new UniformBuffer();
     m_uniformBuffer->bind();

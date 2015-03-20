@@ -14,8 +14,11 @@ Material::Material()
 void Material::setShaderProgram(ShaderProgram* program)
 {
     m_program = program;
+}
 
-    initialize();
+ShaderProgram* Material::getShaderProgram() const
+{
+    return m_program;
 }
 
 Material::~Material()

@@ -82,6 +82,9 @@
     <ClCompile Include="src\Camera\AbstractCamera.cpp" />
     <ClCompile Include="src\Camera\CameraController.cpp" />
     <ClCompile Include="src\Camera\FreeCamera.cpp" />
+    <ClCompile Include="src\Renderer\RenderComponent.cpp" />
+    <ClCompile Include="src\Meshes\Mesh.cpp" />
+    <ClCompile Include="src\Materials\HeightMapMaterial.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="include\Core\Application.h" />
@@ -133,6 +136,9 @@
     <ClInclude Include="include\Camera\FreeCamera.h" />
     <ClInclude Include="include\Camera\TargetCamera.h" />
     <ClInclude Include="include\Meshes\Mesh.h" />
+    <ClInclude Include="include\Models\HeightMapMaterial.h" />
+    <ClInclude Include="include\Renderer\RenderComponent.h" />
+    <ClInclude Include="include\Materials\HeightMapMaterial.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include="res\fxaa.frag" />
@@ -143,6 +149,7 @@
     <None Include="res\phong.frag" />
     <None Include="res\phong.vert" />
     <None Include="res\pass_through.vert" />
+    <None Include="res\terrain.geom" />
   </ItemGroup>
   <ItemGroup>
     <Text Include="res\RobotArmFaces.txt" />

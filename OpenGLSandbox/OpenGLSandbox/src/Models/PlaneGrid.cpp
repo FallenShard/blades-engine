@@ -109,7 +109,7 @@ void PlaneGrid::buildVertices()
     m_vertexArray->bind();
 
     m_vertexBuffer.bind();
-    m_vertexBuffer.setDataCountPerVertex(3);
+    m_vertexBuffer.setVertexSize(3);
     m_vertexBuffer.uploadData();
 
     m_vertexArray->setVertexCount(m_vertexBuffer.getVertexCount());

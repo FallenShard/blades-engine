@@ -104,18 +104,20 @@ void CameraController::update(float timeDelta)
 
     glm::vec3 prev = m_activeCamera->getPosition();
 
-    if (Keyboard::isKeyPressed(Keyboard::Up))
+    if (Keyboard::isKeyPressed(Keyboard::W))
         m_freeCamera.walk(timeDelta);
-    if (Keyboard::isKeyPressed(Keyboard::Down))
+    if (Keyboard::isKeyPressed(Keyboard::S))
         m_freeCamera.walk(-timeDelta);
-    if (Keyboard::isKeyPressed(Keyboard::Right))
+    if (Keyboard::isKeyPressed(Keyboard::D))
         m_freeCamera.strafe(timeDelta);
-    if (Keyboard::isKeyPressed(Keyboard::Left))
+    if (Keyboard::isKeyPressed(Keyboard::A))
         m_freeCamera.strafe(-timeDelta);
 
+#ifdef _DEBUG
     if (prev != m_activeCamera->getPosition())
         std::cout << "CameraPos X:" << m_freeCamera.getPosition().x << " Y: " 
         << m_activeCamera->getPosition().y << " Z: " << m_activeCamera->getPosition().z << std::endl;
+#endif
 }
 
 void CameraController::setFreeLook(bool freeLook)
@@ -137,7 +139,7 @@ void CameraController::adjustYawPitch(int mouseX, int mouseY)
 
 void CameraController::resize(int width, int height)
 {
-    m_activeCamera->setupProjection(45, static_cast<GLfloat>(width) / height);
+    m_activeCamera->setupProjection(45, static_cast<GLfloat>(width) / height, 1.f, 8192.f);
 
     glViewport(0, 0, static_cast<GLsizei>(width), static_cast<GLsizei>(height));
 }

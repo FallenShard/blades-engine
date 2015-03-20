@@ -59,13 +59,14 @@ GLsizei VertexArray::getVertexCount() const
     return m_vertexCount;
 }
 
-GLsizei VertexArray::getPerVertexDataCount() const
+void VertexArray::setIndexCount(GLsizei indexCount)
 {
-    GLsizei count = 0;
-    for (auto& attribute : m_attributes)
-        count += attribute.second.size;
+    m_indexCount = indexCount;
+}
 
-    return count;
+GLsizei VertexArray::getIndexCount() const
+{
+    return m_indexCount;
 }
 
 void VertexArray::attachBuffer(std::string name, VertexBuffer* buffer)
@@ -88,6 +89,21 @@ void VertexArray::enableAttributes(GLuint programId)
 {
     for (auto& attribute : m_attributes)
         attribute.second.enable(programId);
+}
+
+void VertexArray::enableVertexAttrib(GLuint attribLocation)
+{
+    glEnableVertexAttribArray(attribLocation);
+}
+
+void VertexArray::attributeFormat(VertexAttribute attribute)
+{
+    glVertexAttribFormat(attribute.location, attribute.size, attribute.type, attribute.normalized, attribute.iOffset);
+}
+
+void VertexArray::attributeBinding(GLuint attribLocation, GLuint bufferBinding)
+{
+    glVertexAttribBinding(attribLocation, bufferBinding);
 }
 
 void VertexArray::setPrimitiveType(GLenum primitiveType)

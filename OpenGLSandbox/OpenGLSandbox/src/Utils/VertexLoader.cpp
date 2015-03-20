@@ -71,7 +71,7 @@ void VertexLoader::loadFromFile(std::string fileName, VertexBuffer& buffer)
     }
 
     buffer.create(m_vertexData);
-    buffer.setDataCountPerVertex(dataPerVertexCount);
+    buffer.setVertexSize(dataPerVertexCount);
 }
 
 std::vector<int> VertexLoader::getAttributeSizes()

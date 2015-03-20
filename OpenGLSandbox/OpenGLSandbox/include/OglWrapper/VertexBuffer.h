@@ -21,6 +21,9 @@ public:
 
     // Binds the vertex buffer to its target type
     void bind() const;
+
+    // Binds the vertex buffer directly to VAO state (requires OpenGL 4.3)
+    void bind(GLuint bindingIndex, GLintptr offset, GLsizei stride) const;
     
     // Unbinds any buffer currently bound to GL_ARRAY_BUFFER type
     static void release();
@@ -58,8 +61,8 @@ public:
     // Clears the buffer
     void clear();
 
-    // Sets the number in bytes that each vertex uses
-    void setDataCountPerVertex(GLsizei dataCountPerVertex);
+    // Sets the number in components (no of floats) that each vertex uses
+    void setVertexSize(GLsizei vertexSize);
 
     // Returns vertex count
     GLsizei getVertexCount() const;
@@ -76,7 +79,8 @@ private:
     GLenum m_targetType;
     GLenum m_usageType;
 
-    GLsizei m_dataCountPerVertex;
+    GLsizei m_numVertices;
+    GLsizei m_vertexSize;
     std::vector<GLfloat> m_vertexData;
 };
 

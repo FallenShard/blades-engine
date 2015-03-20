@@ -2,21 +2,35 @@
 
 out vec4 finalColor;
 
+uniform sampler2D hMap;
+
 in TES_OUT
 {
     vec3 pos;
+    vec3 color;
+    vec3 normal;
 } fsIn;
+
+uniform vec4 mvLightDir;
+uniform vec3 cameraPos;
+uniform bool wireframe;
 
 void main()
 {
-    float x = fsIn.pos.x;
-    float y = fsIn.pos.y;
-    float z = fsIn.pos.z;
+    //vec3 n = normalize(fsIn.normal);
 
-    x /= 128.f;
-    //y = (y + 8.f) / 16.f;
-    y /= 16.f;
-    z /= 128.f;
+    //float intensity = max(dot(n, mvLightDir.xyz), 0.f);
 
-    finalColor = vec4(1 + y, 1.0 - y, 0.f, 1.f);
+    //vec3 col = fsIn.color * 0.2f;
+    //col += intensity * vec3(0.5f, 0.5f, 0.5f);
+
+    if (wireframe)
+        finalColor = vec4(0.f, 0.f, 0.f, 1.f);
+    else
+        finalColor = vec4(fsIn.color, 1.f);
+
+    //finalColor = vec4(intensity, 0.f, 0.f, 1.f);
+
+    //finalColor = vec4(fsIn.normal, 1.f);
+    //finalColor = vec4(1.f, 0.5f, 0.1f, 1.f);
 }

@@ -14,7 +14,8 @@ namespace fsi
 VertexBuffer::VertexBuffer(GLenum usageType)
     : m_targetType(GL_ARRAY_BUFFER)
     , m_usageType(usageType)
-    , m_dataCountPerVertex(0)
+    , m_vertexSize(0)
+    , m_numVertices(0)
 {
     glGenBuffers(1, &m_id);
 }
@@ -22,7 +23,8 @@ VertexBuffer::VertexBuffer(GLenum usageType)
 VertexBuffer::VertexBuffer(GLenum targetType, GLenum usageType)
     : m_targetType(targetType)
     , m_usageType(usageType)
-    , m_dataCountPerVertex(0)
+    , m_vertexSize(0)
+    , m_numVertices(0)
 {
     glGenBuffers(1, &m_id);
 }
@@ -39,6 +41,11 @@ void VertexBuffer::bind() const
         glBindBuffer(m_targetType, m_id);
         boundVBO = m_id;
     }
+}
+
+void VertexBuffer::bind(GLuint bindingIndex, GLintptr offset, GLsizei stride) const
+{
+    glBindVertexBuffer(bindingIndex, m_id, offset, stride);
 }
 
 void VertexBuffer::release()
@@ -69,14 +76,14 @@ void VertexBuffer::create(GLfloat* vertices, unsigned int size)
     for (unsigned int i = 0; i < size; i++)
         m_vertexData.push_back(vertices[i]);
 
-    glBufferData(m_targetType, sizeof(GLfloat) * m_vertexData.size(), m_vertexData.data(), m_usageType);
+    uploadData();
 }
 
 void VertexBuffer::create(std::vector<GLfloat> vertices)
 {
     m_vertexData = vertices;
 
-    glBufferData(m_targetType, sizeof(GLfloat) * m_vertexData.size(), m_vertexData.data(), m_usageType);
+    uploadData();
 }
 
 void VertexBuffer::loadFromFile(std::string fileName)
@@ -96,33 +103,33 @@ void VertexBuffer::loadFromFile(std::string fileName)
             m_vertexData.push_back(vertexData);
     }
 
-    glBufferData(m_targetType, sizeof(GLfloat) * m_vertexData.size(), m_vertexData.data(), m_usageType);
+    uploadData();
 }
 
 void VertexBuffer::push(GLfloat value)
 {
-    m_vertexData.push_back(value);
+    m_vertexData.emplace_back(value);
 }
 
 void VertexBuffer::push(GLfloat x, GLfloat y)
 {
-    m_vertexData.push_back(x);
-    m_vertexData.push_back(y);
+    m_vertexData.emplace_back(x);
+    m_vertexData.emplace_back(y);
 }
 
 void VertexBuffer::push(GLfloat x, GLfloat y, GLfloat z)
 {
-    m_vertexData.push_back(x);
-    m_vertexData.push_back(y);
-    m_vertexData.push_back(z);
+    m_vertexData.emplace_back(x);
+    m_vertexData.emplace_back(y);
+    m_vertexData.emplace_back(z);
 }
 
 void VertexBuffer::push(GLfloat x, GLfloat y, GLfloat z, GLfloat w)
 {
-    m_vertexData.push_back(x);
-    m_vertexData.push_back(y);
-    m_vertexData.push_back(z);
-    m_vertexData.push_back(w);
+    m_vertexData.emplace_back(x);
+    m_vertexData.emplace_back(y);
+    m_vertexData.emplace_back(z);
+    m_vertexData.emplace_back(w);
 }
 
 void VertexBuffer::uploadData()
@@ -135,16 +142,15 @@ void VertexBuffer::clear()
     m_vertexData.clear();
 }
 
-void VertexBuffer::setDataCountPerVertex(GLsizei dataCountPerVertex)
+void VertexBuffer::setVertexSize(GLsizei vertexSize)
 {
-    m_dataCountPerVertex = dataCountPerVertex;
+    m_vertexSize = vertexSize;
+    m_numVertices = m_vertexData.size() / m_vertexSize;
 }
 
 GLsizei VertexBuffer::getVertexCount() const
 {
-    assert(m_dataCountPerVertex != 0);
-
-    return m_vertexData.size() / m_dataCountPerVertex;
+    return m_numVertices;
 }
 
 GLfloat& VertexBuffer::operator[](unsigned int index)

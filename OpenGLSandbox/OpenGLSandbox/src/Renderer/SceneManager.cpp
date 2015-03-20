@@ -23,6 +23,7 @@ namespace fsi
         CubeMesh* g_prMesh = nullptr;
 
         ShaderProgram* prog = nullptr;
+        ShaderProgram* tessProg = nullptr;
 
 
         GLenum glError;
@@ -71,6 +72,7 @@ SceneManager::~SceneManager()
 void SceneManager::prepare()
 {
     prog = m_shaderManager->getProgram("phong");
+    tessProg = m_shaderManager->getProgram("terrain");
 
     m_cameraController.setPosition(glm::vec3(0.f, 32.f, 36.f));
 
@@ -97,12 +99,14 @@ void SceneManager::prepare()
                               glm::vec4(1.f, 0.f, 1.f, 1.f),
                               shininess);
     g_mat->setShaderProgram(prog);
+    g_mat->init();
 
     g_mat2 = new PhongMaterial(glm::vec4(0.f, 0.f, 1.f, 1.f),
         glm::vec4(0.f, 0.f, 1.f, 1.f),
         glm::vec4(1.f, 1.f, 1.f, 1.f),
         shininess);
     g_mat2->setShaderProgram(prog);
+    g_mat2->init();
 
     Sphere* smallSphere = new Sphere(g_sphMesh, prog, g_mat);
     smallSphere->setScale(glm::vec3(0.5f, 0.5f, 0.5f));
@@ -120,8 +124,9 @@ void SceneManager::prepare()
 
     m_sceneGraph->attachChild(m_sphere);
 
-
-    g_terrain = new Terrain();
+    PlaneMesh* planeMesh = new PlaneMesh(64, 64, 64);
+    HeightMapMaterial* hmMat = new HeightMapMaterial(tessProg);
+    g_terrain = new Terrain(planeMesh, hmMat);
     g_terrain->init();
     
 
@@ -222,8 +227,8 @@ void SceneManager::render()
     prog->setUniformAttribute("mvCameraPos", m_cameraController.getCameraPosition());
     glLineWidth(3.f);
     
-    g_mat2->apply();
-    m_sceneGraph->render(m_cameraController.getProjectionMatrix(), m_cameraController.getViewMatrix());
+    //g_mat2->apply();
+    //m_sceneGraph->render(m_cameraController.getProjectionMatrix(), m_cameraController.getViewMatrix());
 
     g_terrain->render(m_cameraController.getProjectionMatrix(), m_cameraController.getViewMatrix());
     //glEnable(GL_POLYGON_OFFSET_LINE);

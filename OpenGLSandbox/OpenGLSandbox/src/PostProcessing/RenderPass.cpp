@@ -71,7 +71,7 @@ void RenderPass::init(int width, int height)
     qBuffer->push(-1.f, +1.f);
     qBuffer->push(+1.f, +1.f);
     qBuffer->uploadData();
-    qBuffer->setDataCountPerVertex(2);
+    qBuffer->setVertexSize(2);
     m_quadVertexArray->setVertexCount(qBuffer->getVertexCount());
     m_quadVertexArray->attachAttribute(VertexAttribute("position", 2, 0, 0));
     m_quadVertexArray->enableAttributes(m_shaderProgram->getProgramId());

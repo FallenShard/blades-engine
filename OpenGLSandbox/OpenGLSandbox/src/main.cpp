@@ -14,7 +14,7 @@ int _tmain(int argc, _TCHAR* argv[])
 
 int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine, int iCmdShow)
 {
-    Application application;
+    fsi::Application application;
     application.run();
 
     return 0;
