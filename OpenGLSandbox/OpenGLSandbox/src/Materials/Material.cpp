@@ -5,8 +5,8 @@ namespace fsi
 {
 
 Material::Material()
-    : m_uniformBuffer(nullptr)
-    , m_program(nullptr)
+    : //m_uniformBuffer(nullptr)
+     m_program(nullptr)
 {
 
 }
@@ -23,7 +23,7 @@ ShaderProgram* Material::getShaderProgram() const
 
 Material::~Material()
 {
-    delete m_uniformBuffer;
+    //delete m_uniformBuffer;
 }
 
 }

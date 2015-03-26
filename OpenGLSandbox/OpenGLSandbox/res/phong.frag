@@ -15,13 +15,12 @@ layout(std140) uniform Material
 } material;
 
 uniform vec4 mvLightPos;
-uniform vec3 mvCameraPos;
 
 out vec4 color;
 
 const float k0 = 1.f;
-const float k1 = 0.001f;
-const float k2 = 0.002f;
+const float k1 = 0.01f;
+const float k2 = 0.02f;
 
 void main()
 {
@@ -30,16 +29,24 @@ void main()
     L = normalize(L);
 
     vec3 N = normalize(fsIn.normal);
-    vec3 V = normalize(mvCameraPos - fsIn.position);
-    vec3 H = normalize(L + V);
+    
+    
 
     float attenuation = 1.f / (k0 + k1 * d + k2 * d * d);
 
     float diffuse = max(0, dot(fsIn.normal, L));
-    float specular = max(0, pow(dot(N, H), material.shininess));
+    float specular = 0.f;
+
+    if (diffuse > 0.f)
+    {
+        vec3 V = normalize(-fsIn.position);
+        vec3 H = normalize(L + V);
+        float specAngle = max(dot(N, H), 0.0);
+        specular = pow(specAngle, material.shininess);
+    }
 
     vec4 ambCol = material.ambient * 0.15f;
-    vec4 diffCol = material.diffuse * diffuse * attenuation * 0.25;
+    vec4 diffCol = material.diffuse * diffuse * attenuation * 0.25f;
     vec4 specCol = material.specular * specular * attenuation;
 
     color = ambCol + diffCol + specCol;

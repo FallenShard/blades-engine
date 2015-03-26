@@ -19,10 +19,11 @@ out TES_OUT
     vec3 pos;
     vec3 color;
     vec3 normal;
+    vec2 texCoord;
 } tesOut;
 
-const float PATCH_SIZE = 64.f;
-const float MESH_SIZE = 64.f * 64.f;
+const float PATCH_SIZE = 8.f;
+const float MESH_SIZE = 8.f * PATCH_SIZE;
 
 const float HEIGHT_FACTOR = MESH_SIZE / 8.f;
 
@@ -34,19 +35,20 @@ void main()
     float posX = (position.x + MESH_SIZE / 2) / MESH_SIZE;
     float posZ = (position.z + MESH_SIZE / 2) / MESH_SIZE;
     vec2 texCoord = vec2(posX, posZ);
-    position.y = texture(hMap, texCoord).x * HEIGHT_FACTOR;
+    tesOut.texCoord = texCoord;
+    position.y = texture(hMap, texCoord).r * HEIGHT_FACTOR;
 
     const ivec3 off = ivec3(-1, 0, 1);
-    float hL = textureOffset(hMap, texCoord, off.xy).x * HEIGHT_FACTOR;
-    float hR = textureOffset(hMap, texCoord, off.zy).x * HEIGHT_FACTOR;
-    float hD = textureOffset(hMap, texCoord, off.yz).x * HEIGHT_FACTOR;
-    float hU = textureOffset(hMap, texCoord, off.yx).x * HEIGHT_FACTOR;
+    //float hL = textureOffset(hMap, texCoord, off.xy).x * HEIGHT_FACTOR;
+    //float hR = textureOffset(hMap, texCoord, off.zy).x * HEIGHT_FACTOR;
+    //float hD = textureOffset(hMap, texCoord, off.yz).x * HEIGHT_FACTOR;
+    //float hU = textureOffset(hMap, texCoord, off.yx).x * HEIGHT_FACTOR;
 
-    vec3 n;
-    n.x = hR - hL;
-    n.y = hD - hU;
-    n.z = 2.0f;
-    tesOut.normal = normalize(n);
+    //vec3 n;
+    //n.x = hR - hL;
+    //n.y = hD - hU;
+    //n.z = 2.0f;
+    tesOut.normal = normalize(vec3(1.f, 0.f, 0.f));
 
     //if (position.y > MESH_SIZE / 12)
     //    tesOut.color = vec3(1.f, 1.f, 1.f);
@@ -66,9 +68,7 @@ void main()
     bool evenCol = gl_PrimitiveID % 2 == 0;
     bool evenRow = (gl_PrimitiveID >> 6) % 2 == 0;
 
-    if (evenCol && evenRow)
-        tesOut.color = vec3(1.f, 0.3f, 0.3f);
-    else if (!evenCol && !evenRow)
+    if (evenCol && evenRow || (!evenCol && !evenRow))
         tesOut.color = vec3(1.f, 0.3f, 0.3f);
     else
         tesOut.color = vec3(0.3f, 0.3f, 1.f);

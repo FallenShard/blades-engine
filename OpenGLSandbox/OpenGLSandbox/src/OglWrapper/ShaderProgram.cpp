@@ -162,6 +162,12 @@ void ShaderProgram::setUniformAttribute(std::string name, GLfloat value)
     glUniform1f(m_uniformAttributes[name], value);
 }
 
+void ShaderProgram::setUniformAttribute(std::string name, GLint value)
+{
+    glUniform1i(m_uniformAttributes[name], value);
+}
+
+
 void ShaderProgram::setUniformAttribute(std::string name, GLfloat x, GLfloat y)
 {
     glUniform2f(m_uniformAttributes[name], x, y);
@@ -184,6 +190,7 @@ void ShaderProgram::setUniformAttribute(std::string name, const glm::mat4& mat)
 
 void ShaderProgram::setUniformAttribute(std::string name, const glm::mat3& mat)
 {
+    const float* ptr = glm::value_ptr(mat);
     glUniformMatrix3fv(m_uniformAttributes[name], 1, GL_FALSE, glm::value_ptr(mat));
 }
 

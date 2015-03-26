@@ -14,6 +14,7 @@
 #include <algorithm>
 
 #include "Models/Terrain.h"
+#include "Models/NewSphere.h"
 
 namespace fsi
 {
@@ -36,6 +37,7 @@ namespace fsi
         float shininess = 100.f;
 
         Terrain* g_terrain;
+        NewSphere* g_newSphere;
     }
 }
 
@@ -44,17 +46,17 @@ namespace fsi
 
 SceneManager::SceneManager()
     : m_timePassed(0.f)
-    , m_planeGrid(new PlaneGrid(1000.f, 10.f, PlaneGrid::XZ))
+    //, m_planeGrid(new PlaneGrid(1000.f, 10.f, PlaneGrid::XZ))
     , m_cameraController(nullptr)
 {
 }
 
 SceneManager::SceneManager(Window* window, ShaderManager* shaderManager)
     : m_timePassed(0.f)
-    , m_planeGrid(new PlaneGrid(1000.f, 10.f, PlaneGrid::XZ))
+    //, m_planeGrid(new PlaneGrid(1000.f, 10.f, PlaneGrid::XZ))
     , m_cameraController(window)
     , m_shaderManager(shaderManager)
-    , m_sceneGraph(new TransformNode())
+    //, m_sceneGraph(new TransformNode())
 {
 }
 
@@ -63,20 +65,20 @@ SceneManager::~SceneManager()
     delete m_sceneGraph;
     delete g_sphMesh;
     delete g_prMesh;
-    delete g_mat;
+    //delete g_mat;
     delete g_mat2;
 
     delete g_terrain;
+    delete g_newSphere;
 }
 
 void SceneManager::prepare()
 {
-    prog = m_shaderManager->getProgram("phong");
-    tessProg = m_shaderManager->getProgram("terrain");
+    //prog = m_shaderManager->getProgram("phong");
 
-    m_cameraController.setPosition(glm::vec3(0.f, 32.f, 36.f));
+    m_cameraController.setPosition(glm::vec3(0.f, 0.f, 5.f));
 
-    m_planeGrid->setProgram(prog);
+    /*m_planeGrid->setProgram(prog);
     m_sceneGraph->attachChild(m_planeGrid);
 
     g_prMesh = new CubeMesh();
@@ -93,13 +95,21 @@ void SceneManager::prepare()
 
     m_sphere = new Sphere(g_sphMesh, prog);
     m_sphere->translate(glm::vec3(10.f, 0.f, -10.f));
+    */
+    //g_mat = new PhongMaterial(glm::vec4(1.f, 0.f, 1.f, 1.f),
+                             // glm::vec4(1.f, 0.f, 1.f, 1.f),
+                         //     glm::vec4(1.f, 0.f, 1.f, 1.f),
+                        //      shininess);
+    //g_mat->setShaderProgram(prog);
+    //g_mat->init();
 
-    g_mat = new PhongMaterial(glm::vec4(1.f, 0.f, 1.f, 1.f),
-                              glm::vec4(1.f, 0.f, 1.f, 1.f),
-                              glm::vec4(1.f, 0.f, 1.f, 1.f),
-                              shininess);
-    g_mat->setShaderProgram(prog);
-    g_mat->init();
+
+    g_newSphere = new NewSphere(nullptr, nullptr, m_shaderManager->getProgram("phong"));
+    g_newSphere->init();
+
+
+
+    /*
 
     g_mat2 = new PhongMaterial(glm::vec4(0.f, 0.f, 1.f, 1.f),
         glm::vec4(0.f, 0.f, 1.f, 1.f),
@@ -122,24 +132,24 @@ void SceneManager::prepare()
         m_sceneGraph->attachChild(g_spheres[i]);
     }
 
-    m_sceneGraph->attachChild(m_sphere);
+    m_sceneGraph->attachChild(m_sphere);*/
 
-    PlaneMesh* planeMesh = new PlaneMesh(64, 64, 64);
-    HeightMapMaterial* hmMat = new HeightMapMaterial(tessProg);
-    g_terrain = new Terrain(planeMesh, hmMat);
+    //PlaneMesh* planeMesh = new PlaneMesh(64, 64, 64);
+    /*HeightMapMaterial* hmMat = new HeightMapMaterial(tessProg);*/
+    g_terrain = new Terrain(nullptr, nullptr, m_shaderManager->getProgram("terrain"));
     g_terrain->init();
     
 
-    m_validationVector.push_back(m_sceneGraph);
+    //m_validationVector.push_back(m_sceneGraph);
 }
 
 void SceneManager::handleEvents(const Event& event)
 {
     m_cameraController.handleEvents(event);
 
-    if (event.type == Event::KeyPressed)
+    /*if (event.type == Event::KeyPressed)
         if (event.key.code == Keyboard::B)
-            g_mat->setAmbientColor(glm::vec4(0.f, 0.f, 1.f, 1.f));
+            g_mat->setAmbientColor(glm::vec4(0.f, 0.f, 1.f, 1.f));*/
 }
 
 void SceneManager::update(float timeDelta)
@@ -148,11 +158,11 @@ void SceneManager::update(float timeDelta)
 
     m_cameraController.update(timeDelta);
 
-    m_roboticArm->update(timeDelta);
-    g_terrain->update(timeDelta);
+    //m_roboticArm->update(timeDelta);
+    //g_terrain->update(timeDelta);
     //m_validationVector.push_back(m_roboticArm);
 
-    if (Keyboard::isKeyPressed(Keyboard::I))
+    /*if (Keyboard::isKeyPressed(Keyboard::I))
     {
         m_sphere->translate(glm::vec3(-5.f * timeDelta, 0.f, 0.f));
         m_validationVector.push_back(m_sphere);
@@ -216,21 +226,23 @@ void SceneManager::update(float timeDelta)
         nodeToValidate->validate(timeDelta);
     }
 
-    m_validationVector.clear();
+    m_validationVector.clear();*/
 }
 
 void SceneManager::render()
 {
-    prog->use();
+    //prog->use();
 
-    prog->setUniformAttribute("mvLightPos", m_cameraController.getViewMatrix() * glm::vec4(0.f, 10.f, -10.f, 1.f));
-    prog->setUniformAttribute("mvCameraPos", m_cameraController.getCameraPosition());
-    glLineWidth(3.f);
+    //prog->setUniformAttribute("mvLightPos", m_cameraController.getViewMatrix() * glm::vec4(0.f, 370.f, -250.f, 1.f));
+    //prog->setUniformAttribute("mvCameraPos", m_cameraController.getCameraPosition());
+    //glLineWidth(3.f);
     
     //g_mat2->apply();
     //m_sceneGraph->render(m_cameraController.getProjectionMatrix(), m_cameraController.getViewMatrix());
 
+    g_newSphere->render(m_cameraController.getProjectionMatrix(), m_cameraController.getViewMatrix());
     g_terrain->render(m_cameraController.getProjectionMatrix(), m_cameraController.getViewMatrix());
+    //g_terrain->render(m_cameraController.getProjectionMatrix(), m_cameraController.getViewMatrix());
     //glEnable(GL_POLYGON_OFFSET_LINE);
     //glPolygonOffset(-1, -1);
 

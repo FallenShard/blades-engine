@@ -4,9 +4,55 @@
 #include "OglWrapper/FrameBuffer.h"
 #include "OglWrapper/Texture.h"
 
+#include <iostream>
+
 namespace
 {
     bool useFXAA = true;
+}
+
+void APIENTRY DebugCallback(GLenum source, GLenum type, GLuint id,
+    GLenum severity, GLsizei length, const GLchar* message, const void* userParam)
+{
+    std::cout << "---------------------opengl-callback-start------------" << std::endl;
+    std::cout << "message: " << message << std::endl;
+    std::cout << "type: ";
+    switch (type) {
+    case GL_DEBUG_TYPE_ERROR:
+        std::cout << "ERROR";
+        break;
+    case GL_DEBUG_TYPE_DEPRECATED_BEHAVIOR:
+        std::cout << "DEPRECATED_BEHAVIOR";
+        break;
+    case GL_DEBUG_TYPE_UNDEFINED_BEHAVIOR:
+        std::cout << "UNDEFINED_BEHAVIOR";
+        break;
+    case GL_DEBUG_TYPE_PORTABILITY:
+        std::cout << "PORTABILITY";
+        break;
+    case GL_DEBUG_TYPE_PERFORMANCE:
+        std::cout << "PERFORMANCE";
+        break;
+    case GL_DEBUG_TYPE_OTHER:
+        std::cout << "OTHER";
+        break;
+    }
+    std::cout << std::endl;
+
+    std::cout << "id: " << id << std::endl;    std::cout << "severity: ";
+    switch (severity){
+    case GL_DEBUG_SEVERITY_LOW:
+        std::cout << "LOW";
+        break;
+    case GL_DEBUG_SEVERITY_MEDIUM:
+        std::cout << "MEDIUM";
+        break;
+    case GL_DEBUG_SEVERITY_HIGH:
+        std::cout << "HIGH";
+        break;
+    }
+    std::cout << std::endl;
+    std::cout << "---------------------opengl-callback-end--------------" << std::endl;
 }
 
 namespace fsi
@@ -38,16 +84,18 @@ GLRenderer::~GLRenderer()
 
 void GLRenderer::init()
 {
+    glDebugMessageCallback(DebugCallback, NULL);
+    glEnable(GL_DEBUG_OUTPUT);
+    glEnable(GL_DEBUG_OUTPUT_SYNCHRONOUS);
+
+
     if (m_window)
     {
         glm::ivec2 windowSize = m_window->getSize();
         m_aspectRatio = static_cast<float>(windowSize.x) / windowSize.y;
     }
 
-    m_shaderManager = new ShaderManager();
-
-    m_sceneManager = new SceneManager(m_window, m_shaderManager);
-    m_sceneManager->prepare();
+    
 
     glEnable(GL_CULL_FACE);
     glCullFace(GL_BACK);
@@ -58,8 +106,17 @@ void GLRenderer::init()
     glDepthFunc(GL_LEQUAL);
     glDepthRange(0.0f, 1.0f);
     
-    glClearColor(0.1f, 0.1f, 0.1f, 1.f);
+    glClearColor(0.1f, 0.1f, 0.3f, 1.f);
     glClearDepth(1.0f);
+
+    m_shaderManager = new ShaderManager();
+
+    m_sceneManager = new SceneManager(m_window, m_shaderManager);
+    m_sceneManager->prepare();
+
+    int maxUnits;
+    glGetIntegerv(GL_MAX_COMBINED_TEXTURE_IMAGE_UNITS, &maxUnits);
+    std::cout << "Texture units: " << maxUnits << std::endl;
 
     glm::ivec2 windowSize = m_window->getSize();
 

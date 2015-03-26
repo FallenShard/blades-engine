@@ -4,17 +4,18 @@ namespace fsi
 {
 
 RenderPass::RenderPass()
-    : m_quadVertexArray(nullptr)
-    , m_frameBuffer(nullptr)
-    , m_shaderProgram(nullptr)
-    , m_fullTex(nullptr)
+    //: m_quadVertexArray(nullptr)
+    //, m_frameBuffer(nullptr)
+    //, m_shaderProgram(nullptr)
+    //, m_fullTex(nullptr)
 {
 
 }
 
 RenderPass::~RenderPass()
 {
-    cleanUp();
+    glDeleteVertexArrays(1, &m_vao);
+    cleanUpFBO();
 }
 
 void RenderPass::attachProgram(ShaderProgram* program)
@@ -22,15 +23,12 @@ void RenderPass::attachProgram(ShaderProgram* program)
     m_shaderProgram = program;
 }
 
-void RenderPass::cleanUp()
+void RenderPass::cleanUpFBO()
 {
-    delete m_fullTex;
-    m_fullTex = nullptr;
-    delete m_quadVertexArray;
-    m_quadVertexArray = nullptr;
-    glDeleteRenderbuffers(1, &m_depthRenderBuffer);
-    delete m_frameBuffer;
-    m_frameBuffer = nullptr;
+    glDeleteFramebuffers(1, &m_fbo);
+    glDeleteTextures(1, &m_tex);
+    glDeleteSamplers(1, &m_sampler);
+    glDeleteRenderbuffers(1, &m_rbo);
 }
 
 void RenderPass::init(int width, int height)
@@ -38,49 +36,62 @@ void RenderPass::init(int width, int height)
     m_shaderProgram->use();
     m_shaderProgram->setUniformAttribute("screenWidth", static_cast<GLfloat>(width));
     m_shaderProgram->setUniformAttribute("screenHeight", static_cast<GLfloat>(height));
-    ShaderProgram::release();
-
-    m_frameBuffer = new FrameBuffer(width, height);
-    m_frameBuffer->bind();
-
-    m_fullTex = new Texture(width, height, "renderedTexture");
-    m_fullTex->bind();
-    m_fullTex->create();
-    m_fullTex->setWrapMode(GL_CLAMP_TO_EDGE, GL_CLAMP_TO_EDGE);
-    m_fullTex->setMinFilter(GL_NEAREST);
-    m_fullTex->setMagFilter(GL_NEAREST);
-    m_fullTex->locate(m_shaderProgram);
-    m_frameBuffer->attachTexture(GL_COLOR_ATTACHMENT0, m_fullTex->getTextureId());
     
-    glGenRenderbuffers(1, &m_depthRenderBuffer);
-    glBindRenderbuffer(GL_RENDERBUFFER, m_depthRenderBuffer);
-    glRenderbufferStorage(GL_RENDERBUFFER, GL_DEPTH_COMPONENT24, width, height);
-    glFramebufferRenderbuffer(GL_FRAMEBUFFER, GL_DEPTH_ATTACHMENT, GL_RENDERBUFFER, m_depthRenderBuffer);
+    initFBO(width, height);
+    initVAO();
+    
+}
 
-    m_frameBuffer->enableAttachments();
+void RenderPass::initFBO(int width, int height)
+{
+    glCreateFramebuffers(1, &m_fbo);
 
-    m_quadVertexArray = new VertexArray();
-    m_quadVertexArray->bind();
+    glCreateTextures(GL_TEXTURE_2D, 1, &m_tex);
+    glTextureStorage2D(m_tex, 1, GL_RGBA8, width, height);
+    glGenerateTextureMipmap(m_tex);
+    glNamedFramebufferTexture(m_fbo, GL_COLOR_ATTACHMENT0, m_tex, 0);
 
-    VertexBuffer* qBuffer = new VertexBuffer(GL_STATIC_DRAW);
-    qBuffer->bind();
-    qBuffer->push(+1.f, -1.f);
-    qBuffer->push(-1.f, -1.f);
-    qBuffer->push(-1.f, +1.f);
-    qBuffer->push(+1.f, -1.f);
-    qBuffer->push(-1.f, +1.f);
-    qBuffer->push(+1.f, +1.f);
-    qBuffer->uploadData();
-    qBuffer->setVertexSize(2);
-    m_quadVertexArray->setVertexCount(qBuffer->getVertexCount());
-    m_quadVertexArray->attachAttribute(VertexAttribute("position", 2, 0, 0));
-    m_quadVertexArray->enableAttributes(m_shaderProgram->getProgramId());
+    glCreateRenderbuffers(1, &m_rbo);
+    glNamedRenderbufferStorage(m_rbo, GL_DEPTH_COMPONENT24, width, height);
+    glNamedFramebufferRenderbuffer(m_fbo, GL_DEPTH_ATTACHMENT, GL_RENDERBUFFER, m_rbo);
 
-    VertexArray::release();
-    Texture::release();
-    FrameBuffer::bindScreen();
+    GLenum val = GL_COLOR_ATTACHMENT0;
+    glNamedFramebufferDrawBuffers(m_fbo, 1, &val);
 
-    delete qBuffer;
+    glCreateSamplers(1, &m_sampler);
+    glSamplerParameteri(m_sampler, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
+    glSamplerParameteri(m_sampler, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
+    glSamplerParameteri(m_sampler, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
+    glSamplerParameteri(m_sampler, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
+
+    glBindTextureUnit(1, m_tex);
+    glUniform1i(m_shaderProgram->getUniformAttribute("renderedTexture"), 1);
+}
+
+void RenderPass::initVAO()
+{
+    glCreateVertexArrays(1, &m_vao);
+
+    GLuint vbo;
+    glCreateBuffers(1, &vbo);
+
+    std::vector<GLfloat> m_quad;
+    m_quad.push_back(+1.f); m_quad.push_back(-1.f);
+    m_quad.push_back(-1.f); m_quad.push_back(-1.f);
+    m_quad.push_back(-1.f); m_quad.push_back(+1.f);
+    m_quad.push_back(+1.f); m_quad.push_back(-1.f);
+    m_quad.push_back(-1.f); m_quad.push_back(+1.f);
+    m_quad.push_back(+1.f); m_quad.push_back(+1.f);
+
+    glNamedBufferData(vbo, m_quad.size() * sizeof(GLfloat), m_quad.data(), GL_STATIC_DRAW);
+
+    glVertexArrayVertexBuffer(m_vao, VertexBufferBinding::Position, vbo, 0, 2 * sizeof(GLfloat));
+
+    glVertexArrayAttribBinding(m_vao, VertexAttrib::Position, VertexBufferBinding::Position);
+    glVertexArrayAttribFormat(m_vao, VertexAttrib::Position, 2, GL_FLOAT, GL_FALSE, 0);
+    glEnableVertexArrayAttrib(m_vao, VertexAttrib::Position);
+
+    glDeleteBuffers(1, &vbo);
 }
 
 void RenderPass::resize(int width, int height)
@@ -88,34 +99,14 @@ void RenderPass::resize(int width, int height)
     m_shaderProgram->use();
     m_shaderProgram->setUniformAttribute("screenWidth", static_cast<GLfloat>(width));
     m_shaderProgram->setUniformAttribute("screenHeight", static_cast<GLfloat>(height));
-    ShaderProgram::release();
 
-    delete m_frameBuffer;
-    m_frameBuffer = new FrameBuffer(width, height);
-    m_frameBuffer->bind();
-
-    delete m_fullTex;
-    m_fullTex = new Texture(width, height, "renderedTexture");
-    m_fullTex->bind();
-    m_fullTex->create();
-    m_fullTex->setWrapMode(GL_CLAMP_TO_EDGE, GL_CLAMP_TO_EDGE);
-    m_fullTex->setMinFilter(GL_NEAREST);
-    m_fullTex->setMagFilter(GL_NEAREST);
-    m_fullTex->locate(m_shaderProgram);
-    m_frameBuffer->attachTexture(GL_COLOR_ATTACHMENT0, m_fullTex->getTextureId());
-
-    glRenderbufferStorage(GL_RENDERBUFFER, GL_DEPTH_COMPONENT24, width, height);
-    glFramebufferRenderbuffer(GL_FRAMEBUFFER, GL_DEPTH_ATTACHMENT, GL_RENDERBUFFER, m_depthRenderBuffer);
-
-    m_frameBuffer->enableAttachments();
-
-    Texture::release();
-    FrameBuffer::bindScreen();
+    cleanUpFBO();
+    initFBO(width, height);
 }
 
 void RenderPass::activate()
 {
-    m_frameBuffer->bind();
+    glBindFramebuffer(GL_FRAMEBUFFER, m_fbo);
     FrameBuffer::clear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 }
 
@@ -123,12 +114,10 @@ void RenderPass::render()
 {
     m_shaderProgram->use();
 
-    m_fullTex->activate();
-    m_fullTex->bind();
-    m_fullTex->setSampler(m_shaderProgram);
-    
-    m_quadVertexArray->bind();
-    m_quadVertexArray->render();
+    glActiveTexture(GL_TEXTURE0 + 1);
+    glBindVertexArray(m_vao);
+
+    glDrawArrays(GL_TRIANGLES, 0, 6);
 }
 
 }

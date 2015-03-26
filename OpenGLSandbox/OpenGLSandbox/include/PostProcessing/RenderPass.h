@@ -25,14 +25,24 @@ public:
     void render();
 
 private:
-    void cleanUp();
+    void initFBO(int width, int height);
+    void initVAO();
 
-    FrameBuffer*   m_frameBuffer;
-    Texture*       m_fullTex;
-    VertexArray*   m_quadVertexArray;
+    void cleanUpFBO();
+
+    GLuint m_vao;
+
+    GLuint m_fbo;
+    GLuint m_tex;
+    GLuint m_sampler;
+    GLuint m_rbo;
+
+    //FrameBuffer*   m_frameBuffer;
+    //Texture*       m_fullTex;
+    //VertexArray*   m_quadVertexArray;
     ShaderProgram* m_shaderProgram;
 
-    GLuint         m_depthRenderBuffer;
+    
 
     //VertexBuffer m_
 

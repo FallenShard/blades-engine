@@ -16,14 +16,14 @@ namespace fsi
 CameraController::CameraController(Window* window)
     : m_activeCamera(&m_freeCamera)
     , m_yaw(180.f)
-    , m_pitch(35.f)
+    , m_pitch(0.f)
     , m_roll(0.f)
-    , m_transSpeed(50.f)
-    , m_lookSpeed(20.f)
+    , m_transSpeed(10.f)
+    , m_lookSpeed(10.f)
     , m_freeLook(false)
     , m_window(window)
 {
-    m_freeCamera.setPosition(glm::vec3(0.f, 1.f, 1.f));
+    m_freeCamera.setPosition(glm::vec3(0.f, 0.f, 5.f));
     m_freeCamera.rotate(m_yaw, m_pitch, 0.f);
     m_freeCamera.setSpeed(m_transSpeed);
 }

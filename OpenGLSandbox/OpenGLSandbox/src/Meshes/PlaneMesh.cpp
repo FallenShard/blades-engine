@@ -13,10 +13,10 @@ PlaneMesh::PlaneMesh(unsigned int xSquares, unsigned int zSquares, float squareS
     m_xTotalSize = m_xSquares * m_squareSize;
     m_zTotalSize = m_zSquares * m_squareSize;
 
-    m_vertexBuffer = std::make_unique<VertexBuffer>(GL_STATIC_DRAW);
-    m_indexBuffer = std::make_unique<IndexBuffer>();
+    //m_vertexBuffer = std::make_unique<VertexBuffer>(GL_STATIC_DRAW);
+    //m_indexBuffer = std::make_unique<IndexBuffer>();
 
-    initVertices();
+    //initVertices();
 }
 
 PlaneMesh::~PlaneMesh()
@@ -31,9 +31,9 @@ void PlaneMesh::bind()
 
 void PlaneMesh::initVertices()
 {
-    for (unsigned int z = 0; z < m_zSquares + 1; z++)
+    for (int z = 0; z < (int)m_zSquares + 1; z++)
     {
-        for (unsigned int x = 0; x < m_xSquares + 1; x++)
+        for (int x = 0; x < (int)m_xSquares + 1; x++)
         {
             m_vertexBuffer->push(x * m_squareSize - m_xTotalSize / 2, 0.f, z * m_squareSize - m_zTotalSize / 2);
         }

@@ -1,6 +1,7 @@
 #pragma once
 
 #include "glm/glm.hpp"
+#include "OpenGL.h"
 
 namespace fsi
 {
@@ -23,9 +24,9 @@ public:
 
 
 protected:
-    
+    GLuint m_ubo;
 
-    UniformBuffer* m_uniformBuffer;
+    //UniformBuffer* m_uniformBuffer;
     ShaderProgram* m_program;
 
 };

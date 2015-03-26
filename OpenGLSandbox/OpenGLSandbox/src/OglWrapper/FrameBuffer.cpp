@@ -30,7 +30,7 @@ void FrameBuffer::bind()
 
 void FrameBuffer::bindScreen()
 {
-    if (boundFBO != 0)
+    //if (boundFBO != 0)
     {
         glBindFramebuffer(GL_FRAMEBUFFER, 0);
         boundFBO = 0;

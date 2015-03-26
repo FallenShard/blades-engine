@@ -21,7 +21,23 @@ namespace
     GLuint timeUnif;
     GLfloat timeVal = 0.f;
 
+    GLuint tbo;
+
+    int m_zSquares = 8;
+    int m_xSquares = 8;
+    int m_squareSize = 8;
+
+    int m_xTotalSize = m_xSquares * m_squareSize;
+    int m_zTotalSize = m_zSquares * m_squareSize;
+
+    int vertCount = 0;
+    int indCount = 0;
+
+
+
 }
+
+
 
 namespace fsi
 {
@@ -30,12 +46,12 @@ Terrain::Terrain()
 {
 }
 
-Terrain::Terrain(PlaneMesh* mesh, HeightMapMaterial* material)
+Terrain::Terrain(PlaneMesh* mesh, HeightMapMaterial* material, ShaderProgram* prog)
     //: m_renderComp(std::make_unique<RenderComponent>(mesh, material))
-    : m_mesh(mesh)
-    , m_material(material)
-    , m_program(material->getShaderProgram())
-    , m_vertexArray(GL_PATCHES)
+    : //m_mesh(mesh)
+     m_material(material)
+    , m_program(prog)
+    //, m_vertexArray(GL_PATCHES)
 {
     //m_renderComp->setPrimitiveType(GL_PATCHES);
 }
@@ -47,7 +63,70 @@ Terrain::~Terrain()
 
 void Terrain::init()
 {
-    m_vertexArray.bind();
+    std::vector<GLfloat> m_vertices;
+    std::vector<GLushort> m_indices;
+
+    for (int z = 0; z < m_zSquares + 1; z++)
+    {
+        for (int x = 0; x < m_xSquares + 1; x++)
+        {
+            m_vertices.push_back(x * m_squareSize - m_xTotalSize / 2.f);
+            m_vertices.push_back(0.f);
+            m_vertices.push_back(z * m_squareSize - m_zTotalSize / 2.f);
+        }
+    }
+
+    for (int z = 0; z < m_zSquares; z++)
+    {
+        for (int x = 0; x < m_xSquares; x++)
+        {
+            m_indices.push_back(z * (m_xSquares + 1) + x);
+            m_indices.push_back(z * (m_xSquares + 1) + x + 1);
+            m_indices.push_back((z + 1) * (m_xSquares + 1) + x + 1);
+            m_indices.push_back((z + 1) * (m_xSquares + 1) + x);
+        }
+    }
+
+    
+    glCreateVertexArrays(1, &m_vao);
+    glCreateBuffers(1, &m_vbo);
+    glCreateBuffers(1, &m_ibo);
+
+    glNamedBufferData(m_vbo, m_vertices.size() * sizeof(GLfloat), m_vertices.data(), GL_STATIC_DRAW);
+    glNamedBufferData(m_ibo, m_indices.size() * sizeof(GLushort), m_indices.data(), GL_STATIC_DRAW);
+    
+    glVertexArrayVertexBuffer(m_vao, VertexBufferBinding::Position, m_vbo, 0, 3 * sizeof(GLfloat));
+    glVertexArrayElementBuffer(m_vao, m_ibo);
+
+    glVertexArrayAttribBinding(m_vao, VertexAttrib::Position, VertexBufferBinding::Position);
+    glVertexArrayAttribFormat(m_vao, VertexAttrib::Position, 3, GL_FLOAT, GL_FALSE, 0);
+    glEnableVertexArrayAttrib(m_vao, VertexAttrib::Position);
+    
+    glPatchParameteri(GL_PATCH_VERTICES, 4);
+    /*
+    glGenVertexArrays(1, &m_vao);
+    glGenBuffers(1, &m_vbo);
+    glGenBuffers(1, &m_ibo);
+
+    glBindVertexArray(m_vao);
+
+    glBindBuffer(GL_ARRAY_BUFFER, m_vbo);
+    glBufferData(GL_ARRAY_BUFFER, m_vertices.size() * 4, m_vertices.data(), GL_STATIC_DRAW);
+    
+    glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, m_ibo);
+    glBufferData(GL_ELEMENT_ARRAY_BUFFER, m_indices.size() * sizeof(GLushort), m_indices.data(), GL_STATIC_DRAW);
+
+    glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 12, (const void*)0);
+    glEnableVertexAttribArray(0);
+
+    glBindVertexArray(0);*/
+
+
+    vertCount = m_vertices.size() / 3;
+
+    indCount = m_indices.size();
+
+    /*m_vertexArray.bind();
 
     m_mesh->bind();
 
@@ -61,9 +140,9 @@ void Terrain::init()
     }
 
     m_vertexArray.setVertexCount(m_mesh->getVertexCount());
-    m_vertexArray.setIndexCount(m_mesh->getIndexCount());
+    m_vertexArray.setIndexCount(m_mesh->getIndexCount());*/
 
-    m_material->init();
+    //m_material->init();
 
     int w;
     int h;
@@ -74,24 +153,57 @@ void Terrain::init()
     //glUniform1i(hMap, 1);
 
     hMap = glGetUniformLocation(m_program->getProgramId(), "hMap");
+
+    
     
 
     unsigned char* img = stbi_load("res/heightmap2.png", &w, &h, &comp, STBI_rgb_alpha);
 
-    glGenTextures(1, &texId);
+    //glGenTextures(1, &texId);
+    glCreateTextures(GL_TEXTURE_2D, 1, &m_tex);
+    glTextureStorage2D(m_tex, 1, GL_RGBA8, w, h);
+    glTextureSubImage2D(m_tex, 0, 0, 0, w, h, GL_BGRA, GL_UNSIGNED_BYTE, img);
+    glGenerateTextureMipmap(m_tex);
 
-    glBindTexture(GL_TEXTURE_2D, texId);
+    glCreateSamplers(1, &m_sampler);
+    glSamplerParameteri(m_sampler, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+    glSamplerParameteri(m_sampler, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
+    glSamplerParameteri(m_sampler, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
+    glSamplerParameteri(m_sampler, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
+
+    /*glTextureStorage2D(texId, 1, GL_RGB, w, h);
+    glGenBuffers(1, &tbo);
+    glNamedBufferStorage(tbo, w * h * 4, img, 0);
+    glTextureView(texId, )*/
+    
+
+    //glCreateTextures(GL_TEXTURE_2D, 1, &texId);
+    //glTextureStorage2D(texId, 1, GL_RGBA8, w, h);
+    //glBindTextures(0, 1, &texId);
+    
+
+    /*glTextureParameteri(texId, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+    glTextureParameteri(texId, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
+    glTextureParameteri(texId, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
+    glTextureParameteri(texId, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);*/
+
+
+    /*glBindTexture(GL_TEXTURE_2D, texId);
     glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, w, h, 0, GL_RGBA, GL_UNSIGNED_BYTE, img);
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
-    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);*/
+
+    /*glActiveTexture(GL_TEXTURE0);
+    glBindTexture(GL_TEXTURE_2D, texId);*/
+    
+    glBindTextureUnit(0, m_tex);
+    m_program->setUniformSampler(hMap, 0);
 
     stbi_image_free(img);
 
-    int maxVert;
-    glGetIntegerv(GL_MAX_TESS_GEN_LEVEL, &maxVert);
-    std::cout << maxVert << '\n';
+    
 }
 
 void Terrain::update(const float deltaTime)
@@ -103,39 +215,41 @@ void Terrain::render(const glm::mat4& projection, const glm::mat4& view)
 {
     glm::mat4 model = glm::translate(glm::vec3(0.f, -50.f, 0.f));
     glm::mat4 mat = projection * view * model;
-    glm::mat3& normalMatrix = glm::mat3(glm::inverseTranspose(view * model));
 
     glm::vec4 cameraPos = glm::inverse(view)[3];
 
     //std::cout << cameraPos.x << " " << cameraPos.y << " " << cameraPos.z << '\n';
 
     m_program->use();
-    m_program->setUniformAttribute("normalMatrix", normalMatrix);
     m_program->setUniformAttribute("MVP", mat);
     m_program->setUniformAttribute("cameraPos", cameraPos);
-    m_program->setUniformAttribute("time", timeVal);
-    m_program->setUniformAttribute("mvLightDir", view * glm::vec4(0.f, -1.f, 0.f, 0.f));
+    //m_program->setUniformAttribute("time", timeVal);
+    //m_program->setUniformAttribute("mvLightDir", view * glm::vec4(0.f, -1.f, 0.f, 0.f));
+    //
 
-    glActiveTexture(GL_TEXTURE0);
-    glBindTexture(GL_TEXTURE_2D, texId);
-    m_program->setUniformSampler(hMap, 0);
+    //glLineWidth(3.f);
 
-    glLineWidth(3.f);
+    ////m_program->setUniformAttribute("wireframe", 1);
 
-    m_program->setUniformAttribute("wireframe", false);
+    ////m_vertexArray.bind();
+    ////m_vertexArray.renderIndexed();
+    //glBindTextureUnit(0, m_tex);
 
-    m_vertexArray.bind();
-    m_vertexArray.renderIndexed();
+    //glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
+    glActiveTexture(GL_TEXTURE0 + 0);
+    glBindVertexArray(m_vao);
 
-    glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
+    glDrawElements(GL_PATCHES, indCount, GL_UNSIGNED_SHORT, 0);
 
-    m_program->setUniformAttribute("wireframe", true);
-    //m_program->setUniformAttribute("MVP", projection * view * glm::translate(glm::vec3(0.f, -49.5f, 0.f)));
+    ////m_program->setUniformAttribute("wireframe", true);
+    ////m_program->setUniformAttribute("MVP", projection * view * glm::translate(glm::vec3(0.f, -49.5f, 0.f)));
 
-    m_vertexArray.bind();
-    m_vertexArray.renderIndexed();
+    ////m_vertexArray.bind();
+    ////m_vertexArray.renderIndexed();
 
-    glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
+    
 }
+
+
 
 }

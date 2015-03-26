@@ -21,6 +21,7 @@
     <ClCompile Include="src\Meshes\Mesh.cpp" />
     <ClCompile Include="src\Meshes\PlaneMesh.cpp" />
     <ClCompile Include="src\Meshes\CubeMesh.cpp" />
+    <ClCompile Include="src\Models\NewSphere.cpp" />
     <ClCompile Include="src\Renderer\RenderComponent.cpp" />
     <ClCompile Include="src\Models\Sphere.cpp" />
     <ClCompile Include="src\Meshes\SphereMesh.cpp" />
@@ -64,11 +65,13 @@
     <ClInclude Include="include\Input\Mouse.h" />
     <ClInclude Include="include\Materials\HeightMapMaterial.h" />
     <ClInclude Include="include\Materials\Material.h" />
+    <ClInclude Include="include\Meshes\GridMesh.h" />
     <ClInclude Include="include\Meshes\Mesh.h" />
     <ClInclude Include="include\Meshes\PlaneMesh.h" />
     <ClInclude Include="include\Meshes\CubeMesh.h" />
     <ClInclude Include="include\Meshes\SphereMesh.h" />
     <ClInclude Include="include\Models\HeightMapMaterial.h" />
+    <ClInclude Include="include\Models\NewSphere.h" />
     <ClInclude Include="include\Renderer\RenderComponent.h" />
     <ClInclude Include="include\Models\Sphere.h" />
     <ClInclude Include="include\Models\Terrain.h" />

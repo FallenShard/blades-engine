@@ -34,24 +34,31 @@ void PhongMaterial::setShininess(float shininess)
 {
     m_data.shininess = shininess;
 
-    m_uniformBuffer->bind();
-    m_uniformBuffer->setBufferData(&m_data, sizeof(PhongData));
+    //m_uniformBuffer->bind();
+    //m_uniformBuffer->setBufferData(&m_data, sizeof(PhongData));
 }
 
 void PhongMaterial::apply()
 {
-    m_uniformBuffer->bindToBindingPoint();
+    //m_uniformBuffer->bindToBindingPoint();
 }
 
 void PhongMaterial::init()
 {
-    m_uniformBuffer = new UniformBuffer();
-    m_uniformBuffer->bind();
-    m_uniformBuffer->setBufferData(&m_data, sizeof(PhongData));
+    glCreateBuffers(1, &m_ubo);
+
+    glNamedBufferData(m_ubo, sizeof PhongData, &m_data, GL_STATIC_DRAW);
+
+    //m_uniformBuffer = new UniformBuffer();
+    //m_uniformBuffer->bind();
+    //m_uniformBuffer->setBufferData(&m_data, sizeof(PhongData));
     
     std::string blockName = "Material";
-    m_uniformBuffer->setBindingPoint(0);
+
     m_program->setUniformBlockBinding(blockName, 0);
+    glBindBufferBase(GL_UNIFORM_BUFFER, 0, m_ubo);
+    //m_uniformBuffer->setBindingPoint(0);
+    //m_program->setUniformBlockBinding(blockName, 0);
 }
 
 }

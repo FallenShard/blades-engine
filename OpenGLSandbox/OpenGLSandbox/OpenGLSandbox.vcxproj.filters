@@ -85,6 +85,7 @@
     <ClCompile Include="src\Renderer\RenderComponent.cpp" />
     <ClCompile Include="src\Meshes\Mesh.cpp" />
     <ClCompile Include="src\Materials\HeightMapMaterial.cpp" />
+    <ClCompile Include="src\Models\NewSphere.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="include\Core\Application.h" />
@@ -139,6 +140,8 @@
     <ClInclude Include="include\Models\HeightMapMaterial.h" />
     <ClInclude Include="include\Renderer\RenderComponent.h" />
     <ClInclude Include="include\Materials\HeightMapMaterial.h" />
+    <ClInclude Include="include\Models\NewSphere.h" />
+    <ClInclude Include="include\Meshes\GridMesh.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include="res\fxaa.frag" />
