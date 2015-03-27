@@ -158,6 +158,8 @@ void SceneManager::update(float timeDelta)
 
     m_cameraController.update(timeDelta);
 
+    g_terrain->update(timeDelta);
+
     //m_roboticArm->update(timeDelta);
     //g_terrain->update(timeDelta);
     //m_validationVector.push_back(m_roboticArm);

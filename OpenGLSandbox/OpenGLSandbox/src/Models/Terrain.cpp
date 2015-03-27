@@ -25,7 +25,7 @@ namespace
 
     int m_zSquares = 8;
     int m_xSquares = 8;
-    int m_squareSize = 8;
+    int m_squareSize = 16;
 
     int m_xTotalSize = m_xSquares * m_squareSize;
     int m_zTotalSize = m_zSquares * m_squareSize;
@@ -168,37 +168,11 @@ void Terrain::init()
     glCreateSamplers(1, &m_sampler);
     glSamplerParameteri(m_sampler, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
     glSamplerParameteri(m_sampler, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
-    glSamplerParameteri(m_sampler, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
-    glSamplerParameteri(m_sampler, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
-
-    /*glTextureStorage2D(texId, 1, GL_RGB, w, h);
-    glGenBuffers(1, &tbo);
-    glNamedBufferStorage(tbo, w * h * 4, img, 0);
-    glTextureView(texId, )*/
-    
-
-    //glCreateTextures(GL_TEXTURE_2D, 1, &texId);
-    //glTextureStorage2D(texId, 1, GL_RGBA8, w, h);
-    //glBindTextures(0, 1, &texId);
-    
-
-    /*glTextureParameteri(texId, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
-    glTextureParameteri(texId, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
-    glTextureParameteri(texId, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
-    glTextureParameteri(texId, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);*/
-
-
-    /*glBindTexture(GL_TEXTURE_2D, texId);
-    glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, w, h, 0, GL_RGBA, GL_UNSIGNED_BYTE, img);
-    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
-    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
-    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
-    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);*/
-
-    /*glActiveTexture(GL_TEXTURE0);
-    glBindTexture(GL_TEXTURE_2D, texId);*/
+    glSamplerParameteri(m_sampler, GL_TEXTURE_WRAP_S, GL_REPEAT);
+    glSamplerParameteri(m_sampler, GL_TEXTURE_WRAP_T, GL_REPEAT);
     
     glBindTextureUnit(0, m_tex);
+    glBindSampler(0, m_sampler);
     m_program->setUniformSampler(hMap, 0);
 
     stbi_image_free(img);
@@ -223,31 +197,10 @@ void Terrain::render(const glm::mat4& projection, const glm::mat4& view)
     m_program->use();
     m_program->setUniformAttribute("MVP", mat);
     m_program->setUniformAttribute("cameraPos", cameraPos);
-    //m_program->setUniformAttribute("time", timeVal);
     //m_program->setUniformAttribute("mvLightDir", view * glm::vec4(0.f, -1.f, 0.f, 0.f));
-    //
 
-    //glLineWidth(3.f);
-
-    ////m_program->setUniformAttribute("wireframe", 1);
-
-    ////m_vertexArray.bind();
-    ////m_vertexArray.renderIndexed();
-    //glBindTextureUnit(0, m_tex);
-
-    //glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
-    glActiveTexture(GL_TEXTURE0 + 0);
     glBindVertexArray(m_vao);
-
     glDrawElements(GL_PATCHES, indCount, GL_UNSIGNED_SHORT, 0);
-
-    ////m_program->setUniformAttribute("wireframe", true);
-    ////m_program->setUniformAttribute("MVP", projection * view * glm::translate(glm::vec3(0.f, -49.5f, 0.f)));
-
-    ////m_vertexArray.bind();
-    ////m_vertexArray.renderIndexed();
-
-    
 }
 
 

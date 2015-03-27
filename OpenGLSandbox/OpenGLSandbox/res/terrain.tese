@@ -22,7 +22,7 @@ out TES_OUT
     vec2 texCoord;
 } tesOut;
 
-const float PATCH_SIZE = 8.f;
+const float PATCH_SIZE = 16.f;
 const float MESH_SIZE = 8.f * PATCH_SIZE;
 
 const float HEIGHT_FACTOR = MESH_SIZE / 8.f;
@@ -34,9 +34,12 @@ void main()
 
     float posX = (position.x + MESH_SIZE / 2) / MESH_SIZE;
     float posZ = (position.z + MESH_SIZE / 2) / MESH_SIZE;
+
     vec2 texCoord = vec2(posX, posZ);
     tesOut.texCoord = texCoord;
-    position.y = texture(hMap, texCoord).r * HEIGHT_FACTOR;
+    float sam = texture(hMap, texCoord).r;
+    float val = rand(texCoord);
+    position.y = sam * HEIGHT_FACTOR;
 
     const ivec3 off = ivec3(-1, 0, 1);
     //float hL = textureOffset(hMap, texCoord, off.xy).x * HEIGHT_FACTOR;

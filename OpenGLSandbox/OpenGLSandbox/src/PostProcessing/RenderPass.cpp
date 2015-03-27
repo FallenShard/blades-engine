@@ -65,6 +65,7 @@ void RenderPass::initFBO(int width, int height)
     glSamplerParameteri(m_sampler, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
 
     glBindTextureUnit(1, m_tex);
+    glBindSampler(1, m_sampler);
     glUniform1i(m_shaderProgram->getUniformAttribute("renderedTexture"), 1);
 }
 
@@ -114,9 +115,7 @@ void RenderPass::render()
 {
     m_shaderProgram->use();
 
-    glActiveTexture(GL_TEXTURE0 + 1);
     glBindVertexArray(m_vao);
-
     glDrawArrays(GL_TRIANGLES, 0, 6);
 }
 
