@@ -15,6 +15,8 @@ in TES_OUT
 uniform vec4 mvLightDir;
 uniform vec3 cameraPos;
 
+uniform int wireframe;
+
 void main()
 {
     //vec3 n = normalize(fsIn.normal);
@@ -27,7 +29,10 @@ void main()
     float hMapSample = texture(hMap, fsIn.texCoord).r;
     //finalColor = vec4(hMapSample, hMapSample, hMapSample, 1.f);
     //finalColor = vec4(hMapSample, 0.f, 0.f, 1.f);
-    finalColor = vec4(hMapSample, 0.f, 0.f, 1.f);
+    if (wireframe == 1)
+        finalColor = vec4(fsIn.color, 1.f);
+    else
+        finalColor = vec4(hMapSample * 0.8, (1 - hMapSample) * 0.8, 0.f, 1.f);
 
     //finalColor = vec4(intensity, 0.f, 0.f, 1.f);
 

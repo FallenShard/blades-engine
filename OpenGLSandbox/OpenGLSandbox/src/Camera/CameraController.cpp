@@ -23,7 +23,7 @@ CameraController::CameraController(Window* window)
     , m_freeLook(false)
     , m_window(window)
 {
-    m_freeCamera.setPosition(glm::vec3(0.f, 0.f, 5.f));
+    m_freeCamera.setPosition(glm::vec3(0.f, -40.f, 60.f));
     m_freeCamera.rotate(m_yaw, m_pitch, 0.f);
     m_freeCamera.setSpeed(m_transSpeed);
 }
@@ -115,8 +115,10 @@ void CameraController::update(float timeDelta)
 
 #ifdef _DEBUG
     if (prev != m_activeCamera->getPosition())
-        std::cout << "CameraPos X:" << m_freeCamera.getPosition().x << " Y: " 
-        << m_activeCamera->getPosition().y << " Z: " << m_activeCamera->getPosition().z << std::endl;
+    {
+        std::cout << "CameraPos X:" << m_freeCamera.getPosition().x << " Y: "
+            << m_activeCamera->getPosition().y << " Z: " << m_activeCamera->getPosition().z << std::endl;
+    }
 #endif
 }
 

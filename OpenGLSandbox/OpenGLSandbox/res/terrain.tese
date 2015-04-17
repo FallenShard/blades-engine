@@ -1,6 +1,6 @@
 #version 440 core
 
-layout(quads, equal_spacing, ccw) in;
+layout(quads, fractional_odd_spacing, ccw) in;
 
 uniform mat4 MVP;
 //uniform float size;
@@ -14,6 +14,11 @@ float rand(vec2 co)
     return fract(sin(dot(co.xy ,vec2(12.9898,78.233))) * 43758.5453);
 }
 
+in TCS_OUT
+{
+    vec3 color;
+} tesIn[];
+
 out TES_OUT
 {
     vec3 pos;
@@ -22,15 +27,21 @@ out TES_OUT
     vec2 texCoord;
 } tesOut;
 
-const float PATCH_SIZE = 16.f;
-const float MESH_SIZE = 8.f * PATCH_SIZE;
+uniform float patchSize;
+uniform float patchesX;
+
+const float MESH_SIZE = patchesX * patchSize;
 
 const float HEIGHT_FACTOR = MESH_SIZE / 8.f;
 
 void main()
 {
-    vec4 position = gl_in[0].gl_Position;
-    position.xz += gl_TessCoord.xy * PATCH_SIZE;
+    //vec4 position = gl_in[0].gl_Position;
+    //position.xz += gl_TessCoord.xy * patchSize;
+
+    vec4 a = mix(gl_in[0].gl_Position, gl_in[1].gl_Position, gl_TessCoord.x);
+    vec4 b = mix(gl_in[3].gl_Position, gl_in[2].gl_Position, gl_TessCoord.x);
+    vec4 position = mix(a, b, gl_TessCoord.y);
 
     float posX = (position.x + MESH_SIZE / 2) / MESH_SIZE;
     float posZ = (position.z + MESH_SIZE / 2) / MESH_SIZE;
@@ -79,4 +90,8 @@ void main()
     gl_Position = MVP * position;
 
     tesOut.pos = position.xyz;
+    
+    vec3 aa = mix(tesIn[0].color, tesIn[1].color, gl_TessCoord.x);
+    vec3 bb = mix(tesIn[3].color, tesIn[2].color, gl_TessCoord.x);
+    tesOut.color = mix(aa, bb, gl_TessCoord.y);
 }

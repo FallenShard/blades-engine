@@ -44,6 +44,7 @@ NewSphere::NewSphere(PlaneMesh* mesh, PhongMaterial* material, ShaderProgram* pr
     , m_program(prog)
     //, m_vertexArray(GL_PATCHES)
 {
+    init();
     //m_renderComp->setPrimitiveType(GL_PATCHES);
 }
 
@@ -186,12 +187,13 @@ void NewSphere::init()
     GLuint blockIndex = glGetUniformBlockIndex(prog, blockName.c_str());
     glUniformBlockBinding(prog, blockIndex, UBO_BINDING);
 
-    glGenBuffers(1, &m_ubo);
-    glBindBuffer(GL_UNIFORM_BUFFER, m_ubo);
+    glCreateBuffers(1, &m_ubo);
+    //glGenBuffers(1, &m_ubo);
+    //glBindBuffer(GL_UNIFORM_BUFFER, m_ubo);
     //glCreateBuffers(1, &m_ubo);
 
-    
-    glBufferData(GL_UNIFORM_BUFFER, uboData.size() * sizeof(GLfloat), uboData.data(), GL_DYNAMIC_DRAW);
+    glNamedBufferData(m_ubo, uboData.size() * sizeof(GLfloat), uboData.data(), GL_DYNAMIC_DRAW);
+    //glBufferData(GL_UNIFORM_BUFFER, uboData.size() * sizeof(GLfloat), uboData.data(), GL_DYNAMIC_DRAW);
     glBindBufferBase(GL_UNIFORM_BUFFER, UBO_BINDING, m_ubo);
 
     //m_uniformBuffer = new UniformBuffer();
@@ -200,7 +202,7 @@ void NewSphere::init()
     
     
 
-    glBindBuffer(GL_UNIFORM_BUFFER, 0);
+    //glBindBuffer(GL_UNIFORM_BUFFER, 0);
     //m_program->setUniformBlockBinding(blockName, 0);
     
 }

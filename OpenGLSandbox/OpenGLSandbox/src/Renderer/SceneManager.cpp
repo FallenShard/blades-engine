@@ -76,8 +76,6 @@ void SceneManager::prepare()
 {
     //prog = m_shaderManager->getProgram("phong");
 
-    m_cameraController.setPosition(glm::vec3(0.f, 0.f, 5.f));
-
     /*m_planeGrid->setProgram(prog);
     m_sceneGraph->attachChild(m_planeGrid);
 
@@ -105,7 +103,6 @@ void SceneManager::prepare()
 
 
     g_newSphere = new NewSphere(nullptr, nullptr, m_shaderManager->getProgram("phong"));
-    g_newSphere->init();
 
 
 

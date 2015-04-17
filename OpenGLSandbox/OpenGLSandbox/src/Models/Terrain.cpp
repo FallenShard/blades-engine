@@ -25,16 +25,23 @@ namespace
 
     int m_zSquares = 8;
     int m_xSquares = 8;
-    int m_squareSize = 16;
+    float m_squareSize = 16.f;
 
-    int m_xTotalSize = m_xSquares * m_squareSize;
-    int m_zTotalSize = m_zSquares * m_squareSize;
+    float m_xTotalSize = m_xSquares * m_squareSize;
+    float m_zTotalSize = m_zSquares * m_squareSize;
 
     int vertCount = 0;
     int indCount = 0;
 
 
+    GLuint prog;
+    GLuint vert;
+    GLuint control;
+    GLuint eval;
+    GLuint frag;
 
+    std::vector<GLfloat> m_vertices;
+    std::vector<GLushort> m_indices;
 }
 
 
@@ -63,9 +70,6 @@ Terrain::~Terrain()
 
 void Terrain::init()
 {
-    std::vector<GLfloat> m_vertices;
-    std::vector<GLushort> m_indices;
-
     for (int z = 0; z < m_zSquares + 1; z++)
     {
         for (int x = 0; x < m_xSquares + 1; x++)
@@ -149,6 +153,7 @@ void Terrain::init()
     int comp;
 
     m_program->use();
+
     //m_program->setUniformSampler(hMap)
     //glUniform1i(hMap, 1);
 
@@ -168,16 +173,18 @@ void Terrain::init()
     glCreateSamplers(1, &m_sampler);
     glSamplerParameteri(m_sampler, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
     glSamplerParameteri(m_sampler, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
-    glSamplerParameteri(m_sampler, GL_TEXTURE_WRAP_S, GL_REPEAT);
-    glSamplerParameteri(m_sampler, GL_TEXTURE_WRAP_T, GL_REPEAT);
+    glSamplerParameteri(m_sampler, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
+    glSamplerParameteri(m_sampler, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
     
     glBindTextureUnit(0, m_tex);
     glBindSampler(0, m_sampler);
     m_program->setUniformSampler(hMap, 0);
+    m_program->setUniformAttribute("patchSize", (float)m_squareSize);
+    m_program->setUniformAttribute("patchesX", (float)m_xSquares);
 
     stbi_image_free(img);
 
-    
+    glLineWidth(3);
 }
 
 void Terrain::update(const float deltaTime)
@@ -189,17 +196,50 @@ void Terrain::render(const glm::mat4& projection, const glm::mat4& view)
 {
     glm::mat4 model = glm::translate(glm::vec3(0.f, -50.f, 0.f));
     glm::mat4 mat = projection * view * model;
+    glm::mat4 mv = view * model;
+    glm::mat4 proj(projection);
 
     glm::vec4 cameraPos = glm::inverse(view)[3];
+
+    /*for (int i = 0; i < vertCount; i++)
+    {
+        int ind = i * 3;
+        glm::vec4 a = glm::vec4(m_vertices[ind + 0], m_vertices[ind + 1], m_vertices[ind + 2], 1.f);
+        glm::vec4 proj;
+
+        proj = mat * a;
+        proj /= proj.w;
+        proj *= 0.5f;
+        proj += 0.5f;
+        proj.x *= 1366;
+        proj.y *= 768;
+
+        int h = 23;
+    }*/
 
     //std::cout << cameraPos.x << " " << cameraPos.y << " " << cameraPos.z << '\n';
 
     m_program->use();
     m_program->setUniformAttribute("MVP", mat);
-    m_program->setUniformAttribute("cameraPos", cameraPos);
-    //m_program->setUniformAttribute("mvLightDir", view * glm::vec4(0.f, -1.f, 0.f, 0.f));
+    m_program->setUniformAttribute("MV", mv);
+    m_program->setUniformAttribute("P", proj);
 
+    //m_program->setUniformAttribute("cameraPos", cameraPos);
+    //m_program->setUniformAttribute("mvLightDir", view * glm::vec4(0.f, -1.f, 0.f, 0.f));
+    
     glBindVertexArray(m_vao);
+
+    m_program->setUniformAttribute("wireframe", 1);
+    glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
+    //glDrawElements(GL_PATCHES, indCount, GL_UNSIGNED_SHORT, 0);
+
+    model = glm::translate(glm::vec3(0.f, -50.01f, 0.f));
+    mat = projection * view * model;
+    mv = view * model;
+    m_program->setUniformAttribute("MVP", mat);
+    m_program->setUniformAttribute("MV", mv);
+    m_program->setUniformAttribute("wireframe", 0);
+    glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
     glDrawElements(GL_PATCHES, indCount, GL_UNSIGNED_SHORT, 0);
 }
 

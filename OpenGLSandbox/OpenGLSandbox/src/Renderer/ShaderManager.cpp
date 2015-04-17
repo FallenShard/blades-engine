@@ -104,6 +104,8 @@ void ShaderManager::buildProgram(const std::string& key, const std::vector<std::
         program->attachShader(getShader(shaderName));
     }
 
+    //glTransformFeedbackVaryings(program->getProgramId(), 1, "transFeed", )
+
     program->link();
     program->checkForErrors();
 
