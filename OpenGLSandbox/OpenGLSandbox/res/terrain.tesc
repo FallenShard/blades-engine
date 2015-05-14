@@ -45,7 +45,7 @@ highp float ClipToSSTess(vec4 c0, vec4 c1)
 
     float d = distance(c0, c1);
 
-    return clamp(d / 32.f, 0, 64);
+    return clamp(d / 16.f, 1, 64);
 }
 
 float SphereToSSTess(vec3 p0, vec3 p1, float diameter)
@@ -71,7 +71,6 @@ void main()
     float sideLen = max(abs(gl_in[1].gl_Position.x - gl_in[0].gl_Position.x), abs(gl_in[1].gl_Position.x - gl_in[2].gl_Position.x));
     float diagLen = sqrt(2*sideLen*sideLen);
 
-    //float tess = SphereToSSTess(gl_in[0].gl_Position.xyz, gl_in[1].gl_Position.xyz, sideLen);
     gl_TessLevelOuter[1] = SphereToSSTess(gl_in[0].gl_Position.xyz, gl_in[1].gl_Position.xyz, sideLen);
     gl_TessLevelOuter[2] = SphereToSSTess(gl_in[1].gl_Position.xyz, gl_in[2].gl_Position.xyz, sideLen);
     gl_TessLevelOuter[3] = SphereToSSTess(gl_in[2].gl_Position.xyz, gl_in[3].gl_Position.xyz, sideLen);
@@ -84,10 +83,10 @@ void main()
 
     vec3 colors[4];
 
-    colors[0] = vec3(1.f, 0.f, 0.f);
-    colors[1] = vec3(1.f, 1.f, 0.f);
+    colors[0] = vec3(0.f, 1.f, 1.f);
+    colors[1] = vec3(0.f, 1.f, 1.f);
     colors[2] = vec3(0.f, 1.f, 1.f);
-    colors[3] = vec3(0.f, 0.f, 1.f);
+    colors[3] = vec3(0.f, 1.f, 1.f);
 
     tcs_out[gl_InvocationID].color = colors[gl_InvocationID];
 }

@@ -23,9 +23,9 @@ namespace
 
     GLuint tbo;
 
-    int m_zSquares = 8;
-    int m_xSquares = 8;
-    float m_squareSize = 16.f;
+    int m_zSquares = 32;
+    int m_xSquares = 32;
+    float m_squareSize = 32.f;
 
     float m_xTotalSize = m_xSquares * m_squareSize;
     float m_zTotalSize = m_zSquares * m_squareSize;
@@ -162,7 +162,7 @@ void Terrain::init()
     
     
 
-    unsigned char* img = stbi_load("res/heightmap2.png", &w, &h, &comp, STBI_rgb_alpha);
+    unsigned char* img = stbi_load("res/heightmap.png", &w, &h, &comp, STBI_rgb_alpha);
 
     //glGenTextures(1, &texId);
     glCreateTextures(GL_TEXTURE_2D, 1, &m_tex);
@@ -201,24 +201,7 @@ void Terrain::render(const glm::mat4& projection, const glm::mat4& view)
 
     glm::vec4 cameraPos = glm::inverse(view)[3];
 
-    /*for (int i = 0; i < vertCount; i++)
-    {
-        int ind = i * 3;
-        glm::vec4 a = glm::vec4(m_vertices[ind + 0], m_vertices[ind + 1], m_vertices[ind + 2], 1.f);
-        glm::vec4 proj;
-
-        proj = mat * a;
-        proj /= proj.w;
-        proj *= 0.5f;
-        proj += 0.5f;
-        proj.x *= 1366;
-        proj.y *= 768;
-
-        int h = 23;
-    }*/
-
-    //std::cout << cameraPos.x << " " << cameraPos.y << " " << cameraPos.z << '\n';
-
+    
     m_program->use();
     m_program->setUniformAttribute("MVP", mat);
     m_program->setUniformAttribute("MV", mv);
@@ -231,7 +214,7 @@ void Terrain::render(const glm::mat4& projection, const glm::mat4& view)
 
     m_program->setUniformAttribute("wireframe", 1);
     glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
-    //glDrawElements(GL_PATCHES, indCount, GL_UNSIGNED_SHORT, 0);
+    glDrawElements(GL_PATCHES, indCount, GL_UNSIGNED_SHORT, 0);
 
     model = glm::translate(glm::vec3(0.f, -50.01f, 0.f));
     mat = projection * view * model;

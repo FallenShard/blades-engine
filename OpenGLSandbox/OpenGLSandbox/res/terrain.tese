@@ -32,7 +32,7 @@ uniform float patchesX;
 
 const float MESH_SIZE = patchesX * patchSize;
 
-const float HEIGHT_FACTOR = MESH_SIZE / 8.f;
+const float HEIGHT_FACTOR = MESH_SIZE / 4.f;
 
 void main()
 {
