@@ -1,5 +1,7 @@
 #pragma once
 
+#include <vector>
+
 #include "OglWrapper/Shader.h"
 #include "OglWrapper/ShaderProgram.h"
 

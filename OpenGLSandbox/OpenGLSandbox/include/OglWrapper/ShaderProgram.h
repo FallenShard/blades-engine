@@ -3,7 +3,6 @@
 #include <memory>
 #include <map>
 #include "OglWrapper/Shader.h"
-#include "OglWrapper/UniformBuffer.h"
 
 namespace fsi
 {
@@ -57,7 +56,6 @@ private:
 
     std::map<std::string, std::shared_ptr<Shader>> m_shaders;
     std::map<std::string, GLint> m_uniformAttributes;
-    //std::map<std::string, UniformBuffer*> m_uniformBuffers;
 };
 
 }

@@ -1,3 +1,5 @@
+#include <vector>
+
 #include "OglWrapper/ShaderProgram.h"
 #include "Utils/Logger.h"
 

@@ -12,6 +12,7 @@ ShaderManager::ShaderManager()
     m_attributeTable["position"] = VertexAttrib::Position;
     m_attributeTable["normal"] = VertexAttrib::Normal;
     m_attributeTable["texCoord0"] = VertexAttrib::TexCoord0;
+    m_attributeTable["color"] = VertexAttrib::Color;
 
     loadShaderConfig(m_relativePath + "ShaderList.txt");
     loadProgramConfig(m_relativePath + "ProgramList.txt");
@@ -103,8 +104,6 @@ void ShaderManager::buildProgram(const std::string& key, const std::vector<std::
     {
         program->attachShader(getShader(shaderName));
     }
-
-    //glTransformFeedbackVaryings(program->getProgramId(), 1, "transFeed", )
 
     program->link();
     program->checkForErrors();

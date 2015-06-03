@@ -7,10 +7,6 @@
 #include "OglWrapper/Shader.h"
 #include "OglWrapper/ShaderProgram.h"
 #include "Renderer/ShaderManager.h"
-#include "OglWrapper/VertexArray.h"
-#include "OglWrapper/VertexBuffer.h"
-#include "OglWrapper/IndexBuffer.h"
-#include "OglWrapper/VertexAttribute.h"
 #include "PostProcessing/RenderPass.h"
 #include "Renderer/SceneManager.h"
 #include "Window/Window.h"
@@ -19,12 +15,12 @@ namespace fsi
 {
 
 struct Event;
+class TextRenderer;
 
 class GLRenderer
 {
 public:
     GLRenderer(Window* window);
-    GLRenderer(int width, int height);
     ~GLRenderer();
 
     void handleEvents(const Event& event);
@@ -45,6 +41,7 @@ private:
     RenderPass* m_aaPass;
 
     SceneManager* m_sceneManager;
+    TextRenderer* m_textRenderer;
 };
 
 }

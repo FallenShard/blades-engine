@@ -1,34 +1,38 @@
 #pragma once
 
-#include "Models/SceneNode.h"
-
-#include "OglWrapper/VertexBuffer.h"
-#include "OglWrapper/IndexBuffer.h"
-
-#include "Materials/Material.h"
-
-#include "Meshes/SphereMesh.h"
+#include "OpenGL.h"
 
 namespace fsi
 {
 
-class Sphere : public SceneNode
+class ShaderProgram;
+
+class Sphere
 {
 public:
-    Sphere();
-    Sphere(SphereMesh* mesh, ShaderProgram* program);
-    Sphere(SphereMesh* mesh, ShaderProgram* program, Material* material);
+    Sphere(ShaderProgram* prog);
 
     ~Sphere();
 
-    virtual void render(const glm::mat4& projection, const glm::mat4& view);
-    void setPrimitiveType(GLenum type);
 
-private:
     void init();
 
-    SphereMesh* m_mesh;
-    Material* m_material;
+    void update(const float deltaTime);
+
+
+    void render(const glm::mat4& projection, const glm::mat4& view);
+
+private:
+    ShaderProgram* m_program;
+
+    GLuint m_vao;
+    GLuint m_vbo;
+    GLuint m_ibo;
+
+    GLuint m_ubo;
+    GLuint m_sampler;
+
+    glm::mat4 m_modelMatrix;
 };
 
 }

@@ -9,7 +9,7 @@ uniform float patchesX;
 
 const float MESH_SIZE = patchesX * patchSize;
 
-const float HEIGHT_FACTOR = MESH_SIZE / 8.f;
+const float HEIGHT_FACTOR = MESH_SIZE / 16.f;
 
 void main()
 {
@@ -17,6 +17,7 @@ void main()
     float posZ = (position.z + MESH_SIZE / 2) / MESH_SIZE;
 
     vec2 texCoord = vec2(posX, posZ);
+    vec2 fineTexCoord = texCoord * patchesX;
     float height = texture(hMap, texCoord).r * HEIGHT_FACTOR;
 
     gl_Position = vec4(position, 1.f);

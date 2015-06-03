@@ -1,18 +1,15 @@
 #version 440 core
 
-layout(quads, fractional_odd_spacing, ccw) in;
+layout(quads, equal_spacing, ccw) in;
 
 uniform mat4 MVP;
+uniform mat4 MV;
 //uniform float size;
 uniform sampler2D hMap;
-
+uniform sampler2D fMap;
+uniform sampler2D dMap;
 
 uniform float time;
-
-float rand(vec2 co)
-{
-    return fract(sin(dot(co.xy ,vec2(12.9898,78.233))) * 43758.5453);
-}
 
 in TCS_OUT
 {
@@ -32,13 +29,10 @@ uniform float patchesX;
 
 const float MESH_SIZE = patchesX * patchSize;
 
-const float HEIGHT_FACTOR = MESH_SIZE / 4.f;
+const float HEIGHT_FACTOR = MESH_SIZE / 16.f;
 
 void main()
 {
-    //vec4 position = gl_in[0].gl_Position;
-    //position.xz += gl_TessCoord.xy * patchSize;
-
     vec4 a = mix(gl_in[0].gl_Position, gl_in[1].gl_Position, gl_TessCoord.x);
     vec4 b = mix(gl_in[3].gl_Position, gl_in[2].gl_Position, gl_TessCoord.x);
     vec4 position = mix(a, b, gl_TessCoord.y);
@@ -49,8 +43,10 @@ void main()
     vec2 texCoord = vec2(posX, posZ);
     tesOut.texCoord = texCoord;
     float sam = texture(hMap, texCoord).r;
-    float val = rand(texCoord);
-    position.y = sam * HEIGHT_FACTOR;
+    vec3 fSamRgb = texture(fMap, gl_TessCoord.xy * 2).rgb;
+    float fSam = fSamRgb.r;
+    float dSam = texture(dMap, texCoord).r;
+    position.y = sam * HEIGHT_FACTOR - (1 - fSam) * 2 - (1 - dSam) * 5;
 
     const ivec3 off = ivec3(-1, 0, 1);
     //float hL = textureOffset(hMap, texCoord, off.xy).x * HEIGHT_FACTOR;
@@ -80,7 +76,7 @@ void main()
     //position.y = (position.x + 128) / 64 * sin((gl_TessCoord.x + time) * 2 * 3.14159286f);
 
     bool evenCol = gl_PrimitiveID % 2 == 0;
-    bool evenRow = (gl_PrimitiveID >> 6) % 2 == 0;
+    bool evenRow = (gl_PrimitiveID >> 1) % 2 == 0;
 
     if (evenCol && evenRow || (!evenCol && !evenRow))
         tesOut.color = vec3(1.f, 0.3f, 0.3f);
@@ -89,7 +85,7 @@ void main()
 
     gl_Position = MVP * position;
 
-    tesOut.pos = position.xyz;
+    tesOut.pos = (MV * position).xyz;
     
     vec3 aa = mix(tesIn[0].color, tesIn[1].color, gl_TessCoord.x);
     vec3 bb = mix(tesIn[3].color, tesIn[2].color, gl_TessCoord.x);

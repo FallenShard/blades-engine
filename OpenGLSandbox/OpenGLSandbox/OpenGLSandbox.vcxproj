@@ -15,40 +15,19 @@
     <ClCompile Include="src\Core\Timer.cpp" />
     <ClCompile Include="src\gl3w.c" />
     <ClCompile Include="src\main.cpp" />
-    <ClCompile Include="src\Materials\HeightMapMaterial.cpp" />
-    <ClCompile Include="src\Materials\Material.cpp" />
-    <ClCompile Include="src\Materials\PhongMaterial.cpp" />
-    <ClCompile Include="src\Meshes\Mesh.cpp" />
-    <ClCompile Include="src\Meshes\PlaneMesh.cpp" />
-    <ClCompile Include="src\Meshes\CubeMesh.cpp" />
-    <ClCompile Include="src\Models\CoordSystem.cpp" />
-    <ClCompile Include="src\Models\NewSphere.cpp" />
-    <ClCompile Include="src\Renderer\RenderComponent.cpp" />
     <ClCompile Include="src\Models\Sphere.cpp" />
-    <ClCompile Include="src\Meshes\SphereMesh.cpp" />
     <ClCompile Include="src\Models\Terrain.cpp" />
-    <ClCompile Include="src\Models\TransformNode.cpp" />
-    <ClCompile Include="src\Models\PlaneGrid.cpp" />
-    <ClCompile Include="src\Models\Cube.cpp" />
-    <ClCompile Include="src\Models\RoboticArm.cpp" />
-    <ClCompile Include="src\Models\SceneNode.cpp" />
-    <ClCompile Include="src\OglWrapper\UniformBuffer.cpp" />
     <ClCompile Include="src\Camera\AbstractCamera.cpp" />
     <ClCompile Include="src\Camera\CameraController.cpp" />
-    <ClCompile Include="src\OglWrapper\FrameBuffer.cpp" />
     <ClCompile Include="src\Camera\FreeCamera.cpp" />
     <ClCompile Include="src\Renderer\GLRenderer.cpp" />
-    <ClCompile Include="src\OglWrapper\IndexBuffer.cpp" />
     <ClCompile Include="src\PostProcessing\RenderPass.cpp" />
     <ClCompile Include="src\OglWrapper\Shader.cpp" />
     <ClCompile Include="src\Renderer\ShaderManager.cpp" />
     <ClCompile Include="src\OglWrapper\ShaderProgram.cpp" />
-    <ClCompile Include="src\OglWrapper\Texture.cpp" />
-    <ClCompile Include="src\OglWrapper\VertexArray.cpp" />
-    <ClCompile Include="src\OglWrapper\VertexBuffer.cpp" />
     <ClCompile Include="src\Renderer\SceneManager.cpp" />
+    <ClCompile Include="src\Renderer\TextRenderer.cpp" />
     <ClCompile Include="src\Utils\Logger.cpp" />
-    <ClCompile Include="src\Utils\VertexLoader.cpp" />
     <ClCompile Include="src\Window\GLContext.cpp" />
     <ClCompile Include="src\Input\Keyboard.cpp" />
     <ClCompile Include="src\Input\Mouse.cpp" />
@@ -64,61 +43,40 @@
     <ClInclude Include="include\Input\Event.h" />
     <ClInclude Include="include\Input\Keyboard.h" />
     <ClInclude Include="include\Input\Mouse.h" />
-    <ClInclude Include="include\Materials\HeightMapMaterial.h" />
-    <ClInclude Include="include\Materials\Material.h" />
-    <ClInclude Include="include\Meshes\GridMesh.h" />
-    <ClInclude Include="include\Meshes\Mesh.h" />
-    <ClInclude Include="include\Meshes\PlaneMesh.h" />
-    <ClInclude Include="include\Meshes\CubeMesh.h" />
-    <ClInclude Include="include\Meshes\SphereMesh.h" />
-    <ClInclude Include="include\Models\CoordSystem.h" />
-    <ClInclude Include="include\Models\HeightMapMaterial.h" />
-    <ClInclude Include="include\Models\NewSphere.h" />
-    <ClInclude Include="include\Renderer\RenderComponent.h" />
     <ClInclude Include="include\Models\Sphere.h" />
     <ClInclude Include="include\Models\Terrain.h" />
-    <ClInclude Include="include\Models\TransformNode.h" />
-    <ClInclude Include="include\Models\IRenderable.h" />
-    <ClInclude Include="include\Models\PlaneGrid.h" />
-    <ClInclude Include="include\Models\Cube.h" />
-    <ClInclude Include="include\Models\RoboticArm.h" />
-    <ClInclude Include="include\Models\SceneNode.h" />
-    <ClInclude Include="include\OglWrapper\UniformBuffer.h" />
     <ClInclude Include="include\OglWrapper\VertexStreams.h" />
     <ClInclude Include="include\OpenGL.h" />
-    <ClInclude Include="include\Materials\PhongMaterial.h" />
     <ClInclude Include="include\Camera\AbstractCamera.h" />
     <ClInclude Include="include\Camera\CameraController.h" />
-    <ClInclude Include="include\OglWrapper\FrameBuffer.h" />
     <ClInclude Include="include\Camera\FreeCamera.h" />
     <ClInclude Include="include\Renderer\GLRenderer.h" />
-    <ClInclude Include="include\OglWrapper\IndexBuffer.h" />
     <ClInclude Include="include\PostProcessing\RenderPass.h" />
     <ClInclude Include="include\OglWrapper\Shader.h" />
     <ClInclude Include="include\Renderer\ShaderManager.h" />
     <ClInclude Include="include\OglWrapper\ShaderProgram.h" />
     <ClInclude Include="include\Camera\TargetCamera.h" />
-    <ClInclude Include="include\OglWrapper\Texture.h" />
-    <ClInclude Include="include\OglWrapper\VertexArray.h" />
-    <ClInclude Include="include\OglWrapper\VertexAttribute.h" />
-    <ClInclude Include="include\OglWrapper\VertexBuffer.h" />
     <ClInclude Include="include\Renderer\SceneManager.h" />
+    <ClInclude Include="include\Renderer\TextRenderer.h" />
     <ClInclude Include="include\Utils\Logger.h" />
-    <ClInclude Include="include\Utils\VertexLoader.h" />
     <ClInclude Include="include\Window\GLContext.h" />
     <ClInclude Include="include\Window\VideoMode.h" />
     <ClInclude Include="include\Window\Window.h" />
   </ItemGroup>
   <ItemGroup>
+    <None Include="res\color.frag" />
     <None Include="res\phong.vert" />
     <None Include="res\pass_through.vert" />
     <None Include="res\fxaa.frag" />
     <None Include="res\phong.frag" />
+    <None Include="res\color.vert" />
     <None Include="res\terrain.frag" />
     <None Include="res\terrain.geom" />
     <None Include="res\terrain.tesc" />
     <None Include="res\terrain.tese" />
     <None Include="res\terrain.vert" />
+    <None Include="res\tex.frag" />
+    <None Include="res\tex.vert" />
   </ItemGroup>
   <ItemGroup>
     <Text Include="res\ProgramList.txt" />
@@ -178,14 +136,14 @@
       <PreprocessorDefinitions>WIN32;_DEBUG;_WINDOWS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <SDLCheck>true</SDLCheck>
       <TreatWarningAsError>true</TreatWarningAsError>
-      <AdditionalIncludeDirectories>$(ProjectDir)include;$(SolutionDir)External Libraries;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(ProjectDir)include;$(SolutionDir)External Libraries;$(SolutionDir)External Libraries/FreeType/freetype2;$(SolutionDir)External Libraries/FreeType;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <BrowseInformation>true</BrowseInformation>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
       <GenerateDebugInformation>true</GenerateDebugInformation>
-      <AdditionalDependencies>opengl32.lib;%(AdditionalDependencies)</AdditionalDependencies>
-      <AdditionalLibraryDirectories>%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <AdditionalDependencies>opengl32.lib;freetype.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalLibraryDirectories>$(SolutionDir)External Libraries/Freetype;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
     </Link>
     <Bscmake>
       <PreserveSbr>true</PreserveSbr>
@@ -202,15 +160,15 @@
       <PreprocessorDefinitions>WIN32;NDEBUG;_WINDOWS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <SDLCheck>true</SDLCheck>
       <TreatWarningAsError>true</TreatWarningAsError>
-      <AdditionalIncludeDirectories>$(ProjectDir)include;$(SolutionDir)External Libraries;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(ProjectDir)include;$(SolutionDir)External Libraries;$(SolutionDir)External Libraries/FreeType/freetype2;$(SolutionDir)External Libraries/FreeType;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <SubSystem>Windows</SubSystem>
       <GenerateDebugInformation>true</GenerateDebugInformation>
       <EnableCOMDATFolding>true</EnableCOMDATFolding>
       <OptimizeReferences>true</OptimizeReferences>
-      <AdditionalLibraryDirectories>%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
-      <AdditionalDependencies>opengl32.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalLibraryDirectories>$(SolutionDir)External Libraries/Freetype;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <AdditionalDependencies>opengl32.lib;freetype.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
   </ItemDefinitionGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />

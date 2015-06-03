@@ -58,13 +58,13 @@ void Application::processInput()
     Event event;
     while (m_window->pollEvent(event))
     {
+        m_renderer->handleEvents(event);
+
         if (event.type == Event::KeyPressed && event.key.code == Keyboard::Escape)
             m_window->close();
 
         if (event.type == Event::Closed)
             m_window->close();
-
-        m_renderer->handleEvents(event);
     }
 }
 

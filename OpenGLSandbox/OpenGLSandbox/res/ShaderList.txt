@@ -6,3 +6,7 @@ terrain.frag
 terrain.tesc
 terrain.tese
 terrain.vert
+color.vert
+color.frag
+tex.vert
+tex.frag

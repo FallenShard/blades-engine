@@ -1,10 +1,9 @@
 #include "Renderer/GLRenderer.h"
+#include "Renderer/TextRenderer.h"
 #include "Input/Event.h"
 
-#include "OglWrapper/FrameBuffer.h"
-#include "OglWrapper/Texture.h"
-
 #include <iostream>
+#include <iomanip>
 
 namespace
 {
@@ -14,10 +13,11 @@ namespace
 void APIENTRY DebugCallback(GLenum source, GLenum type, GLuint id,
     GLenum severity, GLsizei length, const GLchar* message, const void* userParam)
 {
-    std::cout << "---------------------opengl-callback-start------------" << std::endl;
-    std::cout << "message: " << message << std::endl;
-    std::cout << "type: ";
-    switch (type) {
+    std::cout << std::left << std::endl << "----------OpenGL Debug Callback Start----------" << std::endl;
+    std::cout << std::setw(10) << "Message: " << message << std::endl;
+    std::cout << std::setw(10) << "Type: ";
+    switch (type)
+    {
     case GL_DEBUG_TYPE_ERROR:
         std::cout << "ERROR";
         break;
@@ -38,9 +38,10 @@ void APIENTRY DebugCallback(GLenum source, GLenum type, GLuint id,
         break;
     }
     std::cout << std::endl;
-
-    std::cout << "id: " << id << std::endl;    std::cout << "severity: ";
-    switch (severity){
+    std::cout << std::setw(10) << "Id: " << id << std::endl;
+    std::cout << std::setw(10) << "Severity: ";
+    switch (severity)
+    {
     case GL_DEBUG_SEVERITY_LOW:
         std::cout << "LOW";
         break;
@@ -52,7 +53,7 @@ void APIENTRY DebugCallback(GLenum source, GLenum type, GLuint id,
         break;
     }
     std::cout << std::endl;
-    std::cout << "---------------------opengl-callback-end--------------" << std::endl;
+    std::cout << "----------OpenGL Debug Callback End------------" << std::endl;
 }
 
 namespace fsi
@@ -69,60 +70,52 @@ GLRenderer::GLRenderer(Window* window)
     init();
 }
 
-GLRenderer::GLRenderer(int width, int height)
-    : m_aspectRatio(static_cast<float>(width) / height)
-    , m_timePassed(0.f)
-{
-    init();
-}
-
 GLRenderer::~GLRenderer()
 {
     delete m_sceneManager;
     delete m_aaPass;
+    delete m_shaderManager;
 }
 
 void GLRenderer::init()
 {
-    glDebugMessageCallback(DebugCallback, NULL);
+#if defined(_DEBUG)
+    glDebugMessageCallback(DebugCallback, nullptr);
     glEnable(GL_DEBUG_OUTPUT);
     glEnable(GL_DEBUG_OUTPUT_SYNCHRONOUS);
+#endif
 
-
-    if (m_window)
-    {
-        glm::ivec2 windowSize = m_window->getSize();
-        m_aspectRatio = static_cast<float>(windowSize.x) / windowSize.y;
-    }
-
+    glm::ivec2 windowSize = m_window->getSize();
+    m_aspectRatio = static_cast<float>(windowSize.x) / static_cast<float>(windowSize.y);
     
 
+    // Enable culling
     glEnable(GL_CULL_FACE);
     glCullFace(GL_BACK);
-    glFrontFace(GL_CW);
+    glFrontFace(GL_CCW);
     
+    // Enable standard depth testing
     glEnable(GL_DEPTH_TEST);
     glDepthMask(GL_TRUE);
     glDepthFunc(GL_LEQUAL);
     glDepthRange(0.0f, 1.0f);
     
-    glClearColor(0.1f, 0.1f, 0.3f, 1.f);
+    glClearColor(0.1f, 1.0f, 0.1f, 1.f);
     glClearDepth(1.0f);
 
+    // Shader resources
     m_shaderManager = new ShaderManager();
 
+    // 3D Scene manager
     m_sceneManager = new SceneManager(m_window, m_shaderManager);
     m_sceneManager->prepare();
 
-    int maxUnits;
-    glGetIntegerv(GL_MAX_COMBINED_TEXTURE_IMAGE_UNITS, &maxUnits);
-    std::cout << "Texture units: " << maxUnits << std::endl;
+    // GUI manager (TODO, it's just the text overlay for now)
+    m_textRenderer = new TextRenderer(m_shaderManager->getProgram("text"));
+    m_textRenderer->prepareText("Antialiasing", 0, 0, 1, 1);
 
-    glm::ivec2 windowSize = m_window->getSize();
-
-    m_aaPass = new RenderPass();
-    m_aaPass->attachProgram(m_shaderManager->getProgram("fxaa"));
-    m_aaPass->init(windowSize.x, windowSize.y);
+    // FXAA Post-processing
+    m_aaPass = new RenderPass(windowSize.x, windowSize.y, m_shaderManager->getProgram("fxaa"));
 }
 
 void GLRenderer::draw()
@@ -133,18 +126,21 @@ void GLRenderer::draw()
 
         m_sceneManager->render();
         
-        FrameBuffer::bindScreen();
-        FrameBuffer::clear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+        glBindFramebuffer(GL_FRAMEBUFFER, 0);
+        glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
         m_aaPass->render();
     }
     else
     {
-        FrameBuffer::bindScreen();
-        FrameBuffer::clear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+        glBindFramebuffer(GL_FRAMEBUFFER, 0);
+        glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
         m_sceneManager->render();
     }
+
+    // Make sure not to render text/GUI under FXAA
+    m_textRenderer->render();
 }
 
 void GLRenderer::handleEvents(const Event& event)
@@ -153,7 +149,11 @@ void GLRenderer::handleEvents(const Event& event)
         useFXAA = !useFXAA;
 
     if (event.type == Event::Resized)
-        m_aaPass->resize(event.size.width, event.size.height);
+    {
+        m_aaPass->resize(event.size.width, event.size.height); 
+        m_textRenderer->resize(event.size.width, event.size.height);
+    }
+        
 
     m_sceneManager->handleEvents(event);
 }
@@ -168,7 +168,7 @@ void GLRenderer::update(float timeDelta)
 void GLRenderer::resize(int width, int height)
 {
     m_sceneManager->reshape(width, height);
-    
+    m_textRenderer->resize(width, height);
 }
 
 }

@@ -34,7 +34,7 @@ void main()
 
     float attenuation = 1.f / (k0 + k1 * d + k2 * d * d);
 
-    float diffuse = max(0, dot(fsIn.normal, L));
+    float diffuse = max(0, dot(N, L));
     float specular = 0.f;
 
     if (diffuse > 0.f)

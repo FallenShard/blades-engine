@@ -1,26 +1,21 @@
+#include <vector>
+
+#include "OglWrapper/VertexStreams.h"
 #include "PostProcessing/RenderPass.h"
 
 namespace fsi
 {
 
-RenderPass::RenderPass()
-    //: m_quadVertexArray(nullptr)
-    //, m_frameBuffer(nullptr)
-    //, m_shaderProgram(nullptr)
-    //, m_fullTex(nullptr)
+RenderPass::RenderPass(int width, int height, ShaderProgram* program)
+    : m_shaderProgram(program)
 {
-
+    init(width, height);
 }
 
 RenderPass::~RenderPass()
 {
     glDeleteVertexArrays(1, &m_vao);
     cleanUpFBO();
-}
-
-void RenderPass::attachProgram(ShaderProgram* program)
-{
-    m_shaderProgram = program;
 }
 
 void RenderPass::cleanUpFBO()
@@ -77,18 +72,18 @@ void RenderPass::initVAO()
     glCreateBuffers(1, &vbo);
 
     std::vector<GLfloat> m_quad;
-    m_quad.push_back(+1.f); m_quad.push_back(-1.f);
     m_quad.push_back(-1.f); m_quad.push_back(-1.f);
-    m_quad.push_back(-1.f); m_quad.push_back(+1.f);
     m_quad.push_back(+1.f); m_quad.push_back(-1.f);
-    m_quad.push_back(-1.f); m_quad.push_back(+1.f);
     m_quad.push_back(+1.f); m_quad.push_back(+1.f);
+    m_quad.push_back(-1.f); m_quad.push_back(-1.f);
+    m_quad.push_back(+1.f); m_quad.push_back(+1.f);
+    m_quad.push_back(-1.f); m_quad.push_back(+1.f);
 
     glNamedBufferData(vbo, m_quad.size() * sizeof(GLfloat), m_quad.data(), GL_STATIC_DRAW);
 
-    glVertexArrayVertexBuffer(m_vao, VertexBufferBinding::Position, vbo, 0, 2 * sizeof(GLfloat));
+    glVertexArrayVertexBuffer(m_vao, VertexBufferBinding::Slot0, vbo, 0, 2 * sizeof(GLfloat));
 
-    glVertexArrayAttribBinding(m_vao, VertexAttrib::Position, VertexBufferBinding::Position);
+    glVertexArrayAttribBinding(m_vao, VertexAttrib::Position, VertexBufferBinding::Slot0);
     glVertexArrayAttribFormat(m_vao, VertexAttrib::Position, 2, GL_FLOAT, GL_FALSE, 0);
     glEnableVertexArrayAttrib(m_vao, VertexAttrib::Position);
 
@@ -108,7 +103,7 @@ void RenderPass::resize(int width, int height)
 void RenderPass::activate()
 {
     glBindFramebuffer(GL_FRAMEBUFFER, m_fbo);
-    FrameBuffer::clear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+    glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 }
 
 void RenderPass::render()

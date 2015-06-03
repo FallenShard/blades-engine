@@ -76,8 +76,6 @@ void GLContext::initialize()
     // Activate the new core-profile context
     wglMakeCurrent(m_deviceContextHandle, m_resourceContextHandle);
 
-    version = glGetString(GL_SHADING_LANGUAGE_VERSION);
-
 #ifdef _DEBUG
     std::cout << "Vendor:\t\t" << glGetString(GL_VENDOR) << std::endl;
     std::cout << "Renderer:\t" << glGetString(GL_RENDERER) << std::endl;
