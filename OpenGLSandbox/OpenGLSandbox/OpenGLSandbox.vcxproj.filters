@@ -50,8 +50,6 @@
     <ClCompile Include="src\Window\VideoMode.cpp" />
     <ClCompile Include="src\Window\Window.cpp" />
     <ClCompile Include="src\gl3w.c" />
-    <ClCompile Include="src\Models\PlaneGrid.cpp" />
-    <ClCompile Include="src\Models\RoboticArm.cpp" />
     <ClCompile Include="src\main.cpp" />
     <ClCompile Include="src\Renderer\ShaderManager.cpp" />
     <ClCompile Include="src\Models\Sphere.cpp" />
@@ -65,7 +63,9 @@
     <ClCompile Include="src\Camera\AbstractCamera.cpp" />
     <ClCompile Include="src\Camera\CameraController.cpp" />
     <ClCompile Include="src\Camera\FreeCamera.cpp" />
-    <ClCompile Include="src\Renderer\TextRenderer.cpp" />
+    <ClCompile Include="src\Renderer\UIRenderer.cpp" />
+    <ClCompile Include="src\UI\Text.cpp" />
+    <ClCompile Include="src\Utils\Font.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="include\Core\Application.h" />
@@ -73,9 +73,6 @@
     <ClInclude Include="include\GL\gl3w.h" />
     <ClInclude Include="include\GL\glcorearb.h" />
     <ClInclude Include="include\GL\wglext.h" />
-    <ClInclude Include="include\Models\IRenderable.h" />
-    <ClInclude Include="include\Models\PlaneGrid.h" />
-    <ClInclude Include="include\Models\RoboticArm.h" />
     <ClInclude Include="include\Renderer\GLRenderer.h" />
     <ClInclude Include="include\Utils\Logger.h" />
     <ClInclude Include="include\Window\GLContext.h" />
@@ -97,7 +94,9 @@
     <ClInclude Include="include\Camera\CameraController.h" />
     <ClInclude Include="include\Camera\FreeCamera.h" />
     <ClInclude Include="include\Camera\TargetCamera.h" />
-    <ClInclude Include="include\Renderer\TextRenderer.h" />
+    <ClInclude Include="include\Renderer\UIRenderer.h" />
+    <ClInclude Include="include\UI\Text.h" />
+    <ClInclude Include="include\Utils\Font.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include="res\fxaa.frag" />
@@ -113,6 +112,8 @@
     <None Include="res\color.vert" />
     <None Include="res\tex.vert" />
     <None Include="res\tex.frag" />
+    <None Include="res\simple.vert" />
+    <None Include="res\simple.frag" />
   </ItemGroup>
   <ItemGroup>
     <Text Include="res\RobotArmFaces.txt" />

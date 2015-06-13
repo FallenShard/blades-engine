@@ -7,7 +7,7 @@
 namespace fsi
 {
 
-SceneManager::SceneManager(Window* window, ShaderManager* shaderManager)
+SceneManager::SceneManager(std::shared_ptr<Window>& window, ShaderManager* shaderManager)
     : m_timePassed(0.f)
     , m_cameraController(window)
     , m_shaderManager(shaderManager)

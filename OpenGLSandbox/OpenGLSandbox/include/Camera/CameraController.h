@@ -1,5 +1,6 @@
 #pragma once
 
+#include <memory>
 #include "Camera/FreeCamera.h"
 
 namespace fsi
@@ -13,7 +14,7 @@ struct Event;
 class CameraController
 {
 public:
-    CameraController(Window* window);
+    CameraController(std::shared_ptr<Window>& window);
     ~CameraController();
 
     void setPosition(glm::vec3& position);
@@ -42,7 +43,7 @@ private:
     float m_roll;
 
     bool    m_freeLook;
-    Window* m_window;
+    std::shared_ptr<Window> m_window;
 };
 
 }

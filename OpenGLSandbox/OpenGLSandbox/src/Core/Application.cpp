@@ -20,7 +20,7 @@ namespace fsi
 
 Application::Application()
     : m_window(std::make_shared<Window>(VideoMode(windowWidth, windowHeight, 32), "OpenGL Tessellation"))
-    , m_renderer(std::make_unique<GLRenderer>(m_window.get()))
+    , m_renderer(std::make_unique<GLRenderer>(m_window))
 {
 }
 
@@ -62,8 +62,7 @@ void Application::processInput()
 
         if (event.type == Event::KeyPressed && event.key.code == Keyboard::Escape)
             m_window->close();
-
-        if (event.type == Event::Closed)
+        else if (event.type == Event::Closed)
             m_window->close();
     }
 }

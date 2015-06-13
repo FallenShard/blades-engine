@@ -1,5 +1,5 @@
 #include "Renderer/GLRenderer.h"
-#include "Renderer/TextRenderer.h"
+#include "Renderer/UIRenderer.h"
 #include "Input/Event.h"
 
 #include <iostream>
@@ -59,13 +59,14 @@ void APIENTRY DebugCallback(GLenum source, GLenum type, GLuint id,
 namespace fsi
 {
 
-GLRenderer::GLRenderer(Window* window)
+GLRenderer::GLRenderer(std::shared_ptr<Window>& window)
     : m_aspectRatio(-1.f)
     , m_timePassed(0.f)
     , m_window(window)
     , m_shaderManager(nullptr)
     , m_aaPass(nullptr)
     , m_sceneManager(nullptr)
+    , m_uiRenderer(nullptr)
 {
     init();
 }
@@ -87,7 +88,6 @@ void GLRenderer::init()
 
     glm::ivec2 windowSize = m_window->getSize();
     m_aspectRatio = static_cast<float>(windowSize.x) / static_cast<float>(windowSize.y);
-    
 
     // Enable culling
     glEnable(GL_CULL_FACE);
@@ -111,8 +111,7 @@ void GLRenderer::init()
     m_sceneManager->prepare();
 
     // GUI manager (TODO, it's just the text overlay for now)
-    m_textRenderer = new TextRenderer(m_shaderManager->getProgram("text"));
-    m_textRenderer->prepareText("Antialiasing", 0, 0, 1, 1);
+    m_uiRenderer = std::make_shared<UIRenderer>(m_window, m_shaderManager);
 
     // FXAA Post-processing
     m_aaPass = new RenderPass(windowSize.x, windowSize.y, m_shaderManager->getProgram("fxaa"));
@@ -140,7 +139,7 @@ void GLRenderer::draw()
     }
 
     // Make sure not to render text/GUI under FXAA
-    m_textRenderer->render();
+    m_uiRenderer->render();
 }
 
 void GLRenderer::handleEvents(const Event& event)
@@ -151,9 +150,10 @@ void GLRenderer::handleEvents(const Event& event)
     if (event.type == Event::Resized)
     {
         m_aaPass->resize(event.size.width, event.size.height); 
-        m_textRenderer->resize(event.size.width, event.size.height);
+        m_uiRenderer->resize(event.size.width, event.size.height);
     }
         
+    m_uiRenderer->handleEvents(event);
 
     m_sceneManager->handleEvents(event);
 }
@@ -168,7 +168,7 @@ void GLRenderer::update(float timeDelta)
 void GLRenderer::resize(int width, int height)
 {
     m_sceneManager->reshape(width, height);
-    m_textRenderer->resize(width, height);
+    m_uiRenderer->resize(width, height);
 }
 
 }

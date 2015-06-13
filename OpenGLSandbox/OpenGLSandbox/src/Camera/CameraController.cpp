@@ -13,7 +13,7 @@
 namespace fsi
 {
 
-CameraController::CameraController(Window* window)
+CameraController::CameraController(std::shared_ptr<Window>& window)
     : m_activeCamera(&m_freeCamera)
     , m_yaw(180.f)
     , m_pitch(0.f)

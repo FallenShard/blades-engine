@@ -17,7 +17,7 @@ class Sphere;
 class SceneManager
 {
 public:
-    SceneManager(Window* window, ShaderManager* shaderManager);
+    SceneManager(std::shared_ptr<Window>& window, ShaderManager* shaderManager);
     ~SceneManager();
 
     void prepare();

@@ -9,18 +9,19 @@
 #include "Renderer/ShaderManager.h"
 #include "PostProcessing/RenderPass.h"
 #include "Renderer/SceneManager.h"
+
 #include "Window/Window.h"
 
 namespace fsi
 {
 
 struct Event;
-class TextRenderer;
+class UIRenderer;
 
 class GLRenderer
 {
 public:
-    GLRenderer(Window* window);
+    GLRenderer(std::shared_ptr<Window>& window);
     ~GLRenderer();
 
     void handleEvents(const Event& event);
@@ -35,13 +36,13 @@ private:
     float m_aspectRatio;
     float m_timePassed;
 
-    Window* m_window;
+    std::shared_ptr<Window> m_window;
     ShaderManager* m_shaderManager;
 
     RenderPass* m_aaPass;
 
     SceneManager* m_sceneManager;
-    TextRenderer* m_textRenderer;
+    std::shared_ptr<UIRenderer> m_uiRenderer;
 };
 
 }

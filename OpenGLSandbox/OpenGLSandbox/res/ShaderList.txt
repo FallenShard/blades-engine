@@ -10,3 +10,5 @@ color.vert
 color.frag
 tex.vert
 tex.frag
+simple.vert
+simple.frag
