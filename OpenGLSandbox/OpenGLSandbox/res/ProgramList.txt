@@ -4,3 +4,4 @@ terrain terrain.vert terrain.tesc terrain.tese terrain.frag
 color color.vert color.frag
 text tex.vert tex.frag
 simple simple.vert simple.frag
+gui tex.vert gui.frag

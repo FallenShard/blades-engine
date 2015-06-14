@@ -30,11 +30,17 @@ public:
 
     void resize(int width, int height);
 
+    void setFrameTime(long long frameTime);
+
+    void enableFXAA(bool enabled);
+
 private:
     void init();
 
     float m_aspectRatio;
     float m_timePassed;
+
+    bool m_FXAAenabled;
 
     std::shared_ptr<Window> m_window;
     ShaderManager* m_shaderManager;

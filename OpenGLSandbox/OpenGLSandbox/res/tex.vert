@@ -1,4 +1,4 @@
-#version 450
+#version 450 core
  
 layout(location = 0) in vec4 coord;
 
@@ -9,5 +9,5 @@ out vec2 texCoord;
 void main(void)
 {
     texCoord = coord.zw;
-    gl_Position = MVP * vec4(coord.xy, 0, 1);
+    gl_Position = MVP * vec4(coord.xy, 0.f, 1.f);
 }

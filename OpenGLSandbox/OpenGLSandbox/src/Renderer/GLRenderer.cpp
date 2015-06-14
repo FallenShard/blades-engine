@@ -1,18 +1,23 @@
+#include <iostream>
+#include <iomanip>
+#include <chrono>
+
 #include "Renderer/GLRenderer.h"
 #include "Renderer/UIRenderer.h"
 #include "Input/Event.h"
 
-#include <iostream>
-#include <iomanip>
+#include "Core/Timer.h"
 
 namespace
 {
-    bool useFXAA = true;
+    fsi::Timer fpsTimer;
 }
 
 void APIENTRY DebugCallback(GLenum source, GLenum type, GLuint id,
     GLenum severity, GLsizei length, const GLchar* message, const void* userParam)
 {
+    if (type == GL_DEBUG_TYPE_OTHER)
+        return;
     std::cout << std::left << std::endl << "----------OpenGL Debug Callback Start----------" << std::endl;
     std::cout << std::setw(10) << "Message: " << message << std::endl;
     std::cout << std::setw(10) << "Type: ";
@@ -67,6 +72,7 @@ GLRenderer::GLRenderer(std::shared_ptr<Window>& window)
     , m_aaPass(nullptr)
     , m_sceneManager(nullptr)
     , m_uiRenderer(nullptr)
+    , m_FXAAenabled(true)
 {
     init();
 }
@@ -111,7 +117,7 @@ void GLRenderer::init()
     m_sceneManager->prepare();
 
     // GUI manager (TODO, it's just the text overlay for now)
-    m_uiRenderer = std::make_shared<UIRenderer>(m_window, m_shaderManager);
+    m_uiRenderer = std::make_shared<UIRenderer>(m_window, m_shaderManager, this);
 
     // FXAA Post-processing
     m_aaPass = new RenderPass(windowSize.x, windowSize.y, m_shaderManager->getProgram("fxaa"));
@@ -119,7 +125,9 @@ void GLRenderer::init()
 
 void GLRenderer::draw()
 {
-    if (useFXAA)
+    auto start = fpsTimer.getElapsedTime();
+    
+    if (m_FXAAenabled)
     {
         m_aaPass->activate();
 
@@ -145,7 +153,7 @@ void GLRenderer::draw()
 void GLRenderer::handleEvents(const Event& event)
 {
     if (event.type == Event::KeyPressed && event.key.code == Keyboard::Space)
-        useFXAA = !useFXAA;
+        m_FXAAenabled = !m_FXAAenabled;
 
     if (event.type == Event::Resized)
     {
@@ -165,10 +173,20 @@ void GLRenderer::update(float timeDelta)
     m_sceneManager->update(timeDelta);
 }
 
+void GLRenderer::setFrameTime(long long frameTime)
+{
+    m_uiRenderer->setFrameTime(frameTime);
+}
+
 void GLRenderer::resize(int width, int height)
 {
     m_sceneManager->reshape(width, height);
     m_uiRenderer->resize(width, height);
+}
+
+void GLRenderer::enableFXAA(bool enabled)
+{
+    m_FXAAenabled = enabled;
 }
 
 }

@@ -20,6 +20,8 @@
     <ClCompile Include="src\Camera\AbstractCamera.cpp" />
     <ClCompile Include="src\Camera\CameraController.cpp" />
     <ClCompile Include="src\Camera\FreeCamera.cpp" />
+    <ClCompile Include="src\UI\CheckBox.cpp" />
+    <ClCompile Include="src\UI\Panel.cpp" />
     <ClCompile Include="src\UI\Text.cpp" />
     <ClCompile Include="src\Renderer\GLRenderer.cpp" />
     <ClCompile Include="src\PostProcessing\RenderPass.cpp" />
@@ -47,6 +49,8 @@
     <ClInclude Include="include\Input\Mouse.h" />
     <ClInclude Include="include\Models\Sphere.h" />
     <ClInclude Include="include\Models\Terrain.h" />
+    <ClInclude Include="include\UI\CheckBox.h" />
+    <ClInclude Include="include\UI\Panel.h" />
     <ClInclude Include="include\UI\Text.h" />
     <ClInclude Include="include\OglWrapper\VertexStreams.h" />
     <ClInclude Include="include\OpenGL.h" />
@@ -69,6 +73,7 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="res\color.frag" />
+    <None Include="res\gui.frag" />
     <None Include="res\phong.vert" />
     <None Include="res\pass_through.vert" />
     <None Include="res\fxaa.frag" />

@@ -5,6 +5,8 @@
 
 #include "Utils/Logger.h"
 
+#include <iostream>
+
 namespace
 {
     int frameLimit = 60;
@@ -27,6 +29,9 @@ Application::Application()
 Application::~Application()
 {
 }
+\
+
+
 
 void Application::run()
 {
@@ -48,8 +53,14 @@ void Application::run()
             timeSinceLastUpdate -= microTimePerFrame;
         }
 
+        auto start = frameTimer.getElapsedTime();
         m_renderer->draw();
+        
+        
         m_window->display();
+        auto timeDiff = frameTimer.getElapsedTime() - start;
+
+        m_renderer->setFrameTime(timeDiff);
     }
 }
 

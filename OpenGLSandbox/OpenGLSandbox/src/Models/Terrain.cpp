@@ -24,7 +24,7 @@ namespace
 
     int m_zSquares = 64;
     int m_xSquares = 64;
-    float m_squareSize = 32.f;
+    float m_squareSize = 8.f;
 
     float m_xTotalSize = m_xSquares * m_squareSize;
     float m_zTotalSize = m_zSquares * m_squareSize;
@@ -51,11 +51,6 @@ namespace
     std::vector<GLfloat> lineVerts;
     
     fsi::ShaderProgram* lineProgram;
-
-    GLuint gridVao;
-    GLuint gridVbo;
-    std::vector<GLfloat> gridVerts;
-
 
     void fillOriginBuffer()
     {
@@ -106,34 +101,6 @@ namespace
         lineVerts.push_back(0.f);
         lineVerts.push_back(1.f);
         lineVerts.push_back(1.f);
-    }
-
-    void fillGridVerts(std::vector<GLfloat>& gridVerts)
-    {
-        gridVerts.push_back(-0.33f);
-        gridVerts.push_back(-0.33f);
-        gridVerts.push_back(1.f);
-        gridVerts.push_back(1.f);
-        gridVerts.push_back(1.f);
-        gridVerts.push_back(1.f);
-        gridVerts.push_back(+0.33f);
-        gridVerts.push_back(-0.33f);
-        gridVerts.push_back(1.f);
-        gridVerts.push_back(1.f);
-        gridVerts.push_back(1.f);
-        gridVerts.push_back(1.f);
-        gridVerts.push_back(+0.33f);
-        gridVerts.push_back(+0.33f);
-        gridVerts.push_back(1.f);
-        gridVerts.push_back(1.f);
-        gridVerts.push_back(1.f);
-        gridVerts.push_back(1.f);
-        gridVerts.push_back(-0.33f);
-        gridVerts.push_back(+0.33f);
-        gridVerts.push_back(1.f);
-        gridVerts.push_back(1.f);
-        gridVerts.push_back(1.f);
-        gridVerts.push_back(1.f);
     }
 }
 
@@ -285,23 +252,6 @@ void Terrain::init()
     glVertexArrayAttribBinding(lineVao, VertexAttrib::Color, VertexBufferBinding::Slot0);
     glVertexArrayAttribFormat(lineVao, VertexAttrib::Color, 4, GL_FLOAT, GL_FALSE, 12);
     glEnableVertexArrayAttrib(lineVao, VertexAttrib::Color);
-
-    fillGridVerts(gridVerts);
-
-    glCreateVertexArrays(1, &gridVao);
-    glCreateBuffers(1, &gridVbo);
-
-    glNamedBufferData(gridVbo, gridVerts.size() * sizeof(GLfloat), gridVerts.data(), GL_STATIC_DRAW);
-
-    glVertexArrayVertexBuffer(gridVao, VertexBufferBinding::Slot0, gridVbo, 0, 6 * sizeof(GLfloat));
-
-    glVertexArrayAttribBinding(gridVao, VertexAttrib::Position, VertexBufferBinding::Slot0);
-    glVertexArrayAttribFormat(gridVao, VertexAttrib::Position, 2, GL_FLOAT, GL_FALSE, 0);
-    glEnableVertexArrayAttrib(gridVao, VertexAttrib::Position);
-
-    glVertexArrayAttribBinding(gridVao, VertexAttrib::Color, VertexBufferBinding::Slot0);
-    glVertexArrayAttribFormat(gridVao, VertexAttrib::Color, 4, GL_FLOAT, GL_FALSE, 8);
-    glEnableVertexArrayAttrib(gridVao, VertexAttrib::Color);
 }
 
 void Terrain::update(const float deltaTime)
@@ -350,12 +300,7 @@ void Terrain::render(const glm::mat4& projection, const glm::mat4& view)
 
     glBindVertexArray(lineVao);
     glDrawArrays(GL_LINES, 0, 6);
-
-    glm::mat4 gridMvp(1.f);
-    lineProgram->setUniformAttribute("MVP", gridMvp);
-    
-    glBindVertexArray(gridVao);
-    glDrawArrays(GL_LINE_LOOP, 0, 4);
+   
 
     glEnable(GL_DEPTH_TEST);
 }

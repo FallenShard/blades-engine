@@ -66,6 +66,8 @@
     <ClCompile Include="src\Renderer\UIRenderer.cpp" />
     <ClCompile Include="src\UI\Text.cpp" />
     <ClCompile Include="src\Utils\Font.cpp" />
+    <ClCompile Include="src\UI\CheckBox.cpp" />
+    <ClCompile Include="src\UI\Panel.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="include\Core\Application.h" />
@@ -97,6 +99,8 @@
     <ClInclude Include="include\Renderer\UIRenderer.h" />
     <ClInclude Include="include\UI\Text.h" />
     <ClInclude Include="include\Utils\Font.h" />
+    <ClInclude Include="include\UI\CheckBox.h" />
+    <ClInclude Include="include\UI\Panel.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include="res\fxaa.frag" />
@@ -114,6 +118,7 @@
     <None Include="res\tex.frag" />
     <None Include="res\simple.vert" />
     <None Include="res\simple.frag" />
+    <None Include="res\gui.frag" />
   </ItemGroup>
   <ItemGroup>
     <Text Include="res\RobotArmFaces.txt" />

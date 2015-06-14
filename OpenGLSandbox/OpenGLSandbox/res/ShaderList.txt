@@ -12,3 +12,4 @@ tex.vert
 tex.frag
 simple.vert
 simple.frag
+gui.frag
