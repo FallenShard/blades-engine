@@ -13,6 +13,7 @@ class Window;
 class ShaderManager;
 class Terrain;
 class Sphere;
+class Skybox;
 
 class SceneManager
 {
@@ -24,6 +25,8 @@ public:
     void handleEvents(const Event& event);
     void update(float timeDelta);
     void render();
+
+    Terrain* getTerrain() const;
 
     bool reshape(int width, int height);
 
@@ -37,6 +40,7 @@ private:
 
     Terrain* m_terrain;
     Sphere* m_sphere;
+    Skybox* m_skybox;
 };
 
 }

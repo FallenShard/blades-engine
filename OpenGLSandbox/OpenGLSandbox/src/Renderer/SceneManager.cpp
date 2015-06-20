@@ -3,6 +3,7 @@
 
 #include "Models/Terrain.h"
 #include "Models/Sphere.h"
+#include "Models/Skybox.h"
 
 namespace fsi
 {
@@ -24,6 +25,7 @@ void SceneManager::prepare()
 {
     m_sphere = new Sphere(m_shaderManager->getProgram("phong"));
     m_terrain = new Terrain(m_shaderManager);
+    m_skybox = new Skybox(m_shaderManager->getProgram("skybox"));
 }
 
 void SceneManager::handleEvents(const Event& event)
@@ -36,13 +38,14 @@ void SceneManager::update(float timeDelta)
     m_timePassed += timeDelta;
 
     m_cameraController.update(timeDelta);
-
+    m_skybox->update(m_cameraController.getCameraPosition());
     m_terrain->update(timeDelta);
 }
 
 void SceneManager::render()
 {
-    m_sphere->render(m_cameraController.getProjectionMatrix(), m_cameraController.getViewMatrix());
+    m_skybox->render(m_cameraController.getProjectionMatrix(), m_cameraController.getViewMatrix());
+    //m_sphere->render(m_cameraController.getProjectionMatrix(), m_cameraController.getViewMatrix());
     m_terrain->render(m_cameraController.getProjectionMatrix(), m_cameraController.getViewMatrix());
 }
 
@@ -50,6 +53,11 @@ bool SceneManager::reshape(int width, int height)
 {
     m_cameraController.resize(width, height);
     return true;
+}
+
+Terrain* SceneManager::getTerrain() const
+{
+    return m_terrain;
 }
 
 }

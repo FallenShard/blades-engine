@@ -7,18 +7,20 @@ namespace fsi
 {
 
 class ShaderManager;
+class SceneManager;
 class Font;
 class Window;
 class Text;
 class CheckBox;
 class GLRenderer;
 class Panel;
+class Slider;
 struct Event;
 
 class UIRenderer
 {
 public:
-    UIRenderer(std::shared_ptr<Window>& window, ShaderManager* program, GLRenderer* renderer);
+    UIRenderer(std::shared_ptr<Window>& window, ShaderManager* shaderManager, GLRenderer* renderer, SceneManager* sceneManager);
 
     ~UIRenderer();
 
@@ -54,6 +56,10 @@ private:
 
     std::unique_ptr<Text> m_vsyncText;
     std::unique_ptr<CheckBox> m_vsyncCheckBox;
+
+    std::unique_ptr<Slider> m_triSlider;
+    std::unique_ptr<Text> m_triSizeText;
+    std::unique_ptr<Text> m_currTriSizeText;
 
     std::unique_ptr<Text> m_fpsCounter;
     std::unique_ptr<Text> m_frameTimeCounter;

@@ -3,23 +3,23 @@
 layout(location = 0) in vec3 position;
 
 uniform sampler2D hMap;
+uniform sampler2D fMap;
 
-uniform float patchSize;
-uniform float patchesX;
-
-const float MESH_SIZE = patchesX * patchSize;
-
-const float HEIGHT_FACTOR = MESH_SIZE / 16.f;
+uniform float patches;
+uniform float terrainSize;
+uniform float heightFactor;
+uniform float detailFactor;
+uniform float worldScale;
 
 void main()
 {
-    float posX = (position.x + MESH_SIZE / 2) / MESH_SIZE;
-    float posZ = (position.z + MESH_SIZE / 2) / MESH_SIZE;
+    float posX = (position.x * worldScale + terrainSize / 2) / terrainSize;
+    float posZ = (position.z * worldScale + terrainSize / 2) / terrainSize;
 
     vec2 texCoord = vec2(posX, posZ);
-    vec2 fineTexCoord = texCoord * patchesX;
-    float height = texture(hMap, texCoord).r * HEIGHT_FACTOR;
+    float height = texture(hMap, texCoord * patches).r * heightFactor;
+    float detailHeight = texture(fMap, texCoord).r * heightFactor * detailFactor;
 
     gl_Position = vec4(position, 1.f);
-    gl_Position.y = height;
+    gl_Position.y = height + detailHeight;
 }

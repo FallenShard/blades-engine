@@ -196,6 +196,11 @@ void ShaderProgram::setUniformAttribute(std::string name, const glm::mat3& mat)
     glUniformMatrix3fv(m_uniformAttributes[name], 1, GL_FALSE, glm::value_ptr(mat));
 }
 
+void ShaderProgram::setUniformAttribute(std::string name, const glm::vec2& vec)
+{
+    glUniform2fv(m_uniformAttributes[name], 1, glm::value_ptr(vec));
+}
+
 void ShaderProgram::setUniformAttribute(std::string name, const glm::vec3& vec)
 {
     glUniform3fv(m_uniformAttributes[name], 1, glm::value_ptr(vec));

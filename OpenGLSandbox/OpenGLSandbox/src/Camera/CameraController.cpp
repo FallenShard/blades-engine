@@ -161,4 +161,9 @@ glm::vec3 CameraController::getCameraPosition() const
     return m_activeCamera->getPosition();
 }
 
+glm::vec3 CameraController::getViewDirection() const
+{
+    return m_activeCamera->getViewDirection();
+}
+
 }

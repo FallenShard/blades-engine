@@ -5,8 +5,12 @@
 #include "UI/Text.h"
 #include "UI/CheckBox.h"
 #include "UI/Panel.h"
+#include "UI/Slider.h"
 #include "Renderer/UIRenderer.h"
 #include "Renderer/GLRenderer.h"
+#include "Renderer/SceneManager.h"
+
+#include "Models/Terrain.h"
 
 #include <sstream>
 #include <iomanip>
@@ -20,8 +24,6 @@ namespace fsi
 
 namespace
 {
-    glm::vec4 colorA;
-
     float avg = 0.f;
 
     int avgCount = 10;
@@ -42,28 +44,31 @@ namespace
     float panelX = 20.f;
     float panelY = 20.f;
     float panelWidth = 200.f;
-    float panelHeight = 400.f;
+    float panelHeight = 275.f;
 }
 
-UIRenderer::UIRenderer(std::shared_ptr<Window>& window, ShaderManager* shaderManager, GLRenderer* renderer)
+UIRenderer::UIRenderer(std::shared_ptr<Window>& window, ShaderManager* shaderManager, GLRenderer* renderer, SceneManager* scene)
     : m_font(std::make_shared<Font>(shaderManager->getProgram("text")))
     , m_textProgram(shaderManager->getProgram("text"))
     , m_simpleProgram(shaderManager->getProgram("simple"))
     , m_program(shaderManager->getProgram("gui"))
-    , m_panel(std::make_unique<Panel>(glm::vec3(50.f, 50.f, 0.f), glm::vec2(200.f, 400.f)))
+    , m_panel(std::make_unique<Panel>(glm::vec3(50.f, 50.f, 0.f), glm::vec2(panelWidth, panelHeight)))
     , m_aaText(std::make_unique<Text>(m_font))
     , m_aaCheckBox(std::make_unique<CheckBox>(true))
     , m_wireframeText(std::make_unique<Text>(m_font))
     , m_wfCheckBox(std::make_unique<CheckBox>())
     , m_vsyncText(std::make_unique<Text>(m_font))
     , m_vsyncCheckBox(std::make_unique<CheckBox>(true))
+    , m_triSlider(std::make_unique<Slider>())
+    , m_triSizeText(std::make_unique<Text>(m_font))
+    , m_currTriSizeText(std::make_unique<Text>(m_font))
     , m_fpsCounter(std::make_unique<Text>(m_font))
     , m_frameTimeCounter(std::make_unique<Text>(m_font))
     , m_projection(glm::ortho(0.f, static_cast<float>(window->getSize().x), 
                                    static_cast<float>(window->getSize().y), 0.f))
 {
     m_aaText->setText("Antialiasing");
-    m_aaText->setColor(glm::vec4(1.f, 0.4f, 0.f, 1.f));
+    m_aaText->setColor(glm::vec4(0.f, 1.f, 1.f, 1.f));
     m_aaText->setPosition(glm::vec3(50.f, 40.f, 0.f));
     m_aaCheckBox->setPosition(glm::vec3(20.f, 20.f, 0.f));
     m_aaCheckBox->addMouseArea(m_aaText->getTextSize().x + 6.f);
@@ -73,17 +78,17 @@ UIRenderer::UIRenderer(std::shared_ptr<Window>& window, ShaderManager* shaderMan
     });
 
     m_wireframeText->setText("Wireframe");
-    m_wireframeText->setColor(glm::vec4(1.f, 1.f, 0.f, 1.f));
+    m_wireframeText->setColor(glm::vec4(0.f, 1.f, 1.f, 1.f));
     m_wireframeText->setPosition(glm::vec3(50.f, 80.f, 0.f));
     m_wfCheckBox->setPosition(glm::vec3(20.f, 60.f, 0.f));
     m_wfCheckBox->addMouseArea(m_wireframeText->getTextSize().x + 6.f);
-    m_wfCheckBox->setCallback([](bool isChecked)
+    m_wfCheckBox->setCallback([scene](bool isChecked)
     {
-        std::cout << "Wireframe is " << isChecked << std::endl;
+        scene->getTerrain()->setWireframe(isChecked);
     });
 
     m_vsyncText->setText("V-Sync");
-    m_vsyncText->setColor(glm::vec4(1.f, 1.f, 1.f, 1.f));
+    m_vsyncText->setColor(glm::vec4(0.f, 1.f, 1.f, 1.f));
     m_vsyncText->setPosition(glm::vec3(50.f, 120.f, 0.f));
     m_vsyncCheckBox->setPosition(glm::vec3(20.f, 100.f, 0.f));
     m_vsyncCheckBox->addMouseArea(m_vsyncText->getTextSize().x + 6.f);
@@ -92,13 +97,28 @@ UIRenderer::UIRenderer(std::shared_ptr<Window>& window, ShaderManager* shaderMan
         wglSwapIntervalEXT(isChecked);
     });
 
+    m_triSizeText->setText("Triangle Size");
+    m_triSizeText->setColor(glm::vec4(0.f, 1.f, 1.f, 1.f));
+    m_triSizeText->setPosition(glm::vec3(20.f, 160.f, 0.f));
+    m_currTriSizeText->setText("8");
+    m_currTriSizeText->setColor(glm::vec4(0.f, 1.f, 1.f, 1.f));
+    m_currTriSizeText->setPosition(glm::vec3(140.f, 185.f, 0.f));
+
+    m_triSlider->setPosition(glm::vec3(20.f, 180.f, 0.f));
+    m_triSlider->setCallback([scene, this](int value)
+    {
+        std::cout << value << std::endl;
+        scene->getTerrain()->setTriSize(value);
+        m_currTriSizeText->setText(to_string(value));
+    });
+
     m_fpsCounter->setText("0.0 FPS");
-    m_fpsCounter->setColor(glm::vec4(1.f, 1.f, 1.f, 1.f));
-    m_fpsCounter->setPosition(glm::vec3(20.f, 150.f, 0.f));
+    m_fpsCounter->setColor(glm::vec4(0.f, 1.f, 1.f, 1.f));
+    m_fpsCounter->setPosition(glm::vec3(20.f, 220.f, 0.f));
 
     m_frameTimeCounter->setText("0.0 us");
-    m_frameTimeCounter->setColor(glm::vec4(1.f, 1.f, 1.f, 1.f));
-    m_frameTimeCounter->setPosition(glm::vec3(20.f, 180.f, 0.f));
+    m_frameTimeCounter->setColor(glm::vec4(0.f, 1.f, 1.f, 1.f));
+    m_frameTimeCounter->setPosition(glm::vec3(20.f, 250.f, 0.f));
 
     GLuint m_cbTexId = 0;
     GLuint m_cbTexUnif;
@@ -140,7 +160,8 @@ UIRenderer::~UIRenderer()
 
 bool UIRenderer::handleEvents(const Event& event)
 {
-    if (event.type == Event::MouseButtonReleased)
+    if (event.type == Event::MouseButtonPressed ||
+        event.type == Event::MouseButtonReleased)
     {
         if (event.mouseButton.x > panelX && event.mouseButton.x < panelX + panelWidth &&
             event.mouseButton.y > panelY && event.mouseButton.y < panelY + panelHeight)
@@ -148,14 +169,18 @@ bool UIRenderer::handleEvents(const Event& event)
             m_aaCheckBox->handleEvents(event);
             m_wfCheckBox->handleEvents(event);
             m_vsyncCheckBox->handleEvents(event);
+            m_triSlider->handleEvents(event);
             return true;
         }
     }
-
-    if (event.type == Event::KeyPressed && event.key.code == Keyboard::K)
+    else if (event.type == Event::MouseMoved)
     {
-        colorA += glm::vec4(0.1f, 0.1f, 0.1f, 0.1f);
-        return true;
+        if (event.mouseMove.x > panelX && event.mouseMove.x < panelX + panelWidth &&
+            event.mouseMove.y > panelY && event.mouseMove.y < panelY + panelHeight)
+        {
+            m_triSlider->handleEvents(event);
+            return true;
+        }
     }
 
     return false;
@@ -183,8 +208,12 @@ void UIRenderer::render()
     m_aaText->render(m_textProgram, panelTrans);
     m_wireframeText->render(m_textProgram, panelTrans);
     m_vsyncText->render(m_textProgram, panelTrans);
+    m_triSizeText->render(m_textProgram, panelTrans);
+    m_currTriSizeText->render(m_textProgram, panelTrans);
     m_frameTimeCounter->render(m_textProgram, panelTrans);
     m_fpsCounter->render(m_textProgram, panelTrans);
+
+    m_triSlider->render(m_simpleProgram, m_textProgram, panelTrans);
 
     glDisable(GL_BLEND);
     glEnable(GL_DEPTH_TEST);

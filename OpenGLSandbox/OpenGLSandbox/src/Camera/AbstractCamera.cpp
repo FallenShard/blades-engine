@@ -54,6 +54,11 @@ const glm::vec3 AbstractCamera::getPosition() const
     return m_position;
 }
 
+const glm::vec3 AbstractCamera::getViewDirection() const
+{
+    return m_look;
+}
+
 const float AbstractCamera::getFov() const
 {
     return m_fov;

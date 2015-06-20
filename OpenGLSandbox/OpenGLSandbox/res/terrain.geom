@@ -7,6 +7,8 @@ in TES_OUT
 {
     vec3 pos;
     vec3 color;
+    vec3 normal;
+    vec2 texCoord;
 } vertices[];
 
 out GEOM_OUT
@@ -14,6 +16,7 @@ out GEOM_OUT
     vec3 pos;
     vec3 color;
     vec3 normal;
+    vec2 texCoord;
 } fragIn;   
 
 uniform mat3 normalMatrix; 
@@ -31,7 +34,8 @@ void main()
     {
         fragIn.pos = vertices[i].pos;
         fragIn.color = vertices[i].color;
-        fragIn.normal = normal;
+        fragIn.normal = normalize(normal);
+        fragIn.texCoord = vertices[i].texCoord;
         gl_Position = gl_in[i].gl_Position;
         EmitVertex();
     }

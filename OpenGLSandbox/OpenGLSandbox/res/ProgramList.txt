@@ -5,3 +5,4 @@ color color.vert color.frag
 text tex.vert tex.frag
 simple simple.vert simple.frag
 gui tex.vert gui.frag
+skybox skybox.vert skybox.frag

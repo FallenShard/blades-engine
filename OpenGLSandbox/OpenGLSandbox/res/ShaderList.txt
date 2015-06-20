@@ -13,3 +13,6 @@ tex.frag
 simple.vert
 simple.frag
 gui.frag
+skybox.vert
+skybox.frag
+terrain.geom

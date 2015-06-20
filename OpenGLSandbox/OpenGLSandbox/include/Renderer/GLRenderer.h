@@ -41,6 +41,7 @@ private:
     float m_timePassed;
 
     bool m_FXAAenabled;
+    bool m_showGui;
 
     std::shared_ptr<Window> m_window;
     ShaderManager* m_shaderManager;

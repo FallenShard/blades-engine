@@ -68,6 +68,9 @@
     <ClCompile Include="src\Utils\Font.cpp" />
     <ClCompile Include="src\UI\CheckBox.cpp" />
     <ClCompile Include="src\UI\Panel.cpp" />
+    <ClCompile Include="src\Renderer\TextureManager.cpp" />
+    <ClCompile Include="src\Models\Skybox.cpp" />
+    <ClCompile Include="src\UI\Slider.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="include\Core\Application.h" />
@@ -101,6 +104,9 @@
     <ClInclude Include="include\Utils\Font.h" />
     <ClInclude Include="include\UI\CheckBox.h" />
     <ClInclude Include="include\UI\Panel.h" />
+    <ClInclude Include="include\Renderer\TextureManager.h" />
+    <ClInclude Include="include\Models\Skybox.h" />
+    <ClInclude Include="include\UI\Slider.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include="res\fxaa.frag" />
@@ -119,6 +125,8 @@
     <None Include="res\simple.vert" />
     <None Include="res\simple.frag" />
     <None Include="res\gui.frag" />
+    <None Include="res\skybox.frag" />
+    <None Include="res\skybox.vert" />
   </ItemGroup>
   <ItemGroup>
     <Text Include="res\RobotArmFaces.txt" />

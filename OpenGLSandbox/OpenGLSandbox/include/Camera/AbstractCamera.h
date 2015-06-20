@@ -22,6 +22,7 @@ public:
 
     void setPosition(const glm::vec3& position);
     const glm::vec3 getPosition() const;
+    const glm::vec3 getViewDirection() const;
 
     void setFov(const float yDegrees);
     const float getFov() const;

@@ -15,6 +15,10 @@ public:
 
     void update(const float deltaTime);
     void render(const glm::mat4& projection, const glm::mat4& view);
+    void resizeScreenSpace(int width, int height);
+
+    void setWireframe(bool enabled);
+    void setTriSize(int size);
 
 private:
     void init();
@@ -28,6 +32,9 @@ private:
     GLuint m_sampler;
 
     glm::mat4 m_modelMatrix;
+
+    int m_wireframe;
+    float m_triSize;
 };
 
 }

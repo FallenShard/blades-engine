@@ -40,6 +40,7 @@ public:
     void setUniformAttribute(std::string name, GLsizei count, GLboolean transpose, const GLfloat* values);
     void setUniformAttribute(std::string name, const glm::mat3& mat);
     void setUniformAttribute(std::string name, const glm::mat4& mat);
+    void setUniformAttribute(std::string name, const glm::vec2& vec);
     void setUniformAttribute(std::string name, const glm::vec3& vec);
     void setUniformAttribute(std::string name, const glm::vec4& vec);
     

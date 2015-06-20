@@ -73,6 +73,7 @@ GLRenderer::GLRenderer(std::shared_ptr<Window>& window)
     , m_sceneManager(nullptr)
     , m_uiRenderer(nullptr)
     , m_FXAAenabled(true)
+    , m_showGui(true)
 {
     init();
 }
@@ -106,7 +107,7 @@ void GLRenderer::init()
     glDepthFunc(GL_LEQUAL);
     glDepthRange(0.0f, 1.0f);
     
-    glClearColor(0.1f, 1.0f, 0.1f, 1.f);
+    glClearColor(1.0f, 0.0f, 1.0f, 1.f);
     glClearDepth(1.0f);
 
     // Shader resources
@@ -116,8 +117,8 @@ void GLRenderer::init()
     m_sceneManager = new SceneManager(m_window, m_shaderManager);
     m_sceneManager->prepare();
 
-    // GUI manager (TODO, it's just the text overlay for now)
-    m_uiRenderer = std::make_shared<UIRenderer>(m_window, m_shaderManager, this);
+    // GUI manager
+    m_uiRenderer = std::make_shared<UIRenderer>(m_window, m_shaderManager, this, m_sceneManager);
 
     // FXAA Post-processing
     m_aaPass = new RenderPass(windowSize.x, windowSize.y, m_shaderManager->getProgram("fxaa"));
@@ -147,13 +148,14 @@ void GLRenderer::draw()
     }
 
     // Make sure not to render text/GUI under FXAA
-    m_uiRenderer->render();
+    if (m_showGui)
+        m_uiRenderer->render();
 }
 
 void GLRenderer::handleEvents(const Event& event)
 {
-    if (event.type == Event::KeyPressed && event.key.code == Keyboard::Space)
-        m_FXAAenabled = !m_FXAAenabled;
+    if (event.type == Event::KeyPressed && event.key.code == Keyboard::G)
+        m_showGui = !m_showGui;
 
     if (event.type == Event::Resized)
     {
@@ -161,7 +163,8 @@ void GLRenderer::handleEvents(const Event& event)
         m_uiRenderer->resize(event.size.width, event.size.height);
     }
         
-    m_uiRenderer->handleEvents(event);
+    if (m_showGui)
+        m_uiRenderer->handleEvents(event);
 
     m_sceneManager->handleEvents(event);
 }
