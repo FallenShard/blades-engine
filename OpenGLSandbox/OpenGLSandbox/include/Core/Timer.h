@@ -4,22 +4,20 @@
 
 namespace fsi
 {
+    // Measures in microseconds
+    class Timer
+    {
+    public:
+        Timer();
+        ~Timer();
 
-// Measures in microseconds
+        __int64 getElapsedTime();
+        __int64 restart();
 
-class Timer
-{
-public:
-    Timer();
-    ~Timer();
+    private:
+        LARGE_INTEGER getCurrentTime();
 
-    __int64 getElapsedTime();
-    __int64 restart();
-
-private:
-    LARGE_INTEGER getCurrentTime();
-
-    LARGE_INTEGER m_accumulatedTime;
-};
+        LARGE_INTEGER m_accumulatedTime;
+    };
 
 }

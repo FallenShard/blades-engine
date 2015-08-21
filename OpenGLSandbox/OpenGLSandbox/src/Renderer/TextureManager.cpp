@@ -1,68 +1,176 @@
 #include "Renderer/TextureManager.h"
-#include "OglWrapper/ShaderProgram.h"
+#include "Renderer/Technique.h"
 #include "stb/stb_image.h"
 
 namespace fsi
 {
+    const std::string TextureManager::relativePath = "res/textures/";
 
-TextureManager::TextureManager()
-    : m_texUnitCount(0)
-{
-    m_defaultSamplers[LinearClamp] = createSampler(GL_LINEAR, GL_LINEAR, GL_CLAMP_TO_EDGE, GL_CLAMP_TO_EDGE);
-    m_defaultSamplers[LinearRepeat] = createSampler(GL_LINEAR, GL_LINEAR, GL_REPEAT, GL_REPEAT);
-}
+    TextureManager::TextureManager()
+    {
+        GLint maxTextureUnits;
+        glGetIntegerv(GL_MAX_TEXTURE_IMAGE_UNITS, &maxTextureUnits);
+        m_textureUnits.resize(maxTextureUnits);
+        for (int unit = 0; unit < maxTextureUnits; unit++)
+            m_freeTextureUnits.insert(unit);
 
-TextureManager::~TextureManager()
-{
+        glPixelStorei(GL_PACK_ALIGNMENT, 1);
+        glPixelStorei(GL_UNPACK_ALIGNMENT, 1);
 
-}
+        m_defaultSamplers[LinearClamp] = createSampler(Filter::Linear, Filter::Linear, WrapMode::ClampToEdge, WrapMode::ClampToEdge);
+        m_defaultSamplers[LinearRepeat] = createSampler(Filter::Linear, Filter::Linear, WrapMode::Repeat, WrapMode::Repeat);
+        m_defaultSamplers[LinearMirrored] = createSampler(Filter::Linear, Filter::Linear, WrapMode::Mirrored, WrapMode::Mirrored);
+        m_defaultSamplers[NearestClamp] = createSampler(Filter::Nearest, Filter::Nearest, WrapMode::ClampToEdge, WrapMode::ClampToEdge);
+    }
 
-GLuint TextureManager::getSamplerPreset(SamplerPreset sampler) const
-{
-    return m_defaultSamplers[sampler];
-}
+    TextureManager::~TextureManager()
+    {
+        for (auto texId : m_textures)
+            glDeleteTextures(1, &texId.first);
+        m_textures.clear();
 
-GLuint TextureManager::createSampler(GLenum minFilter, GLenum magFilter, GLenum sWrap, GLenum tWrap)
-{
-    GLuint sampler;
-    glCreateSamplers(1, &sampler);
-    glSamplerParameteri(sampler, GL_TEXTURE_MIN_FILTER, minFilter);
-    glSamplerParameteri(sampler, GL_TEXTURE_MAG_FILTER, magFilter);
-    glSamplerParameteri(sampler, GL_TEXTURE_WRAP_S, sWrap);
-    glSamplerParameteri(sampler, GL_TEXTURE_WRAP_T, tWrap);
+        glDeleteSamplers(m_samplers.size(), &m_samplers[0]);
+        m_samplers.clear();
 
-    return sampler;
-}
+        glDeleteSamplers(m_defaultSamplers.size(), m_defaultSamplers.data());
+    }
 
-GLuint TextureManager::loadTexture(std::string&& fileName, GLsizei levels, GLenum internalFormat, GLenum format)
-{
-    int w, h, comp;
-    unsigned char* img = stbi_load("res/checkbox.png", &w, &h, &comp, STBI_rgb_alpha);
+    SamplerHandle TextureManager::getSamplerPreset(SamplerPreset sampler) const
+    {
+        return m_defaultSamplers[sampler];
+    }
 
-    GLuint texId;
-    glCreateTextures(GL_TEXTURE_2D, 1, &texId);
-    glTextureStorage2D(texId, levels, internalFormat, w, h);
-    glTextureSubImage2D(texId, 0, 0, 0, w, h, format, GL_UNSIGNED_BYTE, img);
-    glGenerateTextureMipmap(texId);
+    SamplerHandle TextureManager::createSampler(Filter minFilter, Filter magFilter, WrapMode sWrap, WrapMode tWrap)
+    {
+        GLuint sampler;
+        glCreateSamplers(1, &sampler);
+        glSamplerParameteri(sampler, GL_TEXTURE_MIN_FILTER, findGlFilter(minFilter));
+        glSamplerParameteri(sampler, GL_TEXTURE_MAG_FILTER, findGlFilter(magFilter));
+        glSamplerParameteri(sampler, GL_TEXTURE_WRAP_S, findGlWrapMode(sWrap));
+        glSamplerParameteri(sampler, GL_TEXTURE_WRAP_T, findGlWrapMode(tWrap));
 
-    return texId;
-}
+        m_samplers.push_back(sampler);
 
-TextureManager::TexInfo TextureManager::createTextureInfo(GLuint texId, GLuint sampler, ShaderProgram* program, std::string&& name)
-{
-    TexInfo texInfo;
-    texInfo.id = texId;
-    texInfo.sampler = sampler;
-    texInfo.location = glGetUniformLocation(program->getProgramId(), name.c_str());
-    texInfo.unit = m_texUnitCount++;
+        return sampler;
+    }
 
-    program->setUniformSampler(texInfo.location, texInfo.unit);
-    glBindTextureUnit(texInfo.unit, texInfo.id);
-    glBindSampler(texInfo.unit, texInfo.sampler);
+    TextureHandle TextureManager::loadTexture(const std::string& fileName, unsigned int levels, InternalFormat internalFormat, BaseFormat format)
+    {
+        GLenum internalGlFormat = findInternalGlFormat(internalFormat);
+        GLenum baseGlFormat = findBaseGlFormat(format);
+        int stbFormat = findStbFormat(format);
+        int width, height, components;
+        std::string fullFileName = relativePath + fileName;
+        unsigned char* imgData = stbi_load(fullFileName.c_str(), &width, &height, &components, stbFormat);
 
-    return texInfo;
-}
+        GLuint texId;
+        glCreateTextures(GL_TEXTURE_2D, 1, &texId);
+        glTextureStorage2D(texId, levels, internalGlFormat, width, height);
+        glTextureSubImage2D(texId, 0, 0, 0, width, height, baseGlFormat, GL_UNSIGNED_BYTE, imgData);
+        glGenerateTextureMipmap(texId);
 
+        m_textures.emplace(texId, 0);
 
+        stbi_image_free(imgData);
 
+        return texId;
+    }
+
+    TextureHandle TextureManager::createTexture(unsigned int levels, unsigned int width, unsigned int height, InternalFormat internalFormat)
+    {
+        GLuint texId;
+        glCreateTextures(GL_TEXTURE_2D, 1, &texId);
+        glTextureStorage2D(texId, levels, findInternalGlFormat(internalFormat), width, height);
+        glGenerateTextureMipmap(texId);
+
+        m_textures.emplace(texId, 0);
+
+        return texId;
+    }
+
+    void TextureManager::deleteTexture(TextureHandle texture)
+    {
+        glDeleteTextures(1, &texture);
+        auto texUnitIter = m_textures.find(texture);
+        if (texUnitIter != m_textures.end())
+        {
+            m_freeTextureUnits.insert(texUnitIter->second);
+            m_textures.erase(texture);
+        }
+    }
+
+    TextureManager::TexInfo TextureManager::createTextureInfo(TextureHandle texId, SamplerHandle sampler)
+    {
+        auto freeTexUnit = *(m_freeTextureUnits.begin());
+
+        TexInfo texInfo;
+        texInfo.id = texId;
+        texInfo.sampler = sampler;
+        texInfo.unit = freeTexUnit;
+
+        glBindTextureUnit(texInfo.unit, texInfo.id);
+        glBindSampler(texInfo.unit, texInfo.sampler);
+
+        m_textures[texInfo.id] = texInfo.unit;
+        m_textureUnits[texInfo.unit] = texInfo;
+        m_freeTextureUnits.erase(freeTexUnit);
+
+        return texInfo;
+    }
+
+    int TextureManager::findStbFormat(BaseFormat format)
+    {
+        switch (format)
+        {
+        case BaseFormat::Red:  return STBI_grey;
+        case BaseFormat::RGB:  return STBI_rgb;
+        case BaseFormat::RGBA: return STBI_rgb_alpha;
+        default:               return STBI_rgb_alpha;
+        }
+    }
+
+    GLenum TextureManager::findInternalGlFormat(InternalFormat format)
+    {
+        switch (format)
+        {
+        case InternalFormat::R8:    return GL_R8;
+        case InternalFormat::RGB8:  return GL_RGB8;
+        case InternalFormat::RGBA8: return GL_RGBA8;
+        default:                    return GL_RGBA8;
+        }
+    }
+
+    GLenum TextureManager::findBaseGlFormat(BaseFormat format)
+    {
+        switch (format)
+        {
+        case BaseFormat::Red:  return GL_RED;
+        case BaseFormat::RGB:  return GL_RGB;
+        case BaseFormat::RGBA: return GL_RGBA;
+        default:               return GL_RGBA;
+        }
+    }
+    
+    GLenum TextureManager::findGlFilter(Filter filter)
+    {
+        switch (filter)
+        {
+        case Filter::Linear:  return GL_LINEAR;
+        case Filter::Nearest: return GL_NEAREST;
+        case Filter::Mipmap:  return GL_LINEAR_MIPMAP_LINEAR;
+        default:              return GL_LINEAR;
+        }
+    }
+
+    GLenum TextureManager::findGlWrapMode(WrapMode mode)
+    {
+        switch (mode)
+        {
+        case WrapMode::Repeat:        return GL_REPEAT;
+        case WrapMode::ClampToBorder: return GL_CLAMP_TO_BORDER;
+        case WrapMode::ClampToEdge:   return GL_CLAMP_TO_EDGE;
+        case WrapMode::Mirrored:      return GL_MIRRORED_REPEAT;
+        default:                      return GL_CLAMP_TO_EDGE;
+        }
+    }
 }

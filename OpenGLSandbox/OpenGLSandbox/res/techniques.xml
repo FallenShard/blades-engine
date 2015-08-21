@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="utf-8"?>
+<techniques>
+    <technique name="fxaa">
+        <shader source="fxaa_vert.glsl" type="Vertex" />
+        <shader source="fxaa_frag.glsl" type="Fragment" />
+    </technique>
+    <technique name="terrain">
+        <shader source="terrain_vert.glsl" type="Vertex" />
+        <shader source="terrain_tesc.glsl" type="TessControl" />
+        <shader source="terrain_tese.glsl" type="TessEvaluation" />
+        <shader source="terrain_frag.glsl" type="Fragment" />
+    </technique>
+    <technique name="phong">
+        <shader source="phong_vert.glsl" type="Vertex" />
+        <shader source="phong_frag.glsl" type="Fragment" />
+    </technique>
+    <technique name="color">
+        <shader source="color_vert.glsl" type="Vertex" />
+        <shader source="color_frag.glsl" type="Fragment" />
+    </technique>
+    <technique name="text">
+        <shader source="text_vert.glsl" type="Vertex" />
+        <shader source="text_frag.glsl" type="Fragment" />
+    </technique>
+    <technique name="simple">
+        <shader source="simple_vert.glsl" type="Vertex" />
+        <shader source="simple_frag.glsl" type="Fragment" />
+    </technique>
+    <technique name="gui">
+        <shader source="text_vert.glsl" type="Vertex" />
+        <shader source="gui_frag.glsl" type="Fragment" />
+    </technique>
+    <technique name="skybox">
+        <shader source="skybox_vert.glsl" type="Vertex" />
+        <shader source="skybox_frag.glsl" type="Fragment" />
+    </technique>
+</techniques>

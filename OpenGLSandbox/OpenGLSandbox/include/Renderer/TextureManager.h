@@ -1,51 +1,91 @@
 #pragma once
 
 #include <map>
+#include <vector>
+#include <array>
+#include <set>
 #include "OpenGL.h"
 
 namespace fsi
 {
+    using TextureHandle = GLuint;
+    using SamplerHandle = GLuint;
 
-class ShaderProgram;
-
-class TextureManager
-{
-public:
-    struct TexInfo
+    enum class InternalFormat
     {
-        GLuint id;
-        GLuint unit;
-        GLuint sampler;
-        GLuint location;
+        R8,
+        RGB8,
+        RGBA8
     };
 
-    enum SamplerPreset
+    enum class BaseFormat
     {
-        LinearClamp  = 0,
-        LinearRepeat = 1,
-
-        Count
+        Red,
+        RGB,
+        RGBA
     };
 
-    TextureManager();
-    ~TextureManager();
+    enum class Filter
+    {
+        Linear,
+        Nearest,
+        Mipmap
+    };
 
-    GLuint getSamplerPreset(SamplerPreset sampler) const;
-    GLuint createSampler(GLenum minFilter, GLenum magFilter, GLenum sWrap, GLenum tWrap);
+    enum class WrapMode
+    {
+        Repeat,
+        ClampToEdge,
+        ClampToBorder,
+        Mirrored
+    };
 
-    TexInfo createTextureInfo(GLuint texId, GLuint sampler, ShaderProgram* program, std::string&& name);
+    class TextureManager
+    {
+    public:
+        struct TexInfo
+        {
+            TextureHandle id;
+            SamplerHandle sampler;
+            GLint unit;
+        };
 
-    GLuint loadTexture(std::string&& fileName, GLsizei levels, GLenum internalFormat, GLenum format);
+        enum SamplerPreset
+        {
+            LinearClamp = 0,
+            LinearRepeat = 1,
+            LinearMirrored = 2,
+            NearestClamp = 3,
+            Count
+        };
 
-private:
-    std::map<GLuint, TexInfo> m_textureCache;
+        TextureManager();
+        ~TextureManager();
 
-    GLuint m_defaultSamplers[SamplerPreset::Count];
+        SamplerHandle getSamplerPreset(SamplerPreset sampler) const;
+        SamplerHandle createSampler(Filter minFilter, Filter magFilter, WrapMode sWrap, WrapMode tWrap);
 
-    int m_texUnitCount;
+        TexInfo createTextureInfo(TextureHandle texture, SamplerHandle sampler);
 
+        TextureHandle loadTexture(const std::string& fileName, unsigned int levels, InternalFormat internalFormat, BaseFormat format);
+        TextureHandle createTexture(unsigned int levels, unsigned int width, unsigned int height, InternalFormat internalFormat);
+        void deleteTexture(TextureHandle texture);
 
+    private:
+        int findStbFormat(BaseFormat format);
+        GLenum findInternalGlFormat(InternalFormat format);
+        GLenum findBaseGlFormat(BaseFormat format);
+        GLenum findGlFilter(Filter filter);
+        GLenum findGlWrapMode(WrapMode mode);
 
-};
+        std::vector<TexInfo> m_textureUnits;
+        std::set<GLuint> m_freeTextureUnits;
 
+        std::map<TextureHandle, GLuint> m_textures;
+        std::vector<SamplerHandle> m_samplers;
+
+        std::array<SamplerHandle, Count> m_defaultSamplers;
+
+        const static std::string relativePath;
+    };
 }

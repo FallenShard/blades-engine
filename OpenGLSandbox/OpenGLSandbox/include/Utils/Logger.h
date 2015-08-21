@@ -8,24 +8,22 @@
 
 namespace fsi
 {
-
-class Logger
-{
-public:
-    static Logger* getInstance();
+    class Logger
+    {
+    public:
+        static Logger* getInstance();
     
-    static void log(std::string message);
-    static void flush();
+        static void log(std::string message);
+        static void flush();
 
-    ~Logger();
+        ~Logger();
 
-private:
-    Logger();
+    private:
+        Logger();
 
-    void openNewFile();
+        void openNewFile();
 
-    static Logger* m_instance;
-    std::ofstream m_logFile;
-};
-
+        static Logger* m_instance;
+        std::ofstream m_logFile;
+    };
 }

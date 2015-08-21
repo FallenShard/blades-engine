@@ -4,37 +4,37 @@
 
 namespace fsi
 {
+    class TechniqueCache;
+    class Technique;
 
-class ShaderManager;
+    class Terrain
+    {
+    public:
+        Terrain(TechniqueCache* manager);
+        ~Terrain();
 
-class Terrain
-{
-public:
-    Terrain(ShaderManager* manager);
-    ~Terrain();
+        void update(const float deltaTime);
+        void render(const glm::mat4& projection, const glm::mat4& view);
+        void resizeScreenSpace(int width, int height);
 
-    void update(const float deltaTime);
-    void render(const glm::mat4& projection, const glm::mat4& view);
-    void resizeScreenSpace(int width, int height);
+        void setWireframe(bool enabled);
+        void setTriSize(int size);
+        void useDetail(bool detailEnabled);
 
-    void setWireframe(bool enabled);
-    void setTriSize(int size);
+    private:
+        void init();
 
-private:
-    void init();
+        Technique* m_program;
 
-    ShaderProgram* m_program;
+        GLuint m_vao;
+        GLuint m_vbo;
+        GLuint m_ibo;
+        GLuint m_tex;
+        GLuint m_sampler;
 
-    GLuint m_vao;
-    GLuint m_vbo;
-    GLuint m_ibo;
-    GLuint m_tex;
-    GLuint m_sampler;
+        glm::mat4 m_modelMatrix;
 
-    glm::mat4 m_modelMatrix;
-
-    int m_wireframe;
-    float m_triSize;
-};
-
+        int m_wireframe;
+        float m_triSize;
+    };
 }

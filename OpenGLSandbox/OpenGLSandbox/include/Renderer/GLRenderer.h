@@ -2,54 +2,74 @@
 
 #include <vector>
 #include <map>
+#include <list>
 
 #include "OpenGL.h"
-#include "OglWrapper/Shader.h"
-#include "OglWrapper/ShaderProgram.h"
-#include "Renderer/ShaderManager.h"
-#include "PostProcessing/RenderPass.h"
-#include "Renderer/SceneManager.h"
+#include "Renderer/Scene.h"
 
 #include "Window/Window.h"
 
 namespace fsi
 {
+    struct Event;
+    class GLContext;
+    class UIRenderer;
+    class TechniqueCache;
+    class TextureManager;
+    class DeviceBufferManager;
+    class VertexAssembly;
+    class FramebufferManager;
+    class RenderPass;
 
-struct Event;
-class UIRenderer;
+    struct DrawItem;
 
-class GLRenderer
-{
-public:
-    GLRenderer(std::shared_ptr<Window>& window);
-    ~GLRenderer();
+    class GLRenderer
+    {
+    public:
+        GLRenderer(std::shared_ptr<Window>& window);
+        ~GLRenderer();
 
-    void handleEvents(const Event& event);
-    void update(float timeDelta);
-    void draw();
+        void handleEvents(const Event& event);
+        void update(float timeDelta);
+        void render();
 
-    void resize(int width, int height);
+        void resize(int width, int height);
 
-    void setFrameTime(long long frameTime);
+        void setFrameTime(long long frameTime);
 
-    void enableFXAA(bool enabled);
+        void enableFXAA(bool enabled);
 
-private:
-    void init();
+        std::shared_ptr<TechniqueCache> getTechniqueCache() { return m_techniqueCache; }
+        std::shared_ptr<TextureManager> getTextureManager() { return m_textureManager; }
+        std::shared_ptr<DeviceBufferManager> getDeviceBufferManager() { return m_deviceBufferManager; }
+        std::shared_ptr<VertexAssembly> getVertexAssembly() { return m_vertexAssembly; }
+        std::shared_ptr<FramebufferManager> getFramebufferManager() { return m_framebufferManager; }
 
-    float m_aspectRatio;
-    float m_timePassed;
+    private:
+        void enableDebugLogging();
+        void renderPriv(std::vector<DrawItem>& drawItems);
 
-    bool m_FXAAenabled;
-    bool m_showGui;
+        float m_aspectRatio;
+        float m_timePassed;
 
-    std::shared_ptr<Window> m_window;
-    ShaderManager* m_shaderManager;
+        bool m_FXAAenabled;
+        bool m_showGui;
 
-    RenderPass* m_aaPass;
+        std::shared_ptr<Window> m_window;
 
-    SceneManager* m_sceneManager;
-    std::shared_ptr<UIRenderer> m_uiRenderer;
-};
+        std::shared_ptr<GLContext> m_glContext;
+        
+        std::shared_ptr<TechniqueCache> m_techniqueCache;
+        std::shared_ptr<TextureManager> m_textureManager;
+        std::shared_ptr<DeviceBufferManager> m_deviceBufferManager;
+        std::shared_ptr<VertexAssembly> m_vertexAssembly;
+        std::shared_ptr<FramebufferManager> m_framebufferManager;
 
+        std::shared_ptr<CameraController> m_cameraController;
+
+        std::list<std::unique_ptr<RenderPass>> m_renderPasses;
+
+        Scene* m_scene;
+        std::shared_ptr<UIRenderer> m_uiRenderer;
+    };
 }

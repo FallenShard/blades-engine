@@ -4,35 +4,33 @@
 
 namespace fsi
 {
+    class Technique;
 
-class ShaderProgram;
+    class Sphere
+    {
+    public:
+        Sphere(Technique* prog);
 
-class Sphere
-{
-public:
-    Sphere(ShaderProgram* prog);
-
-    ~Sphere();
-
-
-    void init();
-
-    void update(const float deltaTime);
+        ~Sphere();
 
 
-    void render(const glm::mat4& projection, const glm::mat4& view);
+        void init();
 
-private:
-    ShaderProgram* m_program;
+        void update(const float deltaTime);
 
-    GLuint m_vao;
-    GLuint m_vbo;
-    GLuint m_ibo;
 
-    GLuint m_ubo;
-    GLuint m_sampler;
+        void render(const glm::mat4& projection, const glm::mat4& view);
 
-    glm::mat4 m_modelMatrix;
-};
+    private:
+        Technique* m_program;
 
+        GLuint m_vao;
+        GLuint m_vbo;
+        GLuint m_ibo;
+
+        GLuint m_ubo;
+        GLuint m_sampler;
+
+        glm::mat4 m_modelMatrix;
+    };
 }

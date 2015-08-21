@@ -6,23 +6,21 @@ namespace fsi
 {
 
 VideoMode::VideoMode()
-    :   m_modeWidth(0)
-    ,   m_modeHeight(0)
-    ,   m_modeBitsPerPixel(0)
+    : m_width(0)
+    , m_height(0)
+    , m_bitsPerPixel(0)
 {
 }
 
-VideoMode::VideoMode(unsigned int modeWidth, unsigned int modeHeight, unsigned int modeBitsPerPixel)
-    :   m_modeWidth(modeWidth)
-    ,   m_modeHeight(modeHeight)
-    ,   m_modeBitsPerPixel(modeBitsPerPixel)
+VideoMode::VideoMode(unsigned int width, unsigned int height, unsigned int bitsPerPixel)
+    : m_width(width)
+    , m_height(height)
+    , m_bitsPerPixel(bitsPerPixel)
 {
 }
 
 VideoMode VideoMode::getDesktopVideoMode()
 {
-    // This implementation is OS-specific
-
     // Windows-specific struct to obtain device mode
     DEVMODE win32DeviceMode;
 
@@ -30,30 +28,22 @@ VideoMode VideoMode::getDesktopVideoMode()
     win32DeviceMode.dmSize = sizeof(win32DeviceMode);
 
     // Retrieves information about current video mode and puts them in the struct
-    EnumDisplaySettings(NULL, ENUM_CURRENT_SETTINGS, &win32DeviceMode);
+    EnumDisplaySettings(nullptr, ENUM_CURRENT_SETTINGS, &win32DeviceMode);
 
     return VideoMode(win32DeviceMode.dmPelsWidth, win32DeviceMode.dmPelsHeight, win32DeviceMode.dmBitsPerPel);
 }
 
 const std::vector<VideoMode> VideoMode::getFullScreenVideoModes()
 {
-    // This implementation is OS-specific
-
     std::vector<VideoMode> modes;
 
     // Windows-specific struct to obtain device mode
     DEVMODE win32DeviceMode;
     win32DeviceMode.dmSize = sizeof(win32DeviceMode);
 
-    // Iterate all the available device modes
-    for (int count = 0; EnumDisplaySettings(NULL, count, &win32DeviceMode); ++count)
-    {
-        // Build a video mode
-        VideoMode mode(win32DeviceMode.dmPelsWidth, win32DeviceMode.dmPelsHeight, win32DeviceMode.dmBitsPerPel);
-
-        // Insert items that are not in the set already
-        modes.push_back(mode);
-    }
+    // Iterate through all the available device modes
+    for (int count = 0; EnumDisplaySettings(nullptr, count, &win32DeviceMode); ++count)
+        modes.emplace_back(win32DeviceMode.dmPelsWidth, win32DeviceMode.dmPelsHeight, win32DeviceMode.dmBitsPerPel);
 
     return modes;
 }
@@ -62,13 +52,10 @@ bool VideoMode::isValidInFullScreen() const
 {
     const std::vector<VideoMode>& fullScreenModes = getFullScreenVideoModes();
 
-    // Iterate through available modes and check whether the current one is valid for full-screen
     bool validStatus = false;
     for (VideoMode mode : fullScreenModes)
     {
-        if (m_modeWidth == mode.m_modeWidth &&
-            m_modeHeight == mode.m_modeHeight &&
-            m_modeBitsPerPixel == mode.m_modeBitsPerPixel)
+        if (m_width == mode.m_width && m_height == mode.m_height && m_bitsPerPixel == mode.m_bitsPerPixel)
         {
             validStatus = true;
             break;
@@ -78,34 +65,34 @@ bool VideoMode::isValidInFullScreen() const
     return validStatus;
 }
 
-unsigned int VideoMode::getModeWidth() const
+unsigned int VideoMode::getWidth() const
 {
-    return m_modeWidth;
+    return m_width;
 }
 
-void VideoMode::setModeWidth(unsigned int modeWidth)
+void VideoMode::setWidth(unsigned int width)
 {
-    m_modeWidth = modeWidth;
+    m_width = width;
 }
 
-unsigned int VideoMode::getModeHeight() const
+unsigned int VideoMode::getHeight() const
 {
-    return m_modeHeight;
+    return m_height;
 }
 
-void VideoMode::setModeHeight(unsigned int modeHeight)
+void VideoMode::setHeight(unsigned int height)
 {
-    m_modeHeight = modeHeight;
+    m_height = height;
 }
 
-unsigned int VideoMode::getModeBitsPerPixel() const
+unsigned int VideoMode::getBitsPerPixel() const
 {
-    return m_modeBitsPerPixel;
+    return m_bitsPerPixel;
 }
 
-void VideoMode::setModeBitsPerPixel(unsigned int modeBitsPerPixel)
+void VideoMode::setBitsPerPixel(unsigned int bitsPerPixel)
 {
-    m_modeBitsPerPixel = modeBitsPerPixel;
+    m_bitsPerPixel = bitsPerPixel;
 }
 
 }

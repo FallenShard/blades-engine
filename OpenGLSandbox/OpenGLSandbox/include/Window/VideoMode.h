@@ -4,39 +4,29 @@
 
 namespace fsi
 {
+    class VideoMode
+    {
+    public:
+        VideoMode();
+        VideoMode(unsigned int width, unsigned int height, unsigned int bitsPerPixel);
 
-// This class represents video mode used by a window
-class VideoMode
-{
-public:
-    // Default constructor, sets members to zero
-    VideoMode();
+        static VideoMode getDesktopVideoMode();
+        static const std::vector<VideoMode> getFullScreenVideoModes();
 
-    // Creates a video mode with given width, height and bits per pixel
-    VideoMode(unsigned int modeWidth, unsigned int modeHeight, unsigned int modeBitsPerPixel);
+        bool isValidInFullScreen() const;
 
-    // Returns current desktop video mode of the device
-    static VideoMode getDesktopVideoMode();
+        unsigned int getWidth() const;
+        void setWidth(unsigned int modeWidth);
 
-    // Returns all available fullscreen video modes
-    static const std::vector<VideoMode> getFullScreenVideoModes();
+        unsigned int getHeight() const;
+        void setHeight(unsigned int modeHeight);
 
-    // Check whether current video mode is supported in full-screen
-    bool isValidInFullScreen() const;
+        unsigned int getBitsPerPixel() const;    
+        void setBitsPerPixel(unsigned int modeBitsPerPixel);
 
-    unsigned int getModeWidth() const;
-    void setModeWidth(unsigned int modeWidth);
-
-    unsigned int getModeHeight() const;
-    void setModeHeight(unsigned int modeHeight);
-
-    unsigned int getModeBitsPerPixel() const;    
-    void setModeBitsPerPixel(unsigned int modeBitsPerPixel);
-
-private:
-    unsigned int m_modeWidth;
-    unsigned int m_modeHeight;
-    unsigned int m_modeBitsPerPixel;
-};
-
+    private:
+        unsigned int m_width;
+        unsigned int m_height;
+        unsigned int m_bitsPerPixel;
+    };
 }

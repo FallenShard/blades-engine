@@ -5,42 +5,41 @@
 
 namespace fsi
 {
-
-class Font;
+    class Font;
+    class Technique;
     
-class Text
-{
-public:
-    Text(std::shared_ptr<Font>& font);
-    ~Text();
+    class Text
+    {
+    public:
+        Text(std::shared_ptr<Font>& font);
+        ~Text();
 
-    void setText(std::string newText);
-    void setPosition(glm::vec3&& position);
-    void setColor(glm::vec4&& color);
+        void setText(std::string newText);
+        void setPosition(glm::vec3&& position);
+        void setColor(glm::vec4&& color);
 
-    glm::vec2 getTextSize() const;
+        glm::vec2 getTextSize() const;
 
-    void render(ShaderProgram* prog, const glm::mat4& parent);
+        void render(Technique* prog, const glm::mat4& parent);
 
 
-private:
-    std::string m_textString;
+    private:
+        std::string m_textString;
 
-    std::vector<GLfloat> m_vertices;
-    std::vector<GLushort> m_indices;
+        std::vector<GLfloat> m_vertices;
+        std::vector<GLushort> m_indices;
 
-    std::shared_ptr<Font> m_font;
+        std::shared_ptr<Font> m_font;
 
-    glm::vec4 m_color;
-    glm::mat4 m_modelMat;
+        glm::vec4 m_color;
+        glm::mat4 m_modelMat;
 
-    glm::vec2 m_size;
+        glm::vec2 m_size;
 
-    GLuint m_atlasTexId;
+        GLuint m_atlasTexId;
 
-    GLuint m_vao;
-    GLuint m_vbo;
-    GLuint m_ibo;
-};
-
+        GLuint m_vao;
+        GLuint m_vbo;
+        GLuint m_ibo;
+    };
 }
