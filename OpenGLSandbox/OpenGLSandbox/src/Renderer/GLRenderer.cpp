@@ -151,8 +151,6 @@ namespace
     fsi::Technique* colTech;
 
     std::vector<fsi::DrawItem> drawItems(2);
-
-    fsi::FXAA* fxaaPass;
 }
 
 void APIENTRY DebugCallback(GLenum source, GLenum type, GLuint id,
@@ -411,9 +409,6 @@ namespace fsi
 
         delete colTech;
         colTech = nullptr;
-
-        delete fxaaPass;
-        fxaaPass = nullptr;
     }
 
     void GLRenderer::enableDebugLogging()
@@ -519,8 +514,8 @@ namespace fsi
 
         m_aspectRatio = static_cast<float>(width) / static_cast<float>(height);
 
-        fxaaPass->resize(width, height);
-
+        for (auto& pass : m_renderPasses)
+            pass->resize(width, height);
         //m_uiRenderer->resize(width, height);
     }
 
