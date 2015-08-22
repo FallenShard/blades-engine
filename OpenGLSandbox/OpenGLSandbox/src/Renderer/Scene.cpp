@@ -37,7 +37,7 @@ namespace fsi
 
         m_cameraController.update(timeDelta);
         m_skybox->update(m_cameraController.getCamera()->getPosition());
-        m_terrain->update(timeDelta);
+        //m_terrain->update(timeDelta);
     }
 
     void Scene::render()

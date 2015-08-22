@@ -22,7 +22,6 @@ namespace fsi
 
     FXAA::~FXAA()
     {
-        cleanUpFBO();
     }
 
     void FXAA::cleanUpFBO()

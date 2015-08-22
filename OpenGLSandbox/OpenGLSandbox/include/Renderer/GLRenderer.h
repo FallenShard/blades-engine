@@ -5,20 +5,24 @@
 #include <list>
 
 #include "OpenGL.h"
-#include "Renderer/Scene.h"
 
 #include "Window/Window.h"
+
+#include "Renderer/TechniqueCache.h"
+#include "Renderer/TextureManager.h"
+#include "Renderer/FramebufferManager.h"
+#include "Renderer/VertexAssembly.h"
+#include "Renderer/DeviceBufferManager.h"
+
+#include "Renderer/DrawItem.h"
+
+#include "Camera/CameraController.h"
 
 namespace fsi
 {
     struct Event;
     class GLContext;
     class UIRenderer;
-    class TechniqueCache;
-    class TextureManager;
-    class DeviceBufferManager;
-    class VertexAssembly;
-    class FramebufferManager;
     class RenderPass;
 
     struct DrawItem;
@@ -39,6 +43,10 @@ namespace fsi
 
         void enableFXAA(bool enabled);
 
+        void submitDrawItem(const DrawItem& drawItem);
+
+        glm::ivec2 getScreenSize() const;
+
         std::shared_ptr<TechniqueCache> getTechniqueCache() { return m_techniqueCache; }
         std::shared_ptr<TextureManager> getTextureManager() { return m_textureManager; }
         std::shared_ptr<DeviceBufferManager> getDeviceBufferManager() { return m_deviceBufferManager; }
@@ -47,7 +55,7 @@ namespace fsi
 
     private:
         void enableDebugLogging();
-        void renderPriv(std::vector<DrawItem>& drawItems);
+        void renderScene();
 
         float m_aspectRatio;
         float m_timePassed;
@@ -69,7 +77,8 @@ namespace fsi
 
         std::list<std::unique_ptr<RenderPass>> m_renderPasses;
 
-        Scene* m_scene;
+        std::list<DrawItem> m_drawItems;
+
         std::shared_ptr<UIRenderer> m_uiRenderer;
     };
 }

@@ -4,23 +4,17 @@
 #include <fstream>
 #include <functional>
 
+#include "Core/Timer.h"
+
 #include "PostProcessing/RenderPass.h"
 #include "PostProcessing/FXAA.h"
 
+#include "Renderer/GLContext.h"
 #include "Renderer/GLRenderer.h"
 #include "Renderer/UIRenderer.h"
 #include "Input/Event.h"
 
-#include "Core/Timer.h"
-
-#include "Renderer/GLContext.h"
-#include "Renderer/TechniqueCache.h"
-#include "Renderer/TextureManager.h"
-#include "Renderer/DeviceBufferManager.h"
-#include "Renderer/VertexAssembly.h"
-#include "Renderer/FramebufferManager.h"
-
-#include "Renderer/DrawItem.h"
+#include "Models/Terrain.h"
 
 namespace
 {
@@ -147,10 +141,10 @@ namespace
     };
 
     TerrainParams terrParams;
-    fsi::Technique* t;
+    fsi::Technique* t = nullptr;
     fsi::Technique* colTech;
 
-    std::vector<fsi::DrawItem> drawItems(2);
+    fsi::Terrain* terrain = nullptr;
 }
 
 void APIENTRY DebugCallback(GLenum source, GLenum type, GLuint id,
@@ -214,7 +208,6 @@ namespace fsi
         , m_vertexAssembly(std::make_shared<VertexAssembly>())
         , m_framebufferManager(std::make_shared<FramebufferManager>())
         , m_cameraController(std::make_shared<CameraController>(m_window))
-        , m_scene(nullptr)
         , m_uiRenderer(nullptr)
         , m_FXAAenabled(true)
         , m_showGui(true)
@@ -274,7 +267,7 @@ namespace fsi
         //m_Scene->prepare();
 
         // TERRAIN SETUP
-        for (int z = 0; z < m_tiles + 1; z++)
+        /*for (int z = 0; z < m_tiles + 1; z++)
         {
             for (int x = 0; x < m_tiles + 1; x++)
             {
@@ -334,13 +327,14 @@ namespace fsi
 
         auto uboDesc = t->createUniformBufferDescriptor("TerrainParams", 0, terrUbo);
 
-        drawItems[0].program = terr;
-        drawItems[0].primitiveType = GL_PATCHES;
-        drawItems[0].vertexArray = terrVao;
-        drawItems[0].numVerts = vertCount / 3;
-        drawItems[0].numIndices = indCount;
-        drawItems[0].baseVertex = 0;
-        drawItems[0].updateUniforms = [this](const glm::mat4& P, const glm::mat4& V)
+        DrawItem item;
+        item.program = terr;
+        item.primitiveType = GL_PATCHES;
+        item.vertexArray = terrVao;
+        item.numVerts = vertCount / 3;
+        item.numIndices = indCount;
+        item.baseVertex = 0;
+        item.updateUniforms = [this](const glm::mat4& P, const glm::mat4& V)
         {
             t->setUniformAttribute("P", P);
 
@@ -358,7 +352,9 @@ namespace fsi
             t->setUniformAttribute("mvLightDir", lightDir);
 
             t->setUniformAttribute("wireframe", 0);
-        };
+        };*/
+
+        terrain = new Terrain(128, 1.f, 24.f, this);
 
         
 
@@ -377,13 +373,14 @@ namespace fsi
         lineVao = m_vertexAssembly->createInputState(lineLayout);
 
         colTech = new Technique(color);
-        drawItems[1].program = color;
-        drawItems[1].primitiveType = GL_LINES;
-        drawItems[1].vertexArray = lineVao;
-        drawItems[1].numVerts = 6;
-        drawItems[1].numIndices = -1;
-        drawItems[1].baseVertex = 0;
-        drawItems[1].updateUniforms = [this](const glm::mat4& P, const glm::mat4& V)
+        DrawItem originItem;
+        originItem.program = color;
+        originItem.primitiveType = GL_LINES;
+        originItem.vertexArray = lineVao;
+        originItem.numVerts = 6;
+        originItem.numIndices = -1;
+        originItem.baseVertex = 0;
+        originItem.updateUniforms = [this](const glm::mat4& P, const glm::mat4& V)
         {
             colTech->use();
             glm::mat4 lModel(1.f);
@@ -409,6 +406,9 @@ namespace fsi
 
         delete colTech;
         colTech = nullptr;
+
+        delete terrain;
+        terrain = nullptr;
     }
 
     void GLRenderer::enableDebugLogging()
@@ -418,12 +418,12 @@ namespace fsi
         glEnable(GL_DEBUG_OUTPUT_SYNCHRONOUS);
     }
 
-    void GLRenderer::renderPriv(std::vector<DrawItem>& drawItems)
+    void GLRenderer::renderScene()
     {
         const glm::mat4 P = m_cameraController->getCamera()->getProjectionMatrix();
         const glm::mat4 V = m_cameraController->getCamera()->getViewMatrix();
 
-        for (auto& item : drawItems)
+        for (auto& item : m_drawItems)
         {
             glUseProgram(item.program);
             item.updateUniforms(P, V);
@@ -454,7 +454,8 @@ namespace fsi
         else
             glBindFramebuffer(GL_FRAMEBUFFER, 0);
 
-        renderPriv(drawItems);
+        renderScene();
+
         for (; currentPass != m_renderPasses.end(); ++currentPass)
         {
             auto nextPass = std::next(currentPass);
@@ -522,5 +523,15 @@ namespace fsi
     void GLRenderer::enableFXAA(bool enabled)
     {
         m_FXAAenabled = enabled;
+    }
+
+    void GLRenderer::submitDrawItem(const DrawItem& drawItem)
+    {
+        m_drawItems.emplace_back(drawItem);
+    }
+
+    glm::ivec2 GLRenderer::getScreenSize() const
+    {
+        return m_window->getSize();
     }
 }

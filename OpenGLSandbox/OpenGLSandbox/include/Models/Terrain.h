@@ -1,40 +1,42 @@
 #pragma once
 
+#include <vector>
+#include <memory>
+
 #include "OpenGL.h"
+
+#include "Renderer/DrawItem.h"
 
 namespace fsi
 {
-    class TechniqueCache;
+    class GLRenderer;
     class Technique;
 
     class Terrain
     {
     public:
-        Terrain(TechniqueCache* manager);
+        Terrain(int tiles, float tileSize, float worldScale, GLRenderer* renderer);
         ~Terrain();
 
-        void update(const float deltaTime);
-        void render(const glm::mat4& projection, const glm::mat4& view);
-        void resizeScreenSpace(int width, int height);
-
-        void setWireframe(bool enabled);
-        void setTriSize(int size);
-        void useDetail(bool detailEnabled);
+        void setWireframe(bool isWireframe);
+        void setTriSize(int value);
 
     private:
-        void init();
+        struct TerrainParams
+        {
+            float detailFactor;
+            float heightFactor;
+            float patches;
+            float terrainSize;
+        };
 
-        Technique* m_program;
+        std::vector<GLfloat> generateVertices(int tiles, float tileSize);
+        std::vector<GLushort> generateIndices(int tiles);
 
-        GLuint m_vao;
-        GLuint m_vbo;
-        GLuint m_ibo;
-        GLuint m_tex;
-        GLuint m_sampler;
+        std::unique_ptr<Technique> m_technique;
 
-        glm::mat4 m_modelMatrix;
+        GLfloat m_triangleSize;
 
-        int m_wireframe;
-        float m_triSize;
+        DrawItem m_drawItem;
     };
 }

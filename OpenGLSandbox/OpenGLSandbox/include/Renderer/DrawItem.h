@@ -1,5 +1,7 @@
 #pragma once
 
+#include <functional>
+
 #include "OpenGL.h"
 
 namespace fsi
