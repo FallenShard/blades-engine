@@ -74,6 +74,7 @@
     <ClCompile Include="src\Renderer\GLContext.cpp" />
     <ClCompile Include="src\PostProcessing\FXAA.cpp" />
     <ClCompile Include="src\Renderer\FramebufferManager.cpp" />
+    <ClCompile Include="src\Models\CoordOrigin.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="include\Core\Timer.h" />
@@ -114,6 +115,7 @@
     <ClInclude Include="include\PostProcessing\FXAA.h" />
     <ClInclude Include="include\Renderer\FramebufferManager.h" />
     <ClInclude Include="include\PostProcessing\RenderPass.h" />
+    <ClInclude Include="include\Models\CoordOrigin.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include="res\glsl\color_frag.glsl" />

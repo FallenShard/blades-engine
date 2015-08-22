@@ -15,136 +15,14 @@
 #include "Input/Event.h"
 
 #include "Models/Terrain.h"
+#include "Models/CoordOrigin.h"
 
 namespace
 {
     fsi::Timer fpsTimer;
 
-    GLuint fxaa;
-    GLuint terr;
-    GLuint color;
-    GLuint phong;
-    GLuint simple;
-    GLuint gui;
-    GLuint text;
-    GLuint sky;
-
-    // Terrain parameters
-    GLint heightMap;
-    GLuint heightTex;
-    GLuint heightSampler;
-
-    GLint fineMap;
-    GLuint fineTex;
-    GLuint fineSampler;
-
-    GLint detailMap;
-    GLuint dirtTex;
-    GLuint dirtSampler;
-
-    GLint noiseMap;
-    GLint detMap;
-    GLuint noiseTex;
-    GLuint detTex;
-
-    GLuint timeUnif;
-    GLfloat timeVal = 0.f;
-
-    GLint detail = 1;
-
-    int m_tiles = 128;
-    float m_tileSize = 1.f;
-    float m_worldScale = 24.f;
-    float m_heightFactor = m_tiles / 16.f;
-    float m_terrainSize = m_tiles * m_tileSize * m_worldScale;
-    float m_triSize = 8.f;
-
-    int vertCount = 0;
-    int indCount = 0;
-
-    std::vector<GLfloat> m_vertices;
-    std::vector<GLushort> m_indices;
-
-    GLuint lineVao;
-    GLuint lineVbo;
-    std::vector<GLfloat> lineVerts;
-
-    GLuint terrVao;
-    GLuint terrVbo;
-    GLuint terrIbo;
-    GLuint terrUbo;
-
-    void fillOriginBuffer()
-    {
-        // X
-        lineVerts.push_back(0.f);
-        lineVerts.push_back(0.f);
-        lineVerts.push_back(0.f);
-        lineVerts.push_back(1.f);
-        lineVerts.push_back(0.f);
-        lineVerts.push_back(0.f);
-        lineVerts.push_back(1.f);
-        lineVerts.push_back(10.f);
-        lineVerts.push_back(0.f);
-        lineVerts.push_back(0.f);
-        lineVerts.push_back(1.f);
-        lineVerts.push_back(0.f);
-        lineVerts.push_back(0.f);
-        lineVerts.push_back(1.f);
-
-        // Y
-        lineVerts.push_back(0.f);
-        lineVerts.push_back(0.f);
-        lineVerts.push_back(0.f);
-        lineVerts.push_back(0.f);
-        lineVerts.push_back(1.f);
-        lineVerts.push_back(0.f);
-        lineVerts.push_back(1.f);
-        lineVerts.push_back(0.f);
-        lineVerts.push_back(10.f);
-        lineVerts.push_back(0.f);
-        lineVerts.push_back(0.f);
-        lineVerts.push_back(1.f);
-        lineVerts.push_back(0.f);
-        lineVerts.push_back(1.f);
-
-        // Z
-        lineVerts.push_back(0.f);
-        lineVerts.push_back(0.f);
-        lineVerts.push_back(0.f);
-        lineVerts.push_back(0.f);
-        lineVerts.push_back(0.f);
-        lineVerts.push_back(1.f);
-        lineVerts.push_back(1.f);
-        lineVerts.push_back(0.f);
-        lineVerts.push_back(0.f);
-        lineVerts.push_back(10.f);
-        lineVerts.push_back(0.f);
-        lineVerts.push_back(0.f);
-        lineVerts.push_back(1.f);
-        lineVerts.push_back(1.f);
-    }
-
-    GLuint aaVao;
-    GLuint aaFbo;
-    GLuint aaTex;
-    GLuint aaSampler;
-    GLuint aaRbo;
-    GLuint aaTexUnit = 1;
-
-    struct TerrainParams
-    {
-        float detailFactor;
-        float heightFactor;
-        float patches;
-        float terrainSize;
-    };
-
-    TerrainParams terrParams;
-    fsi::Technique* t = nullptr;
-    fsi::Technique* colTech;
-
     fsi::Terrain* terrain = nullptr;
+    fsi::CoordOrigin* origin = nullptr;
 }
 
 void APIENTRY DebugCallback(GLenum source, GLenum type, GLuint id,
@@ -233,161 +111,13 @@ namespace fsi
         glClearColor(0.1f, 0.1f, 0.1f, 1.f);
         glClearDepth(1.f);
 
-        // Shader resources
-        fxaa = m_techniqueCache->getProgram("fxaa");
-        terr = m_techniqueCache->getProgram("terrain");
-        phong = m_techniqueCache->getProgram("phong");
-        color = m_techniqueCache->getProgram("color");
-        text = m_techniqueCache->getProgram("text");
-        simple = m_techniqueCache->getProgram("simple");
-        gui = m_techniqueCache->getProgram("gui");
-        sky = m_techniqueCache->getProgram("skybox");
-
-        heightTex = m_textureManager->loadTexture("heightmap1024.png", 1, InternalFormat::R8, BaseFormat::Red);
-        fineTex = m_textureManager->loadTexture("perlinHmap.png", 1, InternalFormat::R8, BaseFormat::Red);
-        dirtTex = m_textureManager->loadTexture("lunar.png", 8, InternalFormat::RGBA8, BaseFormat::RGBA);
-        noiseTex = m_textureManager->loadTexture("noise.png", 8, InternalFormat::R8, BaseFormat::Red);
-        detTex = m_textureManager->loadTexture("seamlessmoon.png", 8, InternalFormat::RGBA8, BaseFormat::RGBA);
-
-        heightSampler = m_textureManager->getSamplerPreset(TextureManager::LinearClamp);
-        fineSampler = m_textureManager->getSamplerPreset(TextureManager::LinearMirrored);
-        dirtSampler = m_textureManager->createSampler(Filter::Mipmap, Filter::Linear, WrapMode::Repeat, WrapMode::Repeat);
-
-        auto heightTexInfo = m_textureManager->createTextureInfo(heightTex, heightSampler);
-        auto detailTexInfo = m_textureManager->createTextureInfo(fineTex, fineSampler);
-        auto globalTexInfo = m_textureManager->createTextureInfo(dirtTex, dirtSampler);
-        auto noiseTexInfo = m_textureManager->createTextureInfo(noiseTex, dirtSampler);
-        auto patchTexInfo = m_textureManager->createTextureInfo(detTex, dirtSampler);
-
-        
-
         // 3D Scene manager
         //m_Scene = new Scene(m_window, m_shaderManager);
 
         //m_Scene->prepare();
 
-        // TERRAIN SETUP
-        /*for (int z = 0; z < m_tiles + 1; z++)
-        {
-            for (int x = 0; x < m_tiles + 1; x++)
-            {
-                m_vertices.push_back(x * m_tileSize - m_tiles * m_tileSize / 2.f);
-                m_vertices.push_back(0.f);
-                m_vertices.push_back(m_tiles * m_tileSize / 2.f - z * m_tileSize);
-            }
-        }
-
-        for (int z = 0; z < m_tiles; z++)
-        {
-            for (int x = 0; x < m_tiles; x++)
-            {
-                m_indices.push_back(z * (m_tiles + 1) + x);
-                m_indices.push_back(z * (m_tiles + 1) + x + 1);
-                m_indices.push_back((z + 1) * (m_tiles + 1) + x + 1);
-                m_indices.push_back((z + 1) * (m_tiles + 1) + x);
-            }
-        }
-
-        vertCount = m_vertices.size() / 3;
-
-        indCount = m_indices.size();
-
-        terrVbo = m_deviceBufferManager->allocate(m_vertices.size() * sizeof(GLfloat), GL_MAP_WRITE_BIT | GL_MAP_PERSISTENT_BIT | GL_MAP_COHERENT_BIT);
-        m_deviceBufferManager->update(terrVbo, m_vertices, 0);
-        terrIbo = m_deviceBufferManager->allocate(m_indices.size() * sizeof(GLushort), GL_MAP_WRITE_BIT);
-        m_deviceBufferManager->update(terrIbo, m_indices, 0);
-
-        VertexLayout layout;
-        layout.indexBuffer = terrIbo;
-        layout.vertexBuffers.emplace_back(0, BufferDescriptor{ terrVbo, 0, 3 * sizeof(GLfloat) });
-        layout.attributes.emplace_back(0, AttributeFormat{ VertexAttrib::Position , 3, 0 });
-        terrVao = m_vertexAssembly->createInputState(layout);
-
-        glPatchParameteri(GL_PATCH_VERTICES, 4);
-
-        t = new Technique(terr);
-        t->setUniformAttribute("heightMap"      , heightTexInfo.unit);
-        t->setUniformAttribute("detailHeightMap", detailTexInfo.unit);
-        t->setUniformAttribute("terrainTexture" , globalTexInfo.unit);
-        t->setUniformAttribute("noiseMap"       , noiseTexInfo.unit);
-        t->setUniformAttribute("patchTexture"   , patchTexInfo.unit);
-        
-        t->setUniformAttribute("worldScale", m_worldScale);
-        t->setUniformAttribute("triSize"   , m_triSize);
-        t->setUniformAttribute("screenSize", glm::vec2(windowSize));
-        t->setUniformAttribute("detail"    , detail);
-
-        terrParams.heightFactor = m_heightFactor;
-        terrParams.detailFactor = m_heightFactor * 0.0125f;
-        terrParams.patches = static_cast<float>(m_tiles);
-        terrParams.terrainSize = static_cast<float>(m_terrainSize);
-
-        terrUbo = m_deviceBufferManager->allocate(sizeof(terrParams), GL_MAP_WRITE_BIT);
-        m_deviceBufferManager->update(terrUbo, &terrParams, sizeof(terrParams));
-
-        auto uboDesc = t->createUniformBufferDescriptor("TerrainParams", 0, terrUbo);
-
-        DrawItem item;
-        item.program = terr;
-        item.primitiveType = GL_PATCHES;
-        item.vertexArray = terrVao;
-        item.numVerts = vertCount / 3;
-        item.numIndices = indCount;
-        item.baseVertex = 0;
-        item.updateUniforms = [this](const glm::mat4& P, const glm::mat4& V)
-        {
-            t->setUniformAttribute("P", P);
-
-            glm::mat4 model = glm::translate(glm::vec3(0.f, -m_worldScale * 10.f, 0.f)) * glm::scale(glm::vec3(m_worldScale));
-            glm::mat4 mv = V * model;
-            t->setUniformAttribute("MV", mv);
-
-            glm::mat4 mat = P * mv;
-            t->setUniformAttribute("MVP", mat);
-
-            glm::mat3 normalMatrix = glm::mat3(glm::inverseTranspose(mv));
-            t->setUniformAttribute("normalMatrix", normalMatrix);
-
-            glm::vec4 lightDir = glm::normalize(V * glm::normalize(glm::vec4(1.f, 1.f, 0.f, 0.f)));
-            t->setUniformAttribute("mvLightDir", lightDir);
-
-            t->setUniformAttribute("wireframe", 0);
-        };*/
-
         terrain = new Terrain(128, 1.f, 24.f, this);
-
-        
-
-        ///////////////////////////////////// Coord system
-        fillOriginBuffer();
-
-        lineVbo = m_deviceBufferManager->allocate(lineVerts.size() * sizeof(GLfloat), GL_MAP_WRITE_BIT);
-        m_deviceBufferManager->update(lineVbo, lineVerts);
-
-        VertexLayout lineLayout;
-        lineLayout.indexBuffer = 0;
-        lineLayout.vertexBuffers.emplace_back(0, BufferDescriptor{ lineVbo, 0, 7 * sizeof(GLfloat) });
-        lineLayout.attributes.emplace_back(0, AttributeFormat{ VertexAttrib::Position, 3, 0 });
-        lineLayout.attributes.emplace_back(0, AttributeFormat{ VertexAttrib::Color   , 4, 12 });
-
-        lineVao = m_vertexAssembly->createInputState(lineLayout);
-
-        colTech = new Technique(color);
-        DrawItem originItem;
-        originItem.program = color;
-        originItem.primitiveType = GL_LINES;
-        originItem.vertexArray = lineVao;
-        originItem.numVerts = 6;
-        originItem.numIndices = -1;
-        originItem.baseVertex = 0;
-        originItem.updateUniforms = [this](const glm::mat4& P, const glm::mat4& V)
-        {
-            colTech->use();
-            glm::mat4 lModel(1.f);
-            glm::mat4 lineMat = P * V * lModel;
-
-            colTech->setUniformAttribute("MVP", lineMat);
-        };
+        origin = new CoordOrigin(10, this);
 
         // GUI manager
         //m_uiRenderer = std::make_shared<UIRenderer>(m_window, m_shaderManager, this, m_Scene);
@@ -399,13 +129,9 @@ namespace fsi
     GLRenderer::~GLRenderer()
     {
         //delete m_Scene;
-        //delete m_aaPass;
-        //delete m_shaderManager;
-        delete t;
-        t = nullptr;
 
-        delete colTech;
-        colTech = nullptr;
+        delete origin;
+        origin = nullptr;
 
         delete terrain;
         terrain = nullptr;
@@ -446,7 +172,6 @@ namespace fsi
         glClearNamedFramebufferfv(0, GL_COLOR, 0, val);
         glClearNamedFramebufferfv(0, GL_DEPTH, 0, &depthVal);
 
-        // TODO
         auto currentPass = m_renderPasses.begin();
         
         if (currentPass != m_renderPasses.end())
@@ -528,6 +253,11 @@ namespace fsi
     void GLRenderer::submitDrawItem(const DrawItem& drawItem)
     {
         m_drawItems.emplace_back(drawItem);
+    }
+
+    void GLRenderer::setTessellationPatchVertices(int numberOfVertices)
+    {
+        glPatchParameteri(GL_PATCH_VERTICES, numberOfVertices);
     }
 
     glm::ivec2 GLRenderer::getScreenSize() const

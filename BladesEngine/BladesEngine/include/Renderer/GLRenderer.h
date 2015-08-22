@@ -45,6 +45,8 @@ namespace fsi
 
         void submitDrawItem(const DrawItem& drawItem);
 
+        void setTessellationPatchVertices(int numberOfVertices);
+
         glm::ivec2 getScreenSize() const;
 
         std::shared_ptr<TechniqueCache> getTechniqueCache() { return m_techniqueCache; }

@@ -19,6 +19,7 @@
     <ClCompile Include="src\Core\Timer.cpp" />
     <ClCompile Include="src\gl3w.c" />
     <ClCompile Include="src\main.cpp" />
+    <ClCompile Include="src\Models\CoordOrigin.cpp" />
     <ClCompile Include="src\Models\Skybox.cpp" />
     <ClCompile Include="src\Models\Sphere.cpp" />
     <ClCompile Include="src\Models\Terrain.cpp" />
@@ -60,6 +61,7 @@
     <ClInclude Include="include\Input\Event.h" />
     <ClInclude Include="include\Input\Keyboard.h" />
     <ClInclude Include="include\Input\Mouse.h" />
+    <ClInclude Include="include\Models\CoordOrigin.h" />
     <ClInclude Include="include\Models\Skybox.h" />
     <ClInclude Include="include\Models\Sphere.h" />
     <ClInclude Include="include\Models\Terrain.h" />
