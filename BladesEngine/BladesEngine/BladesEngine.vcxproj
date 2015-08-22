@@ -26,6 +26,7 @@
     <ClCompile Include="src\Camera\AbstractCamera.cpp" />
     <ClCompile Include="src\Camera\CameraController.cpp" />
     <ClCompile Include="src\Camera\FreeCamera.cpp" />
+    <ClCompile Include="src\PostProcessing\RenderPass.cpp" />
     <ClCompile Include="src\Renderer\FramebufferManager.cpp" />
     <ClCompile Include="src\Renderer\D3DRenderer.cpp">
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug [Direct3D]|Win32'">true</ExcludedFromBuild>

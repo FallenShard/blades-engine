@@ -75,6 +75,7 @@
     <ClCompile Include="src\PostProcessing\FXAA.cpp" />
     <ClCompile Include="src\Renderer\FramebufferManager.cpp" />
     <ClCompile Include="src\Models\CoordOrigin.cpp" />
+    <ClCompile Include="src\PostProcessing\RenderPass.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="include\Core\Timer.h" />

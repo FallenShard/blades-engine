@@ -166,11 +166,7 @@ namespace fsi
     {
         auto start = fpsTimer.getElapsedTime();
 
-        float val[] = { 0.1f, 0.1f, 0.1f, 1.f };
-        float depthVal = 1.f;
-
-        glClearNamedFramebufferfv(0, GL_COLOR, 0, val);
-        glClearNamedFramebufferfv(0, GL_DEPTH, 0, &depthVal);
+        RenderPass::clearScreen();
 
         auto currentPass = m_renderPasses.begin();
         
