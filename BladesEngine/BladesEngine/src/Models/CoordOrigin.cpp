@@ -27,7 +27,7 @@ namespace fsi
         m_drawItem.primitiveType = GL_LINES;
         m_drawItem.vertexArray = vao;
         m_drawItem.numVerts = vertexData.size() / 7;
-        m_drawItem.numIndices = 0;
+        m_drawItem.numIndices = -1;
         m_drawItem.baseVertex = 0;
         m_drawItem.updateUniforms = [this](const glm::mat4& P, const glm::mat4& V)
         {
