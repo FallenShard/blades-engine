@@ -117,8 +117,9 @@
   <PropertyGroup Label="Globals">
     <ProjectGuid>{C78F7A58-C68B-4FDB-B61B-215B531D06AC}</ProjectGuid>
     <Keyword>Win32Proj</Keyword>
-    <RootNamespace>OpenGLSandbox</RootNamespace>
+    <RootNamespace>BladesEngine</RootNamespace>
     <WindowsTargetPlatformVersion>10.0.10240.0</WindowsTargetPlatformVersion>
+    <ProjectName>BladesEngine</ProjectName>
   </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" Label="Configuration">

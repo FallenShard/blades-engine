@@ -3,7 +3,7 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 14
 VisualStudioVersion = 14.0.23107.0
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "OpenGLSandbox", "OpenGLSandbox\OpenGLSandbox.vcxproj", "{C78F7A58-C68B-4FDB-B61B-215B531D06AC}"
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "BladesEngine", "BladesEngine\BladesEngine.vcxproj", "{C78F7A58-C68B-4FDB-B61B-215B531D06AC}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
