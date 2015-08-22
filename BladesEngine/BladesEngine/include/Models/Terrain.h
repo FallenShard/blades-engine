@@ -36,6 +36,7 @@ namespace fsi
         std::unique_ptr<Technique> m_technique;
 
         GLfloat m_triangleSize;
+        GLint m_isWireframe;
 
         DrawItem m_drawItem;
     };

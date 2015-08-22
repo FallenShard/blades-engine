@@ -29,8 +29,6 @@ layout(std140) uniform TerrainParams
 
 uniform float worldScale;
 
-uniform int detail;
-
 void main()
 {
     vec4 a = mix(gl_in[0].gl_Position, gl_in[1].gl_Position, gl_TessCoord.x);
@@ -46,7 +44,7 @@ void main()
     float height = texture(heightMap, texCoord).r;
     float detailHeight = texture(detailHeightMap, texCoord * patches / 8.f).r;
 
-    position.y = height * heightFactor + detail * detailHeight * detailFactor * heightFactor;
+    position.y = height * heightFactor + detailHeight * detailFactor * heightFactor;
     tesOut.position = position.xyz;
 
     vec3 aa = mix(tesIn[0].color, tesIn[1].color, gl_TessCoord.x);
