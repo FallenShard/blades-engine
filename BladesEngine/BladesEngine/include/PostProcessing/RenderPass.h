@@ -15,7 +15,7 @@ namespace fsi
 
         static void clearScreen();
 
-    private:
+    protected:
         static const GLfloat defaultDepth;
         static const GLfloat defaultColor[4];
     };

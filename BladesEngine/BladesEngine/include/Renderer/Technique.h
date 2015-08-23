@@ -26,6 +26,7 @@ namespace fsi
 
         void setUniformAttribute(const std::string& name, GLfloat value);
         void setUniformAttribute(const std::string& name, GLint value);
+        void setUniformAttribute(const std::string& name, GLuint value);
         void setUniformAttribute(const std::string& name, GLfloat x, GLfloat y);
         void setUniformAttribute(const std::string& name, GLfloat x, GLfloat y, GLfloat z);
         void setUniformAttribute(const std::string& name, GLsizei count, GLboolean transpose, const GLfloat* values);

@@ -100,7 +100,8 @@ namespace fsi
     void FXAA::setAsSurface()
     {
         glBindFramebuffer(GL_FRAMEBUFFER, m_fbo);
-        glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+        glClearNamedFramebufferfv(m_fbo, GL_COLOR, 0, defaultColor);
+        glClearNamedFramebufferfv(m_fbo, GL_DEPTH, 0, &defaultDepth);
     }
 
     void FXAA::render()

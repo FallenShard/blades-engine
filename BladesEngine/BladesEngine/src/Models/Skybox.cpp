@@ -1,298 +1,64 @@
 #include <vector>
-#include "Models/Skybox.h"
+
+#include "Renderer/GLRenderer.h"
 #include "Renderer/Technique.h"
-#include "Renderer/VertexAssembly.h"
-#include "stb/stb_image.h"
+
+#include "Models/Skybox.h"
 
 namespace fsi
 {
-    Skybox::Skybox(Technique* prog)
-        : m_program(prog)
+    Skybox::Skybox(float size, GLRenderer* renderer)
+        : m_technique(std::make_unique<Technique>(renderer->getTechniqueCache()->getProgram("skybox")))
     {
-        std::vector<GLfloat> m_vertices;
-        std::vector<GLushort> m_indices;
+        std::vector<GLfloat> vertexData = generateVertices(size);
+        std::vector<GLushort> indexData = generateIndices();
 
-        GLfloat m_size = 5.f;
+        auto bufferMgr = renderer->getDeviceBufferManager();
+        auto vbo = bufferMgr->allocate(vertexData.size() * sizeof(GLfloat), GL_MAP_WRITE_BIT);
+        bufferMgr->update(vbo, vertexData);
+        auto ibo = bufferMgr->allocate(indexData.size() * sizeof(GLushort), GL_MAP_WRITE_BIT);
+        bufferMgr->update(ibo, indexData);
 
-        // Front face
-        m_vertices.push_back(-m_size);
-        m_vertices.push_back(-m_size);
-        m_vertices.push_back(-m_size);
-        m_vertices.push_back(0.f);
-        m_vertices.push_back(1.f);
-        m_vertices.push_back(1.f);
+        VertexLayout layout;
+        layout.indexBuffer = ibo;
+        layout.vertexBuffers.emplace_back(0, BufferDescriptor{ vbo, 0, 6 * sizeof(GLfloat) });
+        layout.attributes.emplace_back(0, AttributeFormat{ VertexAttrib::Position, 3, 0 });
+        layout.attributes.emplace_back(0, AttributeFormat{ VertexAttrib::TexCoord0, 3, 3 * sizeof(GLfloat) });
+        auto vao = renderer->getVertexAssembly()->createInputState(layout);
 
-        m_vertices.push_back(+m_size);
-        m_vertices.push_back(-m_size);
-        m_vertices.push_back(-m_size);
-        m_vertices.push_back(1.f);
-        m_vertices.push_back(1.f);
-        m_vertices.push_back(1.f);
+        std::vector<std::string> fileNames;
+        fileNames.emplace_back("space_left.png");
+        fileNames.emplace_back("space_front.png");
+        fileNames.emplace_back("space_right.png");
+        fileNames.emplace_back("space_back.png");
+        fileNames.emplace_back("space_top.png");
+        fileNames.emplace_back("space_bottom.png");
+        auto texArray = renderer->getTextureManager()->load3DTexture(fileNames, 1, InternalFormat::RGBA8, BaseFormat::RGBA);
+        auto sampler = renderer->getTextureManager()->getSamplerPreset(TextureManager::LinearClamp);
+        auto skyboxTexInfo = renderer->getTextureManager()->createTextureInfo(texArray, sampler);
 
-        m_vertices.push_back(+m_size);
-        m_vertices.push_back(+m_size);
-        m_vertices.push_back(-m_size);
-        m_vertices.push_back(1.f);
-        m_vertices.push_back(0.f);
-        m_vertices.push_back(1.f);
-
-        m_vertices.push_back(-m_size);
-        m_vertices.push_back(+m_size);
-        m_vertices.push_back(-m_size);
-        m_vertices.push_back(0.f);
-        m_vertices.push_back(0.f);
-        m_vertices.push_back(1.f);
-
-        m_indices.push_back(0);
-        m_indices.push_back(1);
-        m_indices.push_back(2);
-
-        m_indices.push_back(0);
-        m_indices.push_back(2);
-        m_indices.push_back(3);
-
-        // Right face
-        m_vertices.push_back(+m_size);
-        m_vertices.push_back(-m_size);
-        m_vertices.push_back(-m_size);
-        m_vertices.push_back(0.f);
-        m_vertices.push_back(1.f);
-        m_vertices.push_back(2.f);
-
-        m_vertices.push_back(+m_size);
-        m_vertices.push_back(-m_size);
-        m_vertices.push_back(+m_size);
-        m_vertices.push_back(1.f);
-        m_vertices.push_back(1.f);
-        m_vertices.push_back(2.f);
-
-        m_vertices.push_back(+m_size);
-        m_vertices.push_back(+m_size);
-        m_vertices.push_back(+m_size);
-        m_vertices.push_back(1.f);
-        m_vertices.push_back(0.f);
-        m_vertices.push_back(2.f);
-
-        m_vertices.push_back(+m_size);
-        m_vertices.push_back(+m_size);
-        m_vertices.push_back(-m_size);
-        m_vertices.push_back(0.f);
-        m_vertices.push_back(0.f);
-        m_vertices.push_back(2.f);
-
-        m_indices.push_back(4);
-        m_indices.push_back(5);
-        m_indices.push_back(6);
-
-        m_indices.push_back(4);
-        m_indices.push_back(6);
-        m_indices.push_back(7);
-
-        // Left face
-        m_vertices.push_back(-m_size);
-        m_vertices.push_back(-m_size);
-        m_vertices.push_back(+m_size);
-        m_vertices.push_back(0.f);
-        m_vertices.push_back(1.f);
-        m_vertices.push_back(0.f);
-
-        m_vertices.push_back(-m_size);
-        m_vertices.push_back(-m_size);
-        m_vertices.push_back(-m_size);
-        m_vertices.push_back(1.f);
-        m_vertices.push_back(1.f);
-        m_vertices.push_back(0.f);
-
-        m_vertices.push_back(-m_size);
-        m_vertices.push_back(+m_size);
-        m_vertices.push_back(-m_size);
-        m_vertices.push_back(1.f);
-        m_vertices.push_back(0.f);
-        m_vertices.push_back(0.f);
-
-        m_vertices.push_back(-m_size);
-        m_vertices.push_back(+m_size);
-        m_vertices.push_back(+m_size);
-        m_vertices.push_back(0.f);
-        m_vertices.push_back(0.f);
-        m_vertices.push_back(0.f);
-
-        m_indices.push_back(8);
-        m_indices.push_back(9);
-        m_indices.push_back(10);
-
-        m_indices.push_back(8);
-        m_indices.push_back(10);
-        m_indices.push_back(11);
-
-        // Rear face
-        m_vertices.push_back(+m_size);
-        m_vertices.push_back(-m_size);
-        m_vertices.push_back(+m_size);
-        m_vertices.push_back(0.f);
-        m_vertices.push_back(1.f);
-        m_vertices.push_back(3.f);
-
-        m_vertices.push_back(-m_size);
-        m_vertices.push_back(-m_size);
-        m_vertices.push_back(+m_size);
-        m_vertices.push_back(1.f);
-        m_vertices.push_back(1.f);
-        m_vertices.push_back(3.f);
-
-        m_vertices.push_back(-m_size);
-        m_vertices.push_back(+m_size);
-        m_vertices.push_back(+m_size);
-        m_vertices.push_back(1.f);
-        m_vertices.push_back(0.f);
-        m_vertices.push_back(3.f);
-
-        m_vertices.push_back(+m_size);
-        m_vertices.push_back(+m_size);
-        m_vertices.push_back(+m_size);
-        m_vertices.push_back(0.f);
-        m_vertices.push_back(0.f);
-        m_vertices.push_back(3.f);
-
-        m_indices.push_back(12);
-        m_indices.push_back(13);
-        m_indices.push_back(14);
-
-        m_indices.push_back(12);
-        m_indices.push_back(14);
-        m_indices.push_back(15);
-
-        // Bottom face
-        m_vertices.push_back(-m_size);
-        m_vertices.push_back(-m_size);
-        m_vertices.push_back(+m_size);
-        m_vertices.push_back(0.f);
-        m_vertices.push_back(1.f);
-        m_vertices.push_back(5.f);
-
-        m_vertices.push_back(+m_size);
-        m_vertices.push_back(-m_size);
-        m_vertices.push_back(+m_size);
-        m_vertices.push_back(1.f);
-        m_vertices.push_back(1.f);
-        m_vertices.push_back(5.f);
-
-        m_vertices.push_back(+m_size);
-        m_vertices.push_back(-m_size);
-        m_vertices.push_back(-m_size);
-        m_vertices.push_back(1.f);
-        m_vertices.push_back(0.f);
-        m_vertices.push_back(5.f);
-
-        m_vertices.push_back(-m_size);
-        m_vertices.push_back(-m_size);
-        m_vertices.push_back(-m_size);
-        m_vertices.push_back(0.f);
-        m_vertices.push_back(0.f);
-        m_vertices.push_back(5.f);
-
-        m_indices.push_back(16);
-        m_indices.push_back(17);
-        m_indices.push_back(18);
-
-        m_indices.push_back(16);
-        m_indices.push_back(18);
-        m_indices.push_back(19);
-
-        // Top face
-        m_vertices.push_back(-m_size);
-        m_vertices.push_back(+m_size);
-        m_vertices.push_back(-m_size);
-        m_vertices.push_back(0.f);
-        m_vertices.push_back(1.f);
-        m_vertices.push_back(4.f);
-
-        m_vertices.push_back(+m_size);
-        m_vertices.push_back(+m_size);
-        m_vertices.push_back(-m_size);
-        m_vertices.push_back(1.f);
-        m_vertices.push_back(1.f);
-        m_vertices.push_back(4.f);
-
-        m_vertices.push_back(+m_size);
-        m_vertices.push_back(+m_size);
-        m_vertices.push_back(+m_size);
-        m_vertices.push_back(1.f);
-        m_vertices.push_back(0.f);
-        m_vertices.push_back(4.f);
-
-        m_vertices.push_back(-m_size);
-        m_vertices.push_back(+m_size);
-        m_vertices.push_back(+m_size);
-        m_vertices.push_back(0.f);
-        m_vertices.push_back(0.f);
-        m_vertices.push_back(4.f);
-
-        m_indices.push_back(20);
-        m_indices.push_back(21);
-        m_indices.push_back(22);
-
-        m_indices.push_back(20);
-        m_indices.push_back(22);
-        m_indices.push_back(23);
-
-        glCreateVertexArrays(1, &m_vao);
-        glCreateBuffers(1, &m_vbo);
-        glCreateBuffers(1, &m_ibo);
-
-        glNamedBufferData(m_vbo, m_vertices.size() * sizeof(GLfloat), m_vertices.data(), GL_STATIC_DRAW);
-        glNamedBufferData(m_ibo, m_indices.size() * sizeof(GLushort), m_indices.data(), GL_STATIC_DRAW);
-
-        glVertexArrayVertexBuffer(m_vao, VertexBufferBinding::Slot0, m_vbo, 0, 6 * sizeof(GLfloat));
-        glVertexArrayElementBuffer(m_vao, m_ibo);
-
-        glVertexArrayAttribBinding(m_vao, VertexAttrib::Position, VertexBufferBinding::Slot0);
-        glVertexArrayAttribFormat(m_vao, VertexAttrib::Position, 3, GL_FLOAT, GL_FALSE, 0);
-        glEnableVertexArrayAttrib(m_vao, VertexAttrib::Position);
-
-        glVertexArrayAttribBinding(m_vao, VertexAttrib::TexCoord0, VertexBufferBinding::Slot0);
-        glVertexArrayAttribFormat(m_vao, VertexAttrib::TexCoord0, 3, GL_FLOAT, GL_FALSE, 3 * sizeof(GLfloat));
-        glEnableVertexArrayAttrib(m_vao, VertexAttrib::TexCoord0);
-
-
-        GLuint m_texUnit = 15;
-
-        int w, h, comp;
-        unsigned char* images[6];
-
-        images[0] = stbi_load("res/space_left.png", &w, &h, &comp, STBI_rgb_alpha);
-        images[1] = stbi_load("res/space_front.png", &w, &h, &comp, STBI_rgb_alpha);
-        images[2] = stbi_load("res/space_right.png", &w, &h, &comp, STBI_rgb_alpha);
-        images[3] = stbi_load("res/space_back.png", &w, &h, &comp, STBI_rgb_alpha);
-        images[4] = stbi_load("res/space_top.png", &w, &h, &comp, STBI_rgb_alpha);
-        images[5] = stbi_load("res/space_bottom.png", &w, &h, &comp, STBI_rgb_alpha);
-
-
-        glCreateTextures(GL_TEXTURE_2D_ARRAY, 1, &m_texId);
-        glTextureStorage3D(m_texId, 1, GL_RGBA8, w, h, 6);
-    
-        for (int i = 0; i < 6; i++)
-            glTextureSubImage3D(m_texId, 0, 0, 0, i, w, h, 1, GL_RGBA, GL_UNSIGNED_BYTE, images[i]);
-        glGenerateTextureMipmap(m_texId);
-
-        glCreateSamplers(1, &m_sampler);
-        glSamplerParameteri(m_sampler, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
-        glSamplerParameteri(m_sampler, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
-        glSamplerParameteri(m_sampler, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
-        glSamplerParameteri(m_sampler, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
-
-        m_program->use();
-        //m_texUnif = glGetUniformLocation(m_program->getRaw(), "skybox");
-        //m_program->setUniformSampler(m_texUnif, m_texUnit);
-
-        glBindTextureUnit(m_texUnit, m_texId);
-        glBindSampler(m_texUnit, m_sampler);
-
-        for (int i = 0; i < 6; i++)
-            stbi_image_free(images[i]);
-    
+        m_technique->setUniformAttribute("skybox", skyboxTexInfo.unit);
 
         m_modelMatrix = glm::mat4(1.f);
+
+        m_drawItem.program = renderer->getTechniqueCache()->getProgram("skybox");
+        m_drawItem.numVerts = vertexData.size() / 6;
+        m_drawItem.numIndices = indexData.size();
+        m_drawItem.baseVertex = 0;
+        m_drawItem.primitiveType = GL_TRIANGLES;
+        m_drawItem.vertexArray = vao;
+        m_drawItem.preRender = [this](const glm::mat4& P, const glm::mat4& V)
+        {
+            m_technique->setUniformAttribute("MVP", P * (V * m_modelMatrix));
+
+            glDisable(GL_DEPTH_TEST);
+        };
+        m_drawItem.postRender = []()
+        {
+            glEnable(GL_DEPTH_TEST);
+        };
+
+        renderer->submitDrawItem(m_drawItem);
     }
 
     Skybox::~Skybox()
@@ -305,13 +71,244 @@ namespace fsi
         m_modelMatrix = glm::translate(cameraPos);
     }
 
-    void Skybox::render(const glm::mat4& projection, const glm::mat4& view)
+    std::vector<GLfloat> Skybox::generateVertices(float size)
     {
-        glDisable(GL_DEPTH_TEST);
-        m_program->use();
-        m_program->setUniformAttribute("MVP", projection * view * m_modelMatrix);
-        glBindVertexArray(m_vao);
-        glDrawElements(GL_TRIANGLES, 36, GL_UNSIGNED_SHORT, nullptr);
-        glEnable(GL_DEPTH_TEST);
+        std::vector<GLfloat> vertexData;
+        // Front face
+        vertexData.push_back(-size);
+        vertexData.push_back(-size);
+        vertexData.push_back(-size);
+        vertexData.push_back(0.f);
+        vertexData.push_back(1.f);
+        vertexData.push_back(1.f);
+
+        vertexData.push_back(+size);
+        vertexData.push_back(-size);
+        vertexData.push_back(-size);
+        vertexData.push_back(1.f);
+        vertexData.push_back(1.f);
+        vertexData.push_back(1.f);
+
+        vertexData.push_back(+size);
+        vertexData.push_back(+size);
+        vertexData.push_back(-size);
+        vertexData.push_back(1.f);
+        vertexData.push_back(0.f);
+        vertexData.push_back(1.f);
+
+        vertexData.push_back(-size);
+        vertexData.push_back(+size);
+        vertexData.push_back(-size);
+        vertexData.push_back(0.f);
+        vertexData.push_back(0.f);
+        vertexData.push_back(1.f);
+
+        // Right face
+        vertexData.push_back(+size);
+        vertexData.push_back(-size);
+        vertexData.push_back(-size);
+        vertexData.push_back(0.f);
+        vertexData.push_back(1.f);
+        vertexData.push_back(2.f);
+
+        vertexData.push_back(+size);
+        vertexData.push_back(-size);
+        vertexData.push_back(+size);
+        vertexData.push_back(1.f);
+        vertexData.push_back(1.f);
+        vertexData.push_back(2.f);
+
+        vertexData.push_back(+size);
+        vertexData.push_back(+size);
+        vertexData.push_back(+size);
+        vertexData.push_back(1.f);
+        vertexData.push_back(0.f);
+        vertexData.push_back(2.f);
+
+        vertexData.push_back(+size);
+        vertexData.push_back(+size);
+        vertexData.push_back(-size);
+        vertexData.push_back(0.f);
+        vertexData.push_back(0.f);
+        vertexData.push_back(2.f);
+
+        // Left face
+        vertexData.push_back(-size);
+        vertexData.push_back(-size);
+        vertexData.push_back(+size);
+        vertexData.push_back(0.f);
+        vertexData.push_back(1.f);
+        vertexData.push_back(0.f);
+
+        vertexData.push_back(-size);
+        vertexData.push_back(-size);
+        vertexData.push_back(-size);
+        vertexData.push_back(1.f);
+        vertexData.push_back(1.f);
+        vertexData.push_back(0.f);
+
+        vertexData.push_back(-size);
+        vertexData.push_back(+size);
+        vertexData.push_back(-size);
+        vertexData.push_back(1.f);
+        vertexData.push_back(0.f);
+        vertexData.push_back(0.f);
+
+        vertexData.push_back(-size);
+        vertexData.push_back(+size);
+        vertexData.push_back(+size);
+        vertexData.push_back(0.f);
+        vertexData.push_back(0.f);
+        vertexData.push_back(0.f);
+
+        // Rear face
+        vertexData.push_back(+size);
+        vertexData.push_back(-size);
+        vertexData.push_back(+size);
+        vertexData.push_back(0.f);
+        vertexData.push_back(1.f);
+        vertexData.push_back(3.f);
+
+        vertexData.push_back(-size);
+        vertexData.push_back(-size);
+        vertexData.push_back(+size);
+        vertexData.push_back(1.f);
+        vertexData.push_back(1.f);
+        vertexData.push_back(3.f);
+
+        vertexData.push_back(-size);
+        vertexData.push_back(+size);
+        vertexData.push_back(+size);
+        vertexData.push_back(1.f);
+        vertexData.push_back(0.f);
+        vertexData.push_back(3.f);
+
+        vertexData.push_back(+size);
+        vertexData.push_back(+size);
+        vertexData.push_back(+size);
+        vertexData.push_back(0.f);
+        vertexData.push_back(0.f);
+        vertexData.push_back(3.f);
+
+        // Bottom face
+        vertexData.push_back(-size);
+        vertexData.push_back(-size);
+        vertexData.push_back(+size);
+        vertexData.push_back(0.f);
+        vertexData.push_back(1.f);
+        vertexData.push_back(5.f);
+
+        vertexData.push_back(+size);
+        vertexData.push_back(-size);
+        vertexData.push_back(+size);
+        vertexData.push_back(1.f);
+        vertexData.push_back(1.f);
+        vertexData.push_back(5.f);
+
+        vertexData.push_back(+size);
+        vertexData.push_back(-size);
+        vertexData.push_back(-size);
+        vertexData.push_back(1.f);
+        vertexData.push_back(0.f);
+        vertexData.push_back(5.f);
+
+        vertexData.push_back(-size);
+        vertexData.push_back(-size);
+        vertexData.push_back(-size);
+        vertexData.push_back(0.f);
+        vertexData.push_back(0.f);
+        vertexData.push_back(5.f);
+
+        // Top face
+        vertexData.push_back(-size);
+        vertexData.push_back(+size);
+        vertexData.push_back(-size);
+        vertexData.push_back(0.f);
+        vertexData.push_back(1.f);
+        vertexData.push_back(4.f);
+
+        vertexData.push_back(+size);
+        vertexData.push_back(+size);
+        vertexData.push_back(-size);
+        vertexData.push_back(1.f);
+        vertexData.push_back(1.f);
+        vertexData.push_back(4.f);
+
+        vertexData.push_back(+size);
+        vertexData.push_back(+size);
+        vertexData.push_back(+size);
+        vertexData.push_back(1.f);
+        vertexData.push_back(0.f);
+        vertexData.push_back(4.f);
+
+        vertexData.push_back(-size);
+        vertexData.push_back(+size);
+        vertexData.push_back(+size);
+        vertexData.push_back(0.f);
+        vertexData.push_back(0.f);
+        vertexData.push_back(4.f);
+
+        return vertexData;
+    }
+
+    std::vector<GLushort> Skybox::generateIndices()
+    {
+        std::vector<GLushort> indices;
+        
+        // Front face
+        indices.push_back(0);
+        indices.push_back(1);
+        indices.push_back(2);
+
+        indices.push_back(0);
+        indices.push_back(2);
+        indices.push_back(3);
+
+        // Right face
+        indices.push_back(4);
+        indices.push_back(5);
+        indices.push_back(6);
+
+        indices.push_back(4);
+        indices.push_back(6);
+        indices.push_back(7);
+
+        // Left face
+        indices.push_back(8);
+        indices.push_back(9);
+        indices.push_back(10);
+
+        indices.push_back(8);
+        indices.push_back(10);
+        indices.push_back(11);
+
+        // Rear face
+        indices.push_back(12);
+        indices.push_back(13);
+        indices.push_back(14);
+
+        indices.push_back(12);
+        indices.push_back(14);
+        indices.push_back(15);
+
+        // Bottom face
+        indices.push_back(16);
+        indices.push_back(17);
+        indices.push_back(18);
+        
+        indices.push_back(16);
+        indices.push_back(18);
+        indices.push_back(19);
+
+        // Top face
+        indices.push_back(20);
+        indices.push_back(21);
+        indices.push_back(22);
+
+        indices.push_back(20);
+        indices.push_back(22);
+        indices.push_back(23);
+
+        return indices;
     }
 }

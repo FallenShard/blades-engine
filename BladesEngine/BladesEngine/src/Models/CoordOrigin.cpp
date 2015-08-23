@@ -29,7 +29,7 @@ namespace fsi
         m_drawItem.numVerts = vertexData.size() / 7;
         m_drawItem.numIndices = -1;
         m_drawItem.baseVertex = 0;
-        m_drawItem.updateUniforms = [this](const glm::mat4& P, const glm::mat4& V)
+        m_drawItem.preRender = [this](const glm::mat4& P, const glm::mat4& V)
         {
             m_technique->use();
             glm::mat4 lModel(1.f);
@@ -37,6 +37,7 @@ namespace fsi
 
             m_technique->setUniformAttribute("MVP", lineMat);
         };
+        m_drawItem.postRender = nullptr;
 
         renderer->submitDrawItem(m_drawItem);
     }

@@ -61,6 +61,11 @@ namespace fsi
         glProgramUniform1i(m_id, m_uniformAttributes[name], value);
     }
 
+    void Technique::setUniformAttribute(const std::string& name, GLuint value)
+    {
+        glProgramUniform1i(m_id, m_uniformAttributes[name], value);
+    }
+
     void Technique::setUniformAttribute(const std::string& name, GLfloat x, GLfloat y)
     {
         glProgramUniform2f(m_id, m_uniformAttributes[name], x, y);

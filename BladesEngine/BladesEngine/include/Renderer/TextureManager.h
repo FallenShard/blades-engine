@@ -10,6 +10,7 @@ namespace fsi
 {
     using TextureHandle = GLuint;
     using SamplerHandle = GLuint;
+    using TextureUnit = GLuint;
 
     enum class InternalFormat
     {
@@ -47,7 +48,7 @@ namespace fsi
         {
             TextureHandle id;
             SamplerHandle sampler;
-            GLint unit;
+            TextureUnit unit;
         };
 
         enum SamplerPreset
@@ -69,6 +70,9 @@ namespace fsi
 
         TextureHandle loadTexture(const std::string& fileName, unsigned int levels, InternalFormat internalFormat, BaseFormat format);
         TextureHandle createTexture(unsigned int levels, unsigned int width, unsigned int height, InternalFormat internalFormat);
+        
+        TextureHandle load3DTexture(const std::vector<std::string>& fileNames, unsigned int levels, InternalFormat internalFormat, BaseFormat format);
+
         void deleteTexture(TextureHandle texture);
 
     private:
@@ -79,9 +83,9 @@ namespace fsi
         GLenum findGlWrapMode(WrapMode mode);
 
         std::vector<TexInfo> m_textureUnits;
-        std::set<GLuint> m_freeTextureUnits;
+        std::set<TextureUnit> m_freeTextureUnits;
 
-        std::map<TextureHandle, GLuint> m_textures;
+        std::map<TextureHandle, TextureUnit> m_textures;
         std::vector<SamplerHandle> m_samplers;
 
         std::array<SamplerHandle, Count> m_defaultSamplers;

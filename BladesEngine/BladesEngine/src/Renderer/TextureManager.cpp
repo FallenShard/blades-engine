@@ -13,7 +13,7 @@ namespace fsi
         GLint maxTextureUnits;
         glGetIntegerv(GL_MAX_TEXTURE_IMAGE_UNITS, &maxTextureUnits);
         m_textureUnits.resize(maxTextureUnits);
-        for (int unit = 0; unit < maxTextureUnits; unit++)
+        for (TextureUnit unit = 0; unit < static_cast<unsigned int>(maxTextureUnits); unit++)
             m_freeTextureUnits.insert(unit);
 
         glPixelStorei(GL_PACK_ALIGNMENT, 1);
@@ -83,6 +83,37 @@ namespace fsi
         GLuint texId;
         glCreateTextures(GL_TEXTURE_2D, 1, &texId);
         glTextureStorage2D(texId, levels, findInternalGlFormat(internalFormat), width, height);
+        glGenerateTextureMipmap(texId);
+
+        m_textures.emplace(texId, 0);
+
+        return texId;
+    }
+
+    TextureHandle TextureManager::load3DTexture(const std::vector<std::string>& fileNames, unsigned int levels, InternalFormat internalFormat, BaseFormat format)
+    {
+        GLenum internalGlFormat = findInternalGlFormat(internalFormat);
+        GLenum baseGlFormat = findBaseGlFormat(format);
+        int stbFormat = findStbFormat(format);
+        int width, height, components;
+        int depth = fileNames.size();
+
+        std::vector<unsigned char*> images(fileNames.size());
+        for (size_t i = 0; i < fileNames.size(); i++)
+        {
+            std::string fullFileName = relativePath + fileNames[i];
+            images[i] = stbi_load(fullFileName.c_str(), &width, &height, &components, stbFormat);
+        }
+
+        GLuint texId;
+        glCreateTextures(GL_TEXTURE_2D_ARRAY, 1, &texId);
+        glTextureStorage3D(texId, levels, internalGlFormat, width, height, depth);
+
+        for (int i = 0; i < depth; i++)
+        {
+            glTextureSubImage3D(texId, 0, 0, 0, i, width, height, 1, baseGlFormat, GL_UNSIGNED_BYTE, images[i]);
+            stbi_image_free(images[i]);
+        }
         glGenerateTextureMipmap(texId);
 
         m_textures.emplace(texId, 0);

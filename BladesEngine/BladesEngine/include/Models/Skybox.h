@@ -2,31 +2,30 @@
 
 #include "OpenGL.h"
 
+#include "Renderer/DrawItem.h"
+
 namespace fsi
 {
     class Technique;
+    class GLRenderer;
 
     class Skybox
     {
     public:
-        Skybox(Technique* prog);
+        Skybox(float size, GLRenderer* renderer);
 
         ~Skybox();
 
         void update(const glm::vec3& cameraPos);
-        void render(const glm::mat4& projection, const glm::mat4& view);
 
     private:
-        Technique* m_program;
+        std::vector<GLfloat> generateVertices(float size);
+        std::vector<GLushort> generateIndices();
 
-        GLuint m_vao;
-        GLuint m_vbo;
-        GLuint m_ibo;
-
-        GLuint m_texId;
-        GLuint m_texUnif;
-        GLuint m_sampler;
+        std::unique_ptr<Technique> m_technique;
 
         glm::mat4 m_modelMatrix;
+
+        DrawItem m_drawItem;
     };
 }

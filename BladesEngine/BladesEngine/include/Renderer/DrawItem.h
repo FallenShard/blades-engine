@@ -16,6 +16,7 @@ namespace fsi
         GLsizei numIndices;
         GLuint baseVertex;
 
-        std::function<void(const glm::mat4& P, const glm::mat4& V)> updateUniforms;
+        std::function<void(const glm::mat4& P, const glm::mat4& V)> preRender;
+        std::function<void()> postRender;
     };
 }

@@ -16,6 +16,7 @@
 
 #include "Models/Terrain.h"
 #include "Models/CoordOrigin.h"
+#include "Models/Skybox.h"
 
 namespace
 {
@@ -23,6 +24,7 @@ namespace
 
     fsi::Terrain* terrain = nullptr;
     fsi::CoordOrigin* origin = nullptr;
+    fsi::Skybox* skybox = nullptr;
 }
 
 void APIENTRY DebugCallback(GLenum source, GLenum type, GLuint id,
@@ -116,8 +118,10 @@ namespace fsi
 
         //m_Scene->prepare();
 
+        skybox = new Skybox(5, this);
         terrain = new Terrain(128, 1.f, 24.f, this);
         origin = new CoordOrigin(10, this);
+        
 
         // GUI manager
         //m_uiRenderer = std::make_shared<UIRenderer>(m_window, m_shaderManager, this, m_Scene);
@@ -135,6 +139,9 @@ namespace fsi
 
         delete terrain;
         terrain = nullptr;
+
+        delete skybox;
+        skybox = nullptr;
     }
 
     void GLRenderer::enableDebugLogging()
@@ -152,13 +159,15 @@ namespace fsi
         for (auto& item : m_drawItems)
         {
             glUseProgram(item.program);
-            item.updateUniforms(P, V);
+            item.preRender(P, V);
 
             glBindVertexArray(item.vertexArray);
             if (item.numIndices != -1)
                 glDrawElementsBaseVertex(item.primitiveType, item.numIndices, GL_UNSIGNED_SHORT, nullptr, item.baseVertex);
             else
                 glDrawArrays(item.primitiveType, 0, item.numVerts);
+
+            if (item.postRender) item.postRender();
         }
     }
 
@@ -223,6 +232,8 @@ namespace fsi
 
         // Update camera
         m_cameraController->update(timeDelta);
+
+        skybox->update(m_cameraController->getCamera()->getPosition());
     }
 
     void GLRenderer::setFrameTime(long long frameTime)

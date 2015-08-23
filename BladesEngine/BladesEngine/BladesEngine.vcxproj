@@ -161,20 +161,20 @@
     <LinkIncremental>true</LinkIncremental>
     <SourcePath>$(ProjectDir)\src;$(ProjectDir)\res;$(SourcePath)</SourcePath>
     <ExecutablePath>$(ProjectDir)res;$(ExecutablePath)</ExecutablePath>
-    <OutDir>$(SolutionDir)\Output\$(Configuration)\</OutDir>
+    <OutDir>$(SolutionDir)Output\$(Configuration)\</OutDir>
     <IncludePath>$(IncludePath)</IncludePath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug [Direct3D]|Win32'">
     <LinkIncremental>true</LinkIncremental>
     <SourcePath>$(ProjectDir)\src;$(ProjectDir)\res;$(SourcePath)</SourcePath>
     <ExecutablePath>$(ProjectDir)res;$(ExecutablePath)</ExecutablePath>
-    <OutDir>$(SolutionDir)\Output\$(Configuration)\</OutDir>
+    <OutDir>$(SolutionDir)Output\$(Configuration)\</OutDir>
     <IncludePath>$(IncludePath)</IncludePath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
     <LinkIncremental>false</LinkIncremental>
     <ExecutablePath>$(ProjectDir)res;$(ExecutablePath)</ExecutablePath>
-    <OutDir>$(SolutionDir)\Output\$(Configuration)\</OutDir>
+    <OutDir>$(SolutionDir)Output\$(Configuration)\</OutDir>
     <SourcePath>$(ProjectDir)\src;$(ProjectDir)\res;$(SourcePath)</SourcePath>
     <IncludePath>$(IncludePath)</IncludePath>
   </PropertyGroup>

@@ -64,11 +64,11 @@ namespace fsi
         m_technique->setUniformAttribute("worldScale", worldScale);
         m_technique->setUniformAttribute("triSize"   , m_triangleSize);
         m_technique->setUniformAttribute("screenSize", glm::vec2(renderer->getScreenSize()));
-        m_technique->setUniformAttribute("wireframe", 1);
+        m_technique->setUniformAttribute("wireframe", 0);
 
         TerrainParams terrainParams;
         terrainParams.heightFactor = tiles / 16.f;
-        terrainParams.detailFactor = tiles / 16.f * 0.0125f;
+        terrainParams.detailFactor = terrainParams.heightFactor * 0.01f;
         terrainParams.patches = static_cast<float>(tiles);
         terrainParams.terrainSize = static_cast<float>(tiles * tileSize * worldScale);
 
@@ -83,7 +83,7 @@ namespace fsi
         m_drawItem.numVerts = vertexCount;
         m_drawItem.numIndices = indexCount;
         m_drawItem.baseVertex = 0;
-        m_drawItem.updateUniforms = [this, worldScale](const glm::mat4& P, const glm::mat4& V)
+        m_drawItem.preRender = [this, worldScale](const glm::mat4& P, const glm::mat4& V)
         {
             m_technique->use();
             m_technique->setUniformAttribute("P", P);
@@ -101,6 +101,7 @@ namespace fsi
             glm::vec4 lightDir = glm::normalize(V * glm::normalize(glm::vec4(1.f, 1.f, 0.f, 0.f)));
             m_technique->setUniformAttribute("mvLightDir", lightDir);
         };
+        m_drawItem.postRender = nullptr;
 
         renderer->submitDrawItem(m_drawItem);
     }
