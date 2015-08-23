@@ -34,7 +34,7 @@ namespace fsi
         auto vao = renderer->getVertexAssembly()->createInputState(layout);
 
         renderer->setTessellationPatchVertices(4);
-
+        
         auto texManager = renderer->getTextureManager();
         TextureHandle heightMap      = texManager->loadTexture("heightmap1024.png", 1, InternalFormat::R8, BaseFormat::Red);
         TextureHandle patchHeightMap = texManager->loadTexture("perlinHmap.png", 1, InternalFormat::R8, BaseFormat::Red);
