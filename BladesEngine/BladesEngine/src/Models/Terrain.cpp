@@ -9,7 +9,6 @@
 
 namespace fsi
 {
-
     Terrain::Terrain(int tiles, float tileSize, float worldScale, GLRenderer* renderer)
         : m_technique(nullptr)
         , m_triangleSize(8.f)
