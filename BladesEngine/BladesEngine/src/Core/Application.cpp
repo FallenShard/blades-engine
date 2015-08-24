@@ -12,15 +12,15 @@ namespace
     __int64 microTimePerFrame = 1000000 / frameLimit;
     float timePerFrame = 1.f / frameLimit;
 
-    const int WindowWidth = 1366;
-    const int WindowHeight = 768;
+    const int WindowWidth = 1920;
+    const int WindowHeight = 1080;
     const int PixelDepth = 32;
 }
 
 namespace fsi
 {
     Application::Application()
-        : m_window(std::make_shared<Window>(VideoMode(WindowWidth, WindowHeight, PixelDepth), "OpenGL Tessellation", Window::Default))
+        : m_window(std::make_shared<Window>(VideoMode(WindowWidth, WindowHeight, PixelDepth), "OpenGL Tessellation"))
         , m_renderer(std::make_unique<GLRenderer>(m_window))
         //, m_d3dRenderer(std::make_unique<D3DRenderer>(m_window))
     {

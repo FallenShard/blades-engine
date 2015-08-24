@@ -23,6 +23,11 @@ namespace fsi
     {
     }
 
+    GLuint Technique::getRawHandle() const
+    {
+        return m_id;
+    }
+
     void Technique::use()
     {
         if (prevBoundProgram != m_id)

@@ -1,207 +1,161 @@
 #include <vector>
-#include <fstream>
-#include <iostream>
 
-#include "Renderer/VertexAssembly.h"
+#include "Renderer/GLRenderer.h"
 #include "Renderer/Technique.h"
 
 #include "Models/Sphere.h"
 
-namespace
-{
-    GLuint texId;
-    GLint hMap;
-
-    GLuint timeUnif;
-    GLfloat timeVal = 0.f;
-
-    GLuint tbo;
-
-    int m_slices = 32;
-    int m_rings = 16;
-    float m_radius = 1.f;
-
-
-    int vertCount = 0;
-    int indCount = 0;
-}
-
 namespace fsi
 {
-    Sphere::Sphere(Technique* prog)
-        : m_program(prog)
+    Sphere::Sphere(float radius, int rings, int slices, GLRenderer* renderer)
+        : m_technique(std::make_unique<Technique>(renderer->getTechniqueCache()->getProgram("phong")))
     {
-        init();
+        std::vector<GLfloat> vertexData;
+        std::vector<GLushort> indices;
+        generateGeometry(vertexData, indices, radius, rings, slices);
+
+        auto bufferMgr = renderer->getDeviceBufferManager();
+        auto vbo = bufferMgr->allocate(vertexData.size() * sizeof(GLfloat), GL_MAP_WRITE_BIT);
+        bufferMgr->update(vbo, vertexData);
+        auto ibo = bufferMgr->allocate(indices.size() * sizeof(GLushort), GL_MAP_WRITE_BIT);
+        bufferMgr->update(ibo, indices);
+
+        VertexLayout layout;
+        layout.indexBuffer = ibo;
+        layout.vertexBuffers.emplace_back(0, BufferDescriptor{ vbo, 0, 3 * sizeof(GLfloat) });
+        layout.attributes.emplace_back(0, AttributeFormat{ VertexAttrib::Position, 3, 0 });
+        layout.attributes.emplace_back(0, AttributeFormat{ VertexAttrib::Normal, 3, 0 });
+        auto vao = renderer->getVertexAssembly()->createInputState(layout);
+
+        Material material;
+        material.ambient = glm::vec4(1.f, 0.f, 0.f, 1.f);
+        material.diffuse = glm::vec4(1.f, 0.f, 0.f, 1.f);
+        material.specular = glm::vec4(1.f, 1.f, 1.f, 1.f);
+        material.shininess = 64.f;
+        auto ubo = bufferMgr->allocate(sizeof(material), GL_MAP_WRITE_BIT);
+        bufferMgr->update(ubo, &material, sizeof(material));
+
+        auto uboDesc = m_technique->createUniformBufferDescriptor("Material", 1, ubo);
+
+        m_modelMatrix = glm::mat4(1.f);
+
+        m_drawItem.baseVertex = 0;
+        m_drawItem.numIndices = indices.size();
+        m_drawItem.numVerts = vertexData.size() / 3;
+        m_drawItem.primitiveType = GL_TRIANGLES;
+        m_drawItem.program = renderer->getTechniqueCache()->getProgram("phong");
+        m_drawItem.vertexArray = vao;
+        m_drawItem.preRender = [this](const glm::mat4& P, const glm::mat4& V)
+        {
+            glm::mat4 MV = V * m_modelMatrix;
+            m_technique->setUniformAttribute("MV", MV);
+            
+            glm::mat4 MVP = P * MV;
+            m_technique->setUniformAttribute("MVP", MVP);
+
+            glm::mat3 normalMatrix = glm::mat3(glm::inverseTranspose(MV));
+            m_technique->setUniformAttribute("normalMatrix", normalMatrix);
+
+            glm::vec4 mvLightPos = V * glm::vec4(2.f, 2.f, 2.f, 1.f);
+            m_technique->setUniformAttribute("mvLightPos", mvLightPos);
+        };
+        m_drawItem.postRender = nullptr;
+
+        renderer->submitDrawItem(m_drawItem);
     }
 
     Sphere::~Sphere()
     {
     }
 
-
-    void Sphere::init()
+    void Sphere::update(const float deltaTime)
     {
-        float sliceIncr = 360.f / m_slices;
-        float ringIncr = 180.f / (m_rings + 1);
+    }
 
-        std::vector<GLfloat> m_vertices;
-        std::vector<GLushort> m_indices;
+    void Sphere::generateGeometry(std::vector<GLfloat>& vertices, std::vector<GLushort>& indices, float radius, int rings, int slices)
+    {
+        float sliceIncr = 360.f / slices;
+        float ringIncr = 180.f / (rings + 1);
 
-        // Fill the buffer with vertices and faces
-
-        m_vertices.push_back(0.f);      //vert
-        m_vertices.push_back(m_radius);
-        m_vertices.push_back(0.f);
-        m_vertices.push_back(0.f);       //normal
-        m_vertices.push_back(m_radius);
-        m_vertices.push_back(0.f);
+        vertices.push_back(0.f);
+        vertices.push_back(radius);
+        vertices.push_back(0.f);
 
         // Faces for initial sphere fan cap
-        unsigned short v = 1;
-        for (v = 1; v < m_slices; v++)
+        unsigned short vert = 1;
+        for (vert = 1; vert < slices; vert++)
         {
-            m_indices.push_back(v + 1);
-            m_indices.push_back(0);
-            m_indices.push_back(v);
+            indices.push_back(vert + 1);
+            indices.push_back(0);
+            indices.push_back(vert);
         }
 
-        m_indices.push_back(1);
-        m_indices.push_back(0);
-        m_indices.push_back(v);
+        indices.push_back(1);
+        indices.push_back(0);
+        indices.push_back(vert);
 
-        v = m_slices + 1;
+        vert = slices + 1;
 
         // Intermediate vertices and faces
-        for (int ring = 1; ring <= m_rings; ring++)
+        for (int ring = 1; ring <= rings; ring++)
         {
             float yCos = cos(glm::radians(ring * ringIncr));
             float ySin = sin(glm::radians(ring * ringIncr));
 
-            for (int slice = m_slices; slice > 0; slice--)
+            for (int slice = slices; slice > 0; slice--)
             {
                 float rads = glm::radians(slice * sliceIncr);
-                m_vertices.push_back(m_radius * ySin * cos(rads));
-                m_vertices.push_back(m_radius * yCos);
-                m_vertices.push_back(m_radius * ySin * sin(rads));
-
-                m_vertices.push_back(m_radius * ySin * cos(rads));
-                m_vertices.push_back(m_radius * yCos);
-                m_vertices.push_back(m_radius * ySin * sin(rads));
+                float xCos = cos(rads);
+                float zSin = sin(rads);
+                vertices.push_back(radius * ySin * xCos);
+                vertices.push_back(radius * yCos);
+                vertices.push_back(radius * ySin * zSin);
             }
 
-            if (ring == m_rings)
+            if (ring == rings)
                 break;
-            short int prevStart = v - m_slices;
-            short int prevEnd = v - 1;
-            short int curr;
-            for (curr = 0; curr < m_slices - 1; curr++)
-            {
-                m_indices.push_back(prevStart + curr);
-                m_indices.push_back(v);
-                m_indices.push_back(prevStart + curr + 1);
 
-                m_indices.push_back(v + 1);
-                m_indices.push_back(prevStart + curr + 1);
-                m_indices.push_back(v);
-                v++;
+            short int prevStart = vert - slices;
+            short int prevEnd = vert - 1;
+            short int curr;
+            for (curr = 0; curr < slices - 1; curr++)
+            {
+                indices.push_back(prevStart + curr);
+                indices.push_back(vert);
+                indices.push_back(prevStart + curr + 1);
+
+                indices.push_back(vert + 1);
+                indices.push_back(prevStart + curr + 1);
+                indices.push_back(vert);
+                vert++;
             }
 
-            m_indices.push_back(prevStart);
-            m_indices.push_back(prevEnd);
-            m_indices.push_back(v);
+            indices.push_back(prevStart);
+            indices.push_back(prevEnd);
+            indices.push_back(vert);
 
-            m_indices.push_back(prevEnd + 1);
-            m_indices.push_back(prevStart);
-            m_indices.push_back(v);
+            indices.push_back(prevEnd + 1);
+            indices.push_back(prevStart);
+            indices.push_back(vert);
 
-            v++;
+            vert++;
         }
 
-        m_vertices.push_back(0.f);
-        m_vertices.push_back(-m_radius);
-        m_vertices.push_back(0.f);
-        m_vertices.push_back(0.f);
-        m_vertices.push_back(-m_radius);
-        m_vertices.push_back(0.f);
+        vertices.push_back(0.f);
+        vertices.push_back(-radius);
+        vertices.push_back(0.f);
 
-        int vertexcount = m_vertices.size() / 6;
+        int vertexcount = vertices.size() / 3;
 
         // faces for lower sphere fan cap
-        for (v = vertexcount - m_slices; v < vertexcount - 1; v++)
+        for (vert = vertexcount - slices; vert < vertexcount - 1; vert++)
         {
-            m_indices.push_back(v - 1);
-            m_indices.push_back(vertexcount - 1);
-            m_indices.push_back(v);
+            indices.push_back(vert - 1);
+            indices.push_back(vertexcount - 1);
+            indices.push_back(vert);
         }
-        m_indices.push_back(vertexcount - 1 - m_slices);
-        m_indices.push_back(vertexcount - 2);
-        m_indices.push_back(vertexcount - 1);
-
-        glCreateVertexArrays(1, &m_vao);
-        glCreateBuffers(1, &m_vbo);
-        glCreateBuffers(1, &m_ibo);
-
-        glNamedBufferData(m_vbo, m_vertices.size() * sizeof(GLfloat), m_vertices.data(), GL_STATIC_DRAW);
-        glNamedBufferData(m_ibo, m_indices.size() * sizeof(GLushort), m_indices.data(), GL_STATIC_DRAW);
-
-        glVertexArrayVertexBuffer(m_vao, VertexBufferBinding::Slot0, m_vbo, 0, 6 * sizeof(GLfloat));
-        glVertexArrayElementBuffer(m_vao, m_ibo);
-
-        glVertexArrayAttribBinding(m_vao, VertexAttrib::Position, VertexBufferBinding::Slot0);
-        glVertexArrayAttribFormat(m_vao, VertexAttrib::Position, 3, GL_FLOAT, GL_FALSE, 0);
-        glEnableVertexArrayAttrib(m_vao, VertexAttrib::Position);
-
-        glVertexArrayAttribBinding(m_vao, VertexAttrib::Normal, VertexBufferBinding::Slot0);
-        glVertexArrayAttribFormat(m_vao, VertexAttrib::Normal, 3, GL_FLOAT, GL_FALSE, 0);
-        glEnableVertexArrayAttrib(m_vao, VertexAttrib::Normal);
-
-        indCount = m_indices.size();
-
-        std::vector<GLfloat> uboData;
-        uboData.push_back(1.f); uboData.push_back(0.f); uboData.push_back(0.f); uboData.push_back(1.f);
-        uboData.push_back(1.f); uboData.push_back(0.f); uboData.push_back(0.f); uboData.push_back(1.f);
-        uboData.push_back(1.f); uboData.push_back(1.f); uboData.push_back(1.f); uboData.push_back(1.f);
-        uboData.push_back(64.f);
-
-        GLuint prog = 0;// = m_program->getProgramId();
-
-        static GLuint UBO_BINDING = 0;
-
-        glUseProgram(prog);
-        std::string blockName = "Material";
-        GLuint blockIndex = glGetUniformBlockIndex(prog, blockName.c_str());
-        glUniformBlockBinding(prog, blockIndex, UBO_BINDING);
-
-        glCreateBuffers(1, &m_ubo);
-        glNamedBufferData(m_ubo, uboData.size() * sizeof(GLfloat), uboData.data(), GL_DYNAMIC_DRAW);
-        glBindBufferBase(GL_UNIFORM_BUFFER, UBO_BINDING, m_ubo);
-    }
-
-    void Sphere::update(const float deltaTime)
-    {
-        timeVal += deltaTime;
-    }
-
-    void Sphere::render(const glm::mat4& projection, const glm::mat4& view)
-    {
-        glm::mat4 model = glm::translate(glm::vec3(0.f, 0.f, 0.f));
-
-        //GLuint progId;// = m_program->getProgramId();
-        m_program->use();
-
-        glm::mat4 MVP = projection * view * model;
-        m_program->setUniformAttribute("MVP", MVP);
-
-        glm::mat4 MV = view * model;
-        m_program->setUniformAttribute("MV", MV);
-
-        glm::mat3 normalMatrix = glm::mat3(glm::inverseTranspose(MV));
-        m_program->setUniformAttribute("normalMatrix", normalMatrix);
-
-        glm::vec4 mvLightPos = view * glm::vec4(2.f, 2.f, 2.f, 1.f);
-        m_program->setUniformAttribute("mvLightPos", mvLightPos);
-
-        glBindVertexArray(m_vao);
-        glDrawElements(GL_TRIANGLES, indCount, GL_UNSIGNED_SHORT, 0);
+        indices.push_back(vertexcount - 1 - slices);
+        indices.push_back(vertexcount - 2);
+        indices.push_back(vertexcount - 1);
     }
 }

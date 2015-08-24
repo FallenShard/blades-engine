@@ -31,7 +31,6 @@ namespace fsi
         m_drawItem.baseVertex = 0;
         m_drawItem.preRender = [this](const glm::mat4& P, const glm::mat4& V)
         {
-            m_technique->use();
             glm::mat4 lModel(1.f);
             glm::mat4 lineMat = P * V * lModel;
 

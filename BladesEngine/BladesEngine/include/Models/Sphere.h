@@ -2,35 +2,36 @@
 
 #include "OpenGL.h"
 
+#include "Renderer/DrawItem.h"
+
 namespace fsi
 {
+    class GLRenderer;
     class Technique;
 
     class Sphere
     {
     public:
-        Sphere(Technique* prog);
-
+        Sphere(float radius, int rings, int slices, GLRenderer* renderer);
         ~Sphere();
-
-
-        void init();
 
         void update(const float deltaTime);
 
-
-        void render(const glm::mat4& projection, const glm::mat4& view);
-
     private:
-        Technique* m_program;
+        struct Material
+        {
+            glm::vec4 ambient;
+            glm::vec4 diffuse;
+            glm::vec4 specular;
+            float shininess;
+        };
 
-        GLuint m_vao;
-        GLuint m_vbo;
-        GLuint m_ibo;
+        void generateGeometry(std::vector<GLfloat>& vertices, std::vector<GLushort>& indices, float radius, int rings, int slices);
 
-        GLuint m_ubo;
-        GLuint m_sampler;
+        std::unique_ptr<Technique> m_technique;
 
         glm::mat4 m_modelMatrix;
+
+        DrawItem m_drawItem;
     };
 }

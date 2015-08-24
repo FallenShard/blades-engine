@@ -16,7 +16,7 @@ out VsOut
 void main()
 {
     vsOut.position = (MV * vec4(position, 1.f)).xyz;
-    vsOut.normal   = normalMatrix * normal;
+    vsOut.normal   = normalMatrix * normalize(normal);
 
     gl_Position = MVP * vec4(position, 1.f);
 }

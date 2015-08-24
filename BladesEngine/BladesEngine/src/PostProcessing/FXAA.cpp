@@ -99,15 +99,15 @@ namespace fsi
 
     void FXAA::setAsSurface()
     {
+        static GLfloat fxaaBg[4] = { 0.5f, 0.5f, 0.f, 1.f };
         glBindFramebuffer(GL_FRAMEBUFFER, m_fbo);
-        glClearNamedFramebufferfv(m_fbo, GL_COLOR, 0, defaultColor);
+        glClearNamedFramebufferfv(m_fbo, GL_COLOR, 0, fxaaBg);
         glClearNamedFramebufferfv(m_fbo, GL_DEPTH, 0, &defaultDepth);
     }
 
     void FXAA::render()
     {
-        m_technique->use();
-
+        glUseProgram(m_technique->getRawHandle());
         glBindVertexArray(m_vao);
         glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_SHORT, nullptr);
     }

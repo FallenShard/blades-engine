@@ -17,6 +17,7 @@
 #include "Models/Terrain.h"
 #include "Models/CoordOrigin.h"
 #include "Models/Skybox.h"
+#include "Models/Sphere.h"
 
 namespace
 {
@@ -25,6 +26,7 @@ namespace
     fsi::Terrain* terrain = nullptr;
     fsi::CoordOrigin* origin = nullptr;
     fsi::Skybox* skybox = nullptr;
+    fsi::Sphere* sphere = nullptr;
 }
 
 void APIENTRY DebugCallback(GLenum source, GLenum type, GLuint id,
@@ -121,7 +123,7 @@ namespace fsi
         skybox = new Skybox(5, this);
         terrain = new Terrain(128, 1.f, 24.f, this);
         origin = new CoordOrigin(10, this);
-        
+        sphere = new Sphere(3.f, 16, 16, this);
 
         // GUI manager
         //m_uiRenderer = std::make_shared<UIRenderer>(m_window, m_shaderManager, this, m_Scene);
@@ -142,6 +144,9 @@ namespace fsi
 
         delete skybox;
         skybox = nullptr;
+
+        delete sphere;
+        sphere = nullptr;
     }
 
     void GLRenderer::enableDebugLogging()
@@ -158,7 +163,13 @@ namespace fsi
 
         for (auto& item : m_drawItems)
         {
+            if (item.program == 24)
+            {
+                int x = 2;
+                x++;
+            }
             glUseProgram(item.program);
+            
             item.preRender(P, V);
 
             glBindVertexArray(item.vertexArray);

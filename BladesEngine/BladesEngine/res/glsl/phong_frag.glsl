@@ -29,8 +29,6 @@ void main()
     L = normalize(L);
 
     vec3 N = normalize(fsIn.normal);
-    
-    
 
     float attenuation = 1.f / (k0 + k1 * d + k2 * d * d);
 

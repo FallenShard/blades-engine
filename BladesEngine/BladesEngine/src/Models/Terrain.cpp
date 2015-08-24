@@ -84,7 +84,6 @@ namespace fsi
         m_drawItem.baseVertex = 0;
         m_drawItem.preRender = [this, worldScale](const glm::mat4& P, const glm::mat4& V)
         {
-            m_technique->use();
             m_technique->setUniformAttribute("P", P);
             
             glm::mat4 model = glm::translate(glm::vec3(0.f, -worldScale * 10.f, 0.f)) * glm::scale(glm::vec3(worldScale));

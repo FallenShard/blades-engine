@@ -18,6 +18,7 @@ namespace fsi
         Technique(GLuint id);
         ~Technique();
 
+        GLuint getRawHandle() const;
         void use();
         static void release();
 
