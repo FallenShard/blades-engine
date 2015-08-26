@@ -29,6 +29,18 @@ namespace fsi
         return buffer;
     }
 
+    GLuint DeviceBufferManager::allocateMutable(GLsizei byteSize, GLenum usageHint)
+    {
+        GLuint buffer;
+        glCreateBuffers(1, &buffer);
+
+        glNamedBufferData(buffer, byteSize, nullptr, usageHint);
+
+        m_bufferUsageMap.emplace(buffer, usageHint);
+
+        return buffer;
+    }
+
     void DeviceBufferManager::deleteBuffer(GLuint buffer)
     {
         glDeleteBuffers(1, &buffer);

@@ -22,10 +22,14 @@ namespace fsi
 {
     struct Event;
     class GLContext;
-    class UIRenderer;
     class RenderPass;
 
     struct DrawItem;
+
+    namespace gui
+    {
+        class GUIManager;
+    }
 
     class GLRenderer
     {
@@ -44,6 +48,7 @@ namespace fsi
         void enableFXAA(bool enabled);
 
         void submitDrawItem(const DrawItem& drawItem);
+        void submitGuiDrawItem(const DrawItem& drawItem);
 
         void setTessellationPatchVertices(int numberOfVertices);
 
@@ -80,7 +85,8 @@ namespace fsi
         std::list<std::unique_ptr<RenderPass>> m_renderPasses;
 
         std::list<DrawItem> m_drawItems;
+        std::list<DrawItem> m_guiDrawItems;
 
-        std::shared_ptr<UIRenderer> m_uiRenderer;
+        std::shared_ptr<gui::GUIManager> m_guiManager;
     };
 }

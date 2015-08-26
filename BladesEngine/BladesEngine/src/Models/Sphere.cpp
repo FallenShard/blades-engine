@@ -39,6 +39,8 @@ namespace fsi
 
         m_modelMatrix = glm::mat4(1.f);
 
+        glLineWidth(3.f);
+
         m_drawItem.baseVertex = 0;
         m_drawItem.numIndices = indices.size();
         m_drawItem.numVerts = vertexData.size() / 3;

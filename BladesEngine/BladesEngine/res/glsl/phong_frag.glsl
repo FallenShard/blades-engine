@@ -19,8 +19,8 @@ uniform vec4 mvLightPos;
 out vec4 color;
 
 const float k0 = 1.f;
-const float k1 = 0.01f;
-const float k2 = 0.02f;
+const float k1 = 0.2f;
+const float k2 = 0.1f;
 
 void main()
 {
@@ -39,12 +39,13 @@ void main()
     {
         vec3 V = normalize(-fsIn.position);
         vec3 H = normalize(L + V);
+
         float specAngle = max(dot(N, H), 0.0);
         specular = pow(specAngle, material.shininess);
     }
 
-    vec4 ambCol = material.ambient * 0.15f;
-    vec4 diffCol = material.diffuse * diffuse * attenuation * 0.25f;
+    vec4 ambCol = material.ambient * 0.2f;
+    vec4 diffCol = material.diffuse * diffuse * attenuation * 0.3f;
     vec4 specCol = material.specular * specular * attenuation;
 
     color = ambCol + diffCol + specCol;

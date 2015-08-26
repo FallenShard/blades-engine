@@ -70,7 +70,8 @@ namespace fsi
 
         TextureHandle loadTexture(const std::string& fileName, unsigned int levels, InternalFormat internalFormat, BaseFormat format);
         TextureHandle createTexture(unsigned int levels, unsigned int width, unsigned int height, InternalFormat internalFormat);
-        
+        void updateTexture(TextureHandle texture, unsigned int level, int xOffset, int yOffset, unsigned int width, unsigned int height, BaseFormat format, unsigned char* data);
+
         TextureHandle load3DTexture(const std::vector<std::string>& fileNames, unsigned int levels, InternalFormat internalFormat, BaseFormat format);
 
         void deleteTexture(TextureHandle texture);

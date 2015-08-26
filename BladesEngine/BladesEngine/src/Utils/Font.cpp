@@ -1,5 +1,6 @@
 #include <algorithm>
 
+#include "Renderer/GLRenderer.h"
 #include "Renderer/VertexAssembly.h"
 #include "Utils/Font.h"
 #include "Utils/Logger.h"
@@ -17,36 +18,38 @@ namespace
 
 namespace fsi
 {
-    Font::Font(Technique* program)
+    Font::Font(GLRenderer* renderer, int pixelSize)
         : m_library(nullptr)
-        , m_typeFace(nullptr)
-        , m_shaderProgram(program)
+        , m_typeface(nullptr)
+        , m_atlasWidth(0)
+        , m_atlasHeight(0)
+        , m_atlasTex(0)
     {
         if (!initFTLibrary())
             return;
 
-        setTypeface(std::string("res/Calibri Bold.ttf"));
-        setPixelSize(20);
+        setTypeface(std::string("res/fonts/Calibri Bold.ttf"));
+        setPixelSize(pixelSize);
 
         initFontAtlasDims();
-        createAtlasTexture();
+        createAtlasTexture(renderer);
     }
 
     Font::~Font()
     {
-        FT_Done_Face(m_typeFace);
+        FT_Done_Face(m_typeface);
         FT_Done_FreeType(m_library);
     }
 
     void Font::setTypeface(std::string& fontFile)
     {
-        if (FT_New_Face(m_library, fontFile.c_str(), 0, &m_typeFace))
-            LOG("Could not open font! Font file: " + fontFile);
+        if (FT_New_Face(m_library, fontFile.c_str(), 0, &m_typeface))
+            LOG("Could not open font! Font file path: " + fontFile);
     }
 
     void Font::setPixelSize(int pixelSize)
     {
-        FT_Set_Pixel_Sizes(m_typeFace, 0, pixelSize);
+        FT_Set_Pixel_Sizes(m_typeface, 0, pixelSize);
     }
 
     const Font::GlyphInfo& Font::getGlyphInfo(char character) const
@@ -82,50 +85,43 @@ namespace fsi
 
     void Font::initFontAtlasDims()
     {
-        FT_GlyphSlot g = m_typeFace->glyph;
+        FT_GlyphSlot glyph = m_typeface->glyph;
 
         m_atlasHeight = 0;
         m_atlasWidth = 0;
 
         for (int i = 0; i < 128; i++)
         {
-            if (FT_Load_Char(m_typeFace, i, FT_LOAD_RENDER))
+            if (FT_Load_Char(m_typeface, i, FT_LOAD_RENDER))
             {
                 LOG("Loading character failed!");
                 continue;
             }
 
-            m_atlasWidth += g->bitmap.width;
-            m_atlasHeight = std::max(m_atlasHeight, g->bitmap.rows);
+            m_atlasWidth += glyph->bitmap.width;
+            m_atlasHeight = std::max(m_atlasHeight, glyph->bitmap.rows);
         }
     }
 
-    void Font::createAtlasTexture()
+    void Font::createAtlasTexture(GLRenderer* renderer)
     {
-        atlasUnifLoc = 0;// glGetUniformLocation(m_shaderProgram->getProgramId(), "atlas");
-        m_shaderProgram->use();
-        //m_shaderProgram->setUniformSampler(atlasUnifLoc, atlasTexUnit);
+        auto texMgr = renderer->getTextureManager();
+        m_atlasTex = texMgr->createTexture(1, m_atlasWidth, m_atlasHeight, InternalFormat::R8);
 
-        glPixelStorei(GL_UNPACK_ALIGNMENT, 1);
-
-        glCreateTextures(GL_TEXTURE_2D, 1, &m_atlasTex);
-        glTextureStorage2D(m_atlasTex, 1, GL_R8, m_atlasWidth, m_atlasHeight);
-        glGenerateTextureMipmap(m_atlasTex);
-
-        FT_GlyphSlot g = m_typeFace->glyph;
-        int x = 0;
+        FT_GlyphSlot g = m_typeface->glyph;
+        int currX = 0;
 
         for (int i = 0; i < 128; i++)
         {
-            if (FT_Load_Char(m_typeFace, i, FT_LOAD_RENDER))
+            if (FT_Load_Char(m_typeface, i, FT_LOAD_RENDER))
             {
                 LOG("Loading character failed!");
                 continue;
             }
 
-            glTextureSubImage2D(m_atlasTex, 0, x, 0, g->bitmap.width, g->bitmap.rows, GL_RED, GL_UNSIGNED_BYTE, g->bitmap.buffer);
+            texMgr->updateTexture(m_atlasTex, 0, currX, 0, g->bitmap.width, g->bitmap.rows, BaseFormat::Red, g->bitmap.buffer);
 
-            m_glyphCache[i].atlasOffsetX = static_cast<float>(x) / static_cast<float>(m_atlasWidth);
+            m_glyphCache[i].atlasOffsetX = static_cast<float>(currX) / static_cast<float>(m_atlasWidth);
             m_glyphCache[i].advanceX = (float)(g->advance.x >> 6);
             m_glyphCache[i].advanceY = (float)(g->advance.y >> 6);
             m_glyphCache[i].bmpWidth = (float)(g->bitmap.width);
@@ -133,29 +129,20 @@ namespace fsi
             m_glyphCache[i].bmpLeft = (float)(g->bitmap_left);
             m_glyphCache[i].bmpTop = (float)(g->bitmap_top);
 
-            x += g->bitmap.width;
+            currX += g->bitmap.width;
         }
 
-        glCreateSamplers(1, &m_sampler);
-        glSamplerParameteri(m_sampler, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
-        glSamplerParameteri(m_sampler, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
-        glSamplerParameteri(m_sampler, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
-        glSamplerParameteri(m_sampler, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
+        auto sampler = texMgr->getSamplerPreset(TextureManager::LinearClamp);
+        auto texInfo = texMgr->createTextureInfo(m_atlasTex, sampler);
 
-        glBindTextureUnit(atlasTexUnit, m_atlasTex);
-        glBindSampler(atlasTexUnit, m_sampler);
+        auto technique = std::make_unique<Technique>(renderer->getTechniqueCache()->getProgram("text"));
+        technique->setUniformAttribute("atlas", texInfo.unit);
     }
 
     void Font::flipBitmapY(unsigned char* data, int width, int height)
     {
         for (int y = 0; y < height / 2; y++)
-        {
             for (int x = 0; x < width; x++)
-            {
-                unsigned char temp = data[y * width + x];
-                data[y * width + x] = data[(height - 1 - y) * width + x];
-                data[(height - 1 - y) * width + x] = temp;
-            }
-        }
+                std::swap(data[y * width + x], data[(height - 1 - y) * width + x]);
     }
 }

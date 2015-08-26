@@ -9,7 +9,5 @@ out vec4 finalColor;
  
 void main()
 {
-    vec4 sam = texture2D(atlas, texCoord).r * color;
-
-    finalColor = sam;
+    finalColor = texture2D(atlas, texCoord).r * color;
 }

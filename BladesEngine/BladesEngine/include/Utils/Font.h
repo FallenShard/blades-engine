@@ -5,14 +5,15 @@
 #include "FreeType/ft2build.h"
 #include FT_FREETYPE_H
 
-#include "Renderer/Technique.h"
+#include "OpenGL.h"
 
 namespace fsi
 {
+    class GLRenderer;
+
     class Font
     {
     public:
-
         struct GlyphInfo
         {
             float advanceX;
@@ -27,13 +28,11 @@ namespace fsi
             float atlasOffsetX;
         };
 
-        Font(Technique* program);
+        Font(GLRenderer* renderer, int pixelSize = 20);
         ~Font();
 
         void setTypeface(std::string& typeface);
         void setPixelSize(int pixelSize);
-
-        GLuint prepareText(const char* text, float x, float y, float sx, float sy);
 
         const GlyphInfo& getGlyphInfo(char character) const;
 
@@ -45,20 +44,18 @@ namespace fsi
         bool initFTLibrary();
 
         void initFontAtlasDims();
-        void createAtlasTexture();
+        void createAtlasTexture(GLRenderer* renderer);
 
-        void flipBitmapY(unsigned char* data, int w, int h);
+        void flipBitmapY(unsigned char* data, int width, int height);
 
         FT_Library m_library;
-        FT_Face m_typeFace;
+        FT_Face m_typeface;
 
         GlyphInfo m_glyphCache[128];
 
         int m_atlasWidth;
         int m_atlasHeight;
         GLuint m_atlasTex;
-        GLuint m_sampler;
 
-        Technique* m_shaderProgram;
     };
 }

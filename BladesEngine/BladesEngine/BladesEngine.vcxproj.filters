@@ -57,14 +57,9 @@
     <ClCompile Include="src\Camera\AbstractCamera.cpp" />
     <ClCompile Include="src\Camera\CameraController.cpp" />
     <ClCompile Include="src\Camera\FreeCamera.cpp" />
-    <ClCompile Include="src\Renderer\UIRenderer.cpp" />
-    <ClCompile Include="src\UI\Text.cpp" />
     <ClCompile Include="src\Utils\Font.cpp" />
-    <ClCompile Include="src\UI\CheckBox.cpp" />
-    <ClCompile Include="src\UI\Panel.cpp" />
     <ClCompile Include="src\Renderer\TextureManager.cpp" />
     <ClCompile Include="src\Models\Skybox.cpp" />
-    <ClCompile Include="src\UI\Slider.cpp" />
     <ClCompile Include="src\Renderer\D3DRenderer.cpp" />
     <ClCompile Include="src\Renderer\TechniqueCache.cpp" />
     <ClCompile Include="src\Renderer\Technique.cpp" />
@@ -76,6 +71,12 @@
     <ClCompile Include="src\Renderer\FramebufferManager.cpp" />
     <ClCompile Include="src\Models\CoordOrigin.cpp" />
     <ClCompile Include="src\PostProcessing\RenderPass.cpp" />
+    <ClCompile Include="src\GUI\CheckBox.cpp" />
+    <ClCompile Include="src\GUI\Component.cpp" />
+    <ClCompile Include="src\GUI\GUIManager.cpp" />
+    <ClCompile Include="src\GUI\Panel.cpp" />
+    <ClCompile Include="src\GUI\Slider.cpp" />
+    <ClCompile Include="src\GUI\Text.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="include\Core\Timer.h" />
@@ -96,14 +97,9 @@
     <ClInclude Include="include\Camera\CameraController.h" />
     <ClInclude Include="include\Camera\FreeCamera.h" />
     <ClInclude Include="include\Camera\TargetCamera.h" />
-    <ClInclude Include="include\Renderer\UIRenderer.h" />
-    <ClInclude Include="include\UI\Text.h" />
     <ClInclude Include="include\Utils\Font.h" />
-    <ClInclude Include="include\UI\CheckBox.h" />
-    <ClInclude Include="include\UI\Panel.h" />
     <ClInclude Include="include\Renderer\TextureManager.h" />
     <ClInclude Include="include\Models\Skybox.h" />
-    <ClInclude Include="include\UI\Slider.h" />
     <ClInclude Include="include\Renderer\D3DRenderer.h" />
     <ClInclude Include="include\Core\Application.h" />
     <ClInclude Include="include\Renderer\TechniqueCache.h" />
@@ -117,6 +113,12 @@
     <ClInclude Include="include\Renderer\FramebufferManager.h" />
     <ClInclude Include="include\PostProcessing\RenderPass.h" />
     <ClInclude Include="include\Models\CoordOrigin.h" />
+    <ClInclude Include="include\GUI\CheckBox.h" />
+    <ClInclude Include="include\GUI\Component.h" />
+    <ClInclude Include="include\GUI\GUIManager.h" />
+    <ClInclude Include="include\GUI\Panel.h" />
+    <ClInclude Include="include\GUI\Slider.h" />
+    <ClInclude Include="include\GUI\Text.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include="res\glsl\color_frag.glsl" />

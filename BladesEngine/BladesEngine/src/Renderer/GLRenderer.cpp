@@ -11,7 +11,7 @@
 
 #include "Renderer/GLContext.h"
 #include "Renderer/GLRenderer.h"
-#include "Renderer/UIRenderer.h"
+#include "GUI/GUIManager.h"
 #include "Input/Event.h"
 
 #include "Models/Terrain.h"
@@ -90,7 +90,7 @@ namespace fsi
         , m_vertexAssembly(std::make_shared<VertexAssembly>())
         , m_framebufferManager(std::make_shared<FramebufferManager>())
         , m_cameraController(std::make_shared<CameraController>(m_window))
-        , m_uiRenderer(nullptr)
+        , m_guiManager(nullptr)
         , m_FXAAenabled(true)
         , m_showGui(true)
     {
@@ -123,10 +123,10 @@ namespace fsi
         skybox = new Skybox(5, this);
         terrain = new Terrain(128, 1.f, 24.f, this);
         origin = new CoordOrigin(10, this);
-        sphere = new Sphere(3.f, 16, 16, this);
+        sphere = new Sphere(3.f, 32, 32, this);
 
         // GUI manager
-        //m_uiRenderer = std::make_shared<UIRenderer>(m_window, m_shaderManager, this, m_Scene);
+        m_guiManager = std::make_shared<gui::GUIManager>(m_window, this, nullptr);
 
         // FXAA Post-processing
         m_renderPasses.push_back(std::make_unique<FXAA>(windowSize.x, windowSize.y, this));
@@ -163,11 +163,6 @@ namespace fsi
 
         for (auto& item : m_drawItems)
         {
-            if (item.program == 24)
-            {
-                int x = 2;
-                x++;
-            }
             glUseProgram(item.program);
             
             item.preRender(P, V);
@@ -208,9 +203,11 @@ namespace fsi
             (*currentPass)->render();
         }
 
+        m_guiManager->render();
+
         // Make sure not to render text/GUI under FXAA
         //if (m_showGui)
-        //    m_uiRenderer->render();
+        //    m_GUIManager->render();
 
         m_window->display();
     }
@@ -223,12 +220,12 @@ namespace fsi
         if (event.type == Event::Resized)
         {
             //m_aaPass->resize(event.size.width, event.size.height);
-            //m_uiRenderer->resize(event.size.width, event.size.height);
+            //m_GUIManager->resize(event.size.width, event.size.height);
             resize(event.size.width, event.size.height);
         }
 
         //if (m_showGui)
-        //    m_uiRenderer->handleEvents(event);
+        //    m_GUIManager->handleEvents(event);
 
         //m_Scene->handleEvents(event);
 
@@ -249,7 +246,7 @@ namespace fsi
 
     void GLRenderer::setFrameTime(long long frameTime)
     {
-        //m_uiRenderer->setFrameTime(frameTime);
+        m_guiManager->setFrameTime(frameTime);
     }
 
     void GLRenderer::resize(int width, int height)
@@ -260,7 +257,7 @@ namespace fsi
 
         for (auto& pass : m_renderPasses)
             pass->resize(width, height);
-        //m_uiRenderer->resize(width, height);
+        //m_GUIManager->resize(width, height);
     }
 
     void GLRenderer::enableFXAA(bool enabled)
@@ -271,6 +268,11 @@ namespace fsi
     void GLRenderer::submitDrawItem(const DrawItem& drawItem)
     {
         m_drawItems.emplace_back(drawItem);
+    }
+
+    void GLRenderer::submitGuiDrawItem(const DrawItem& drawItem)
+    {
+        m_guiDrawItems.emplace_back(drawItem);
     }
 
     void GLRenderer::setTessellationPatchVertices(int numberOfVertices)

@@ -90,6 +90,11 @@ namespace fsi
         return texId;
     }
 
+    void TextureManager::updateTexture(TextureHandle texture, unsigned int level, int xOffset, int yOffset, unsigned int width, unsigned int height, BaseFormat format, unsigned char* data)
+    {
+        glTextureSubImage2D(texture, level, xOffset, yOffset, width, height, findBaseGlFormat(format), GL_UNSIGNED_BYTE, data);
+    }
+
     TextureHandle TextureManager::load3DTexture(const std::vector<std::string>& fileNames, unsigned int levels, InternalFormat internalFormat, BaseFormat format)
     {
         GLenum internalGlFormat = findInternalGlFormat(internalFormat);
