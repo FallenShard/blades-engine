@@ -105,6 +105,17 @@ namespace fsi
             m_color = color;
         }
 
+        glm::vec2 Text::getTextSize() const
+        {
+            return m_textSize;
+        }
+
+        glm::vec4 Text::getBounds() const
+        {
+            glm::vec3 absPos = getAbsolutePosition();
+            return glm::vec4(absPos.x, absPos.y, absPos.x + m_textSize.x, absPos.y + m_textSize.y);
+        }
+
         void Text::render(const glm::mat4& P)
         {
             glUseProgram(m_technique->getRawHandle());

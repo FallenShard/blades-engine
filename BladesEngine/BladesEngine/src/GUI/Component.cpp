@@ -1,3 +1,5 @@
+#include "Input/Event.h"
+
 #include "GUI/Component.h"
 
 namespace fsi
@@ -8,10 +10,15 @@ namespace fsi
             : m_position(position)
             , m_size(size)
             , m_modelMat(glm::translate(m_position) * glm::scale(glm::vec3(m_size, 1.f)))
+            , m_parent(nullptr)
         {
         }
 
         Component::~Component()
+        {
+        }
+
+        void Component::handleEvents(const Event& event)
         {
         }
 
@@ -23,8 +30,8 @@ namespace fsi
         glm::vec3 Component::getAbsolutePosition() const
         {
             glm::vec3 parentAbsPos(0.f);
-            if (auto parent = m_parent.lock())
-                parentAbsPos = parent->getAbsolutePosition();
+            if (m_parent)
+                parentAbsPos = m_parent->getAbsolutePosition();
 
             return m_position + parentAbsPos;
         }
@@ -41,13 +48,29 @@ namespace fsi
             updateModelMatrix();
         }
 
+        glm::vec2 Component::getSize() const
+        {
+            return m_size;
+        }
+
+        glm::vec4 Component::getBounds() const
+        {
+            glm::vec3 absPos = getAbsolutePosition();
+            glm::vec4 bounds;
+            bounds.x = absPos.x;
+            bounds.y = absPos.y;
+            bounds.z = absPos.x + m_size.x;
+            bounds.w = absPos.y + m_size.y;
+            return bounds;
+        }
+
         void Component::addComponent(ComponentPtr component)
         {
-            component->setParent(shared_from_this());
+            component->setParent(this);
             m_children.insert(component);
         }
 
-        void Component::setParent(ComponentPtr component)
+        void Component::setParent(Component* component)
         {
             m_parent = component;
             updateModelMatrix();
@@ -56,8 +79,8 @@ namespace fsi
         void Component::updateModelMatrix()
         {
             glm::vec3 parentPos(0.f);
-            if (auto parent = m_parent.lock())
-                parentPos = parent->getAbsolutePosition();
+            if (m_parent)
+                parentPos = m_parent->getAbsolutePosition();
 
             m_modelMat = glm::translate(m_position + parentPos) * glm::scale(glm::vec3(m_size, 1.f));
 

@@ -6,52 +6,51 @@
 
 #include "OpenGL.h"
 
+#include "GUI/Component.h"
+
 namespace fsi
 {
     struct Event;
+    class GLRenderer;
     class Technique;
+    class Font;
 
     namespace gui
     {
         class Text;
 
-        class CheckBox
+        class CheckBox : public Component
         {
         public:
-            CheckBox(bool isChecked = false);
+            CheckBox(std::shared_ptr<Font>& font, GLRenderer* renderer, bool isChecked = false);
             ~CheckBox();
 
-            bool handleEvents(const Event& event);
-
-            void setPosition(glm::vec3& position);
-
-            void render(Technique* program, const glm::mat4& parentMat);
-
-            void addMouseArea(float xIncrease, float yIncrease = 0.f);
-            glm::vec2 getSize() const;
+            virtual void handleEvents(const Event& event) override;
+            virtual void render(const glm::mat4& P) override;
 
             void setCallback(std::function<void(bool)> callback);
+
+            void setText(const std::string& text);
+            virtual glm::vec4 getBounds() const override;
 
         private:
             void setState(bool isChecked);
 
-            std::string m_textString;
-
-            std::vector<GLfloat> m_vertices;
-            std::vector<GLushort> m_indices;
-
-            glm::mat4 m_modelMat;
-            glm::vec2 m_position;
-            glm::vec2 m_size;
-            glm::vec2 m_mouseAreaSize;
+            std::vector<GLfloat> generateVertices();
+            std::vector<GLushort> generateIndices();
 
             bool m_isChecked;
+            std::function<void(bool)> m_callback;
+
+            std::shared_ptr<Text> m_text;
+            glm::vec2 m_mouseAreaSize;
+
+            GLRenderer* m_renderer;
+            std::unique_ptr<Technique> m_technique;
 
             GLuint m_vao;
             GLuint m_vbo;
             GLuint m_ibo;
-
-            std::function<void(bool)> m_callback;
         };
     }
 }

@@ -23,6 +23,7 @@ namespace fsi
             void setColor(const glm::vec4& color);
             void setBorderColor(const glm::vec4& color);
 
+            virtual void handleEvents(const Event& event) override;
             virtual void render(const glm::mat4& P) override;
 
         private:

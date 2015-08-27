@@ -4,7 +4,7 @@
 
 #include "Renderer/GLRenderer.h"
 #include "Renderer/Technique.h"
-#include "Renderer/VertexAssembly.h"
+#include "Utils/Math.h"
 
 namespace fsi
 {
@@ -56,6 +56,35 @@ namespace fsi
         void Panel::setBorderColor(const glm::vec4 & color)
         {
             m_borderColor = color;
+        }
+
+        void Panel::handleEvents(const Event& event)
+        {
+            int mouseX;
+            int mouseY;
+
+            if (event.type == Event::MouseButtonPressed || event.type == Event::MouseButtonReleased)
+            {
+                mouseX = event.mouseButton.x;
+                mouseY = event.mouseButton.y;
+            }
+            else if (event.type == Event::MouseMoved)
+            {
+                mouseX = event.mouseMove.x;
+                mouseY = event.mouseMove.y;
+            }
+            else
+                return;
+
+            for (auto& child : m_children)
+            {
+                auto bounds = child->getBounds();
+                if (isPointInRect(mouseX, mouseY, bounds))
+                {
+                    child->handleEvents(event);
+                    break;
+                }
+            }
         }
 
         void Panel::render(const glm::mat4& P)

@@ -1,6 +1,12 @@
+#include <iostream>
+#include <sstream>
+#include <iomanip>
+
 #include "Renderer/VertexAssembly.h"
 #include "Window/Window.h"
 #include "Utils/Font.h"
+#include "Utils/Math.h"
+#include "Utils/StringConversion.h"
 #include "GUI/Text.h"
 #include "GUI/CheckBox.h"
 #include "GUI/Panel.h"
@@ -11,47 +17,20 @@
 
 #include "Models/Terrain.h"
 
-#include <sstream>
-#include <iomanip>
-#include <iostream>
-
-#include "stb/stb_image.h"
-
 namespace fsi
 {
     namespace
     {
         float avg = 0.f;
-
-        int avgCount = 10;
         int avgCounter = 0;
-
-        template <class T>
-        inline std::string to_string(const T& t, int prec = 2)
-        {
-            std::stringstream ss;
-            ss << std::setprecision(prec) << std::fixed << t;
-            return ss.str();
-        }
-
-        PFNWGLSWAPINTERVALEXTPROC wglSwapIntervalEXT;
-
         int updateIntervalMicroSec = 1000000;
 
-        float panelX = 20.f;
-        float panelY = 20.f;
-        float panelWidth = 200.f;
-        float panelHeight = 275.f;
+        
+
+        PFNWGLSWAPINTERVALEXTPROC wglSwapIntervalEXT;
     }
 
     //GUIManager::GUIManager(std::shared_ptr<Window>& window, TechniqueCache* shaderManager, GLRenderer* renderer, Scene* scene)
-    //    : m_font(std::make_shared<Font>(nullptr))
-    //    //, m_textProgram(shaderManager->getProgram("text"))
-    //    //, m_simpleProgram(shaderManager->getProgram("simple"))
-    //    //, m_program(shaderManager->getProgram("gui"))
-    //    , m_panel(std::make_unique<Panel>(glm::vec3(50.f, 50.f, 0.f), glm::vec2(panelWidth, panelHeight)))
-    //    , m_aaText(std::make_unique<Text>(m_font))
-    //    , m_aaCheckBox(std::make_unique<CheckBox>(true))
     //    , m_wireframeText(std::make_unique<Text>(m_font))
     //    , m_wfCheckBox(std::make_unique<CheckBox>())
     //    , m_vsyncText(std::make_unique<Text>(m_font))
@@ -59,27 +38,13 @@ namespace fsi
     //    , m_triSlider(std::make_unique<Slider>())
     //    , m_triSizeText(std::make_unique<Text>(m_font))
     //    , m_currTriSizeText(std::make_unique<Text>(m_font))
-    //    , m_fpsCounter(std::make_unique<Text>(m_font))
-    //    , m_frameTimeCounter(std::make_unique<Text>(m_font))
-    //    , m_projection(glm::ortho(0.f, static_cast<float>(window->getSize().x),
-    //    static_cast<float>(window->getSize().y), 0.f))
     //{
-    //    m_aaText->setText("Antialiasing");
-    //    m_aaText->setColor(glm::vec4(0.f, 1.f, 1.f, 1.f));
-    //    m_aaText->setPosition(glm::vec3(50.f, 40.f, 0.f));
-    //    m_aaCheckBox->setPosition(glm::vec3(20.f, 20.f, 0.f));
-    //    m_aaCheckBox->addMouseArea(m_aaText->getTextSize().x + 6.f);
     //    m_aaCheckBox->setCallback([renderer, scene](bool isChecked)
     //    {
     //        renderer->enableFXAA(isChecked);
     //        //scene->getTerrain()->useDetail(isChecked);
     //    });
 
-    //    m_wireframeText->setText("Wireframe");
-    //    m_wireframeText->setColor(glm::vec4(0.f, 1.f, 1.f, 1.f));
-    //    m_wireframeText->setPosition(glm::vec3(50.f, 80.f, 0.f));
-    //    m_wfCheckBox->setPosition(glm::vec3(20.f, 60.f, 0.f));
-    //    m_wfCheckBox->addMouseArea(m_wireframeText->getTextSize().x + 6.f);
     //    m_wfCheckBox->setCallback([scene](bool isChecked)
     //    {
     //        scene->getTerrain()->setWireframe(isChecked);
@@ -109,14 +74,6 @@ namespace fsi
     //        scene->getTerrain()->setTriSize(value);
     //        m_currTriSizeText->setText(to_string(value));
     //    });
-
-    //    m_fpsCounter->setText("0.0 FPS");
-    //    m_fpsCounter->setColor(glm::vec4(0.f, 1.f, 1.f, 1.f));
-    //    m_fpsCounter->setPosition(glm::vec3(20.f, 220.f, 0.f));
-
-    //    m_frameTimeCounter->setText("0.0 us");
-    //    m_frameTimeCounter->setColor(glm::vec4(0.f, 1.f, 1.f, 1.f));
-    //    m_frameTimeCounter->setPosition(glm::vec3(20.f, 250.f, 0.f));
 
     //    GLuint m_cbTexId = 0;
     //    GLuint m_cbTexUnif;
@@ -154,7 +111,7 @@ namespace fsi
     namespace gui
     {
         GUIManager::GUIManager(std::shared_ptr<Window>& window, GLRenderer* renderer, Scene* scene)
-            : m_font(std::make_shared<Font>(renderer))
+            : m_font(std::make_shared<Font>(renderer, 18))
             , m_projection(glm::ortho(0.f, static_cast<float>(window->getSize().x), static_cast<float>(window->getSize().y), 0.f))
             , m_mainPanel(nullptr)
             , m_fpsCounterText(nullptr)
@@ -175,10 +132,47 @@ namespace fsi
             m_frameTimeText->setPosition({ 20.f, 60.f, 0.f });
             m_frameTimeText->setColor({ 0.f, 1.f, 1.f, 1.f });
 
+            auto antiAliasingCheckBox = std::make_shared<CheckBox>(m_font, renderer, true);
+            antiAliasingCheckBox->setText("Antialiasing");
+            antiAliasingCheckBox->setPosition({ 20.f, 70.f, 0.f });
+            antiAliasingCheckBox->setCallback([](bool isChecked)
+            {
+                std::cout << "Anti-aliasing CheckBox checked status: " << isChecked << std::endl;
+            });
+
+            auto wireframeCheckBox = std::make_shared<CheckBox>(m_font, renderer, false);
+            wireframeCheckBox->setText("Wireframe");
+            wireframeCheckBox->setPosition({ 20.f, 100.f, 0.f });
+            wireframeCheckBox->setCallback([](bool isChecked)
+            {
+                std::cout << "Wireframe CheckBox checked status: " << isChecked << std::endl;
+            });
+
+            auto vSyncCheckBox = std::make_shared<CheckBox>(m_font, renderer, true);
+            vSyncCheckBox->setText("V-Sync");
+            vSyncCheckBox->setPosition({ 20.f, 130.f, 0.f });
+            vSyncCheckBox->setCallback([](bool isChecked)
+            {
+                wglSwapIntervalEXT(isChecked);
+            });
+
+            auto triangleSizeSlider = std::make_shared<Slider>(m_font, renderer);
+            triangleSizeSlider->setPosition({ 20.f, 180.f, 0.f });
+            triangleSizeSlider->setCallback([](int value)
+            {
+                std::cout << "Slider value: " << value << std::endl;
+            });
+
             m_mainPanel->addComponent(m_fpsCounterText);
             m_mainPanel->addComponent(m_frameTimeText);
+            m_mainPanel->addComponent(antiAliasingCheckBox);
+            m_mainPanel->addComponent(wireframeCheckBox);
+            m_mainPanel->addComponent(vSyncCheckBox);
+            m_mainPanel->addComponent(triangleSizeSlider);
+            //m_mainPanel->addComponent(triangleSizeText);
 
             glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+            wglSwapIntervalEXT = (PFNWGLSWAPINTERVALEXTPROC)wglGetProcAddress("wglSwapIntervalEXT");
         }
 
         GUIManager::~GUIManager()
@@ -187,27 +181,27 @@ namespace fsi
 
         bool GUIManager::handleEvents(const Event& event)
         {
-            if (event.type == Event::MouseButtonPressed ||
-                event.type == Event::MouseButtonReleased)
+            int mouseX;
+            int mouseY;
+
+            if (event.type == Event::MouseButtonPressed || event.type == Event::MouseButtonReleased)
             {
-                /*if (event.mouseButton.x > panelX && event.mouseButton.x < panelX + panelWidth &&
-                event.mouseButton.y > panelY && event.mouseButton.y < panelY + panelHeight)
-                {
-                m_aaCheckBox->handleEvents(event);
-                m_wfCheckBox->handleEvents(event);
-                m_vsyncCheckBox->handleEvents(event);
-                m_triSlider->handleEvents(event);
-                return true;
-                }*/
+                mouseX = event.mouseButton.x;
+                mouseY = event.mouseButton.y;
             }
             else if (event.type == Event::MouseMoved)
             {
-                /*if (event.mouseMove.x > panelX && event.mouseMove.x < panelX + panelWidth &&
-                event.mouseMove.y > panelY && event.mouseMove.y < panelY + panelHeight)
-                {
-                m_triSlider->handleEvents(event);
+                mouseX = event.mouseMove.x;
+                mouseY = event.mouseMove.y;
+            }
+            else
+                return false;
+
+            auto bounds = m_mainPanel->getBounds();
+            if (isPointInRect(mouseX, mouseY, bounds))
+            {
+                m_mainPanel->handleEvents(event);
                 return true;
-                }*/
             }
 
             return false;

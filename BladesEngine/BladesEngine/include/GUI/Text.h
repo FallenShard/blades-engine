@@ -23,8 +23,10 @@ namespace fsi
 
             void setText(std::string newText);
             void setColor(const glm::vec4& color);
+            glm::vec2 getTextSize() const;
+            virtual glm::vec4 getBounds() const override;
 
-            void render(const glm::mat4& P);
+            virtual void render(const glm::mat4& P) override;
 
         private:
             std::string m_textString;

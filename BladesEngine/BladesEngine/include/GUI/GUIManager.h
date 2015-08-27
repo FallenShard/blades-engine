@@ -45,23 +45,12 @@ namespace fsi
             std::shared_ptr<Text> m_fpsCounterText;
             std::shared_ptr<Text> m_frameTimeText;
 
-
-            //std::vector<std::shared_ptr<Component>> m_components;
-
-                /*std::unique_ptr<Text> m_aaText;
-                std::unique_ptr<CheckBox> m_aaCheckBox;
-
-                std::unique_ptr<Text> m_wireframeText;
-                std::unique_ptr<CheckBox> m_wfCheckBox;
-
-                std::unique_ptr<Text> m_vsyncText;
-                std::unique_ptr<CheckBox> m_vsyncCheckBox;
-
+/*
                 std::unique_ptr<Slider> m_triSlider;
                 std::unique_ptr<Text> m_triSizeText;
                 std::unique_ptr<Text> m_currTriSizeText;
 
-                std::unique_ptr<Text> m_frameTimeCounter;*/
+                */
         };
     }
 }
