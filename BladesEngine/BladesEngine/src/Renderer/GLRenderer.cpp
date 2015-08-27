@@ -116,10 +116,6 @@ namespace fsi
         glClearDepth(1.f);
 
         // 3D Scene manager
-        //m_Scene = new Scene(m_window, m_shaderManager);
-
-        //m_Scene->prepare();
-
         skybox = new Skybox(5, this);
         terrain = new Terrain(128, 1.f, 24.f, this);
         origin = new CoordOrigin(10, this);
@@ -134,8 +130,6 @@ namespace fsi
 
     GLRenderer::~GLRenderer()
     {
-        //delete m_Scene;
-
         delete origin;
         origin = nullptr;
 
@@ -188,7 +182,7 @@ namespace fsi
         if (currentPass != m_renderPasses.end())
             (*currentPass)->setAsSurface();
         else
-            glBindFramebuffer(GL_FRAMEBUFFER, 0);
+            RenderPass::setScreenAsSurface();
 
         renderScene();
 
@@ -198,16 +192,14 @@ namespace fsi
             if (nextPass != m_renderPasses.end())
                 (*nextPass)->setAsSurface();
             else
-                glBindFramebuffer(GL_FRAMEBUFFER, 0);
+                RenderPass::setScreenAsSurface();
 
             (*currentPass)->render();
         }
 
-        m_guiManager->render();
-
         // Make sure not to render text/GUI under FXAA
-        //if (m_showGui)
-        //    m_GUIManager->render();
+        if (m_showGui)
+            m_guiManager->render();
 
         m_window->display();
     }
@@ -219,13 +211,12 @@ namespace fsi
 
         if (event.type == Event::Resized)
         {
-            //m_aaPass->resize(event.size.width, event.size.height);
-            //m_GUIManager->resize(event.size.width, event.size.height);
             resize(event.size.width, event.size.height);
+            return;
         }
 
-        //if (m_showGui)
-        //    m_GUIManager->handleEvents(event);
+        if (m_showGui)
+            m_guiManager->handleEvents(event);
 
         //m_Scene->handleEvents(event);
 
@@ -251,13 +242,12 @@ namespace fsi
 
     void GLRenderer::resize(int width, int height)
     {
-        //m_Scene->reshape(width, height);
-
         m_aspectRatio = static_cast<float>(width) / static_cast<float>(height);
 
         for (auto& pass : m_renderPasses)
             pass->resize(width, height);
-        //m_GUIManager->resize(width, height);
+        
+        m_guiManager->resize(width, height);
     }
 
     void GLRenderer::enableFXAA(bool enabled)

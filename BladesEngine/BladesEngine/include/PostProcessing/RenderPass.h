@@ -14,6 +14,7 @@ namespace fsi
         virtual ~RenderPass() = default;
 
         static void clearScreen();
+        static void setScreenAsSurface();
 
     protected:
         static const GLfloat defaultDepth;

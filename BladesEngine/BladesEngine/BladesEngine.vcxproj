@@ -51,6 +51,7 @@
     <ClCompile Include="src\Utils\Logger.cpp" />
     <ClCompile Include="src\Input\Keyboard.cpp" />
     <ClCompile Include="src\Input\Mouse.cpp" />
+    <ClCompile Include="src\Utils\Math.cpp" />
     <ClCompile Include="src\Window\VideoMode.cpp" />
     <ClCompile Include="src\Window\Window.cpp" />
   </ItemGroup>
@@ -93,6 +94,8 @@
     <ClInclude Include="include\Utils\Font.h" />
     <ClInclude Include="include\GUI\GUIManager.h" />
     <ClInclude Include="include\Utils\Logger.h" />
+    <ClInclude Include="include\Utils\Math.h" />
+    <ClInclude Include="include\Utils\StringConversion.h" />
     <ClInclude Include="include\Window\VideoMode.h" />
     <ClInclude Include="include\Window\Window.h" />
   </ItemGroup>

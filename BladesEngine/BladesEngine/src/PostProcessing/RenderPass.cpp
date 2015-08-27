@@ -10,4 +10,9 @@ namespace fsi
         glClearNamedFramebufferfv(0, GL_COLOR, 0, defaultColor);
         glClearNamedFramebufferfv(0, GL_DEPTH, 0, &defaultDepth);
     }
+
+    void RenderPass::setScreenAsSurface()
+    {
+        glBindFramebuffer(GL_FRAMEBUFFER, 0);
+    }
 }
