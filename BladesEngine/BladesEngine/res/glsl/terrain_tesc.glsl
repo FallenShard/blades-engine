@@ -77,6 +77,18 @@ void main()
     float sideLen = max(abs(gl_in[0].gl_Position.x - gl_in[3].gl_Position.x), abs(gl_in[0].gl_Position.x - gl_in[1].gl_Position.x));
     float diagLen = sqrt(2 * sideLen * sideLen);
 
+    if (!(abs(gl_in[0].gl_Position.x) < 4.f && abs(gl_in[0].gl_Position.z) < 4.f))
+    {
+         gl_TessLevelOuter[0] = 0.f;
+         gl_TessLevelOuter[1] = 0.f;
+         gl_TessLevelOuter[2] = 0.f;
+         gl_TessLevelOuter[3] = 0.f;
+         gl_TessLevelInner[0] = 0.f;
+         gl_TessLevelInner[1] = 0.f;
+    }
+    else
+    {
+
     //if (!inFrustum(center.xyz, cameraPos.xyz / worldScale, viewDir.xyz, diagLen))
     //{
     //    gl_TessLevelOuter[0] = 0.f;
@@ -96,7 +108,7 @@ void main()
         gl_TessLevelInner[0] = 0.5 * (gl_TessLevelOuter[0] + gl_TessLevelOuter[2]);
         gl_TessLevelInner[1] = 0.5 * (gl_TessLevelOuter[1] + gl_TessLevelOuter[3]);
     //}
-    
+    }
 
     vec3 colors[4];
     colors[0] = vec3(1.f, 0.f, 0.f);
