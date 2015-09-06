@@ -93,6 +93,7 @@ namespace fsi
         , m_guiManager(nullptr)
         , m_FXAAenabled(true)
         , m_showGui(true)
+        , m_isWireframe(false)
     {
 #ifdef _DEBUG
         enableDebugLogging();
@@ -183,8 +184,13 @@ namespace fsi
             (*currentPass)->setAsSurface();
         else
             RenderPass::setScreenAsSurface();
-
+        if (m_isWireframe)
+            glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
+        else
+            glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
         renderScene();
+
+        glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
 
         for (; currentPass != m_renderPasses.end(); ++currentPass)
         {
@@ -206,6 +212,8 @@ namespace fsi
 
     void GLRenderer::handleEvents(const Event& event)
     {
+        m_cameraController->handleEvents(event);
+
         if (event.type == Event::KeyPressed && event.key.code == Keyboard::G)
             m_showGui = !m_showGui;
 
@@ -219,8 +227,6 @@ namespace fsi
             m_guiManager->handleEvents(event);
 
         //m_Scene->handleEvents(event);
-
-        m_cameraController->handleEvents(event);
     }
 
     void GLRenderer::update(float timeDelta)
@@ -253,6 +259,11 @@ namespace fsi
     void GLRenderer::enableFXAA(bool enabled)
     {
         m_FXAAenabled = enabled;
+    }
+
+    void GLRenderer::setWireframeMode(bool isWireframe)
+    {
+        m_isWireframe = isWireframe;
     }
 
     void GLRenderer::submitDrawItem(const DrawItem& drawItem)

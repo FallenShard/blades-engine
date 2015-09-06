@@ -46,6 +46,7 @@ namespace fsi
         void setFrameTime(long long frameTime);
 
         void enableFXAA(bool enabled);
+        void setWireframeMode(bool isWireframe);
 
         void submitDrawItem(const DrawItem& drawItem);
         void submitGuiDrawItem(const DrawItem& drawItem);
@@ -69,6 +70,7 @@ namespace fsi
 
         bool m_FXAAenabled;
         bool m_showGui;
+        bool m_isWireframe;
 
         std::shared_ptr<Window> m_window;
 
