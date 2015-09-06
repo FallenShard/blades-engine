@@ -20,8 +20,8 @@ namespace
 namespace fsi
 {
     Application::Application()
-        : m_window(std::make_shared<Window>(VideoMode(WindowWidth, WindowHeight, PixelDepth), "OpenGL Tessellation", Window::Default))
-        , m_renderer(std::make_unique<GLRenderer>(m_window))
+        : m_window(std::make_shared<Window>(VideoMode(WindowWidth, WindowHeight, PixelDepth), "Blades Engine", Window::Default))
+        , m_renderer(std::make_shared<GLRenderer>(m_window))
         //, m_d3dRenderer(std::make_unique<D3DRenderer>(m_window))
     {
     }
